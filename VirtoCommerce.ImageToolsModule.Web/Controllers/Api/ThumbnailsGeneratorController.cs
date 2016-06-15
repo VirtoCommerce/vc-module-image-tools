@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Web.Models;
-using VirtoCommerce.ImageToolsModule.Web.Services;
 using VirtoCommerce.Platform.Core.Assets;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
@@ -42,15 +42,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetThumbnails(string imageUrl, [FromUri] string[] aliases)
         {
-            var result = new string[0];
-            try
-            {
-                result = _thumbnailsGenerator.GetThumbnails(imageUrl, aliases);
-            }
-            catch (Exception e)
-            {
-            }
-
+            var result = _thumbnailsGenerator.GetThumbnails(imageUrl, aliases);
             return Ok(result);
         }
 
@@ -66,17 +58,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            try
-            {
-                var result = await _thumbnailsGenerator.GenerateAsync(request.ImageUrl, request.ThumbnailsParameters, request.IsRegenerateAll);
+                var result = await _thumbnailsGenerator.GenerateAsync(request.ImageUrl, request.IsRegenerateAll);
 
-                return Ok(new GenerateThumbnailsResponse());
-            }
-            catch (Exception e)
-            {
-            }
-
-            return Ok(new GenerateThumbnailsResponse { Error= "Thumbnails creation error" });
+            return Ok(new GenerateThumbnailsResponse());
         }
     }
 }

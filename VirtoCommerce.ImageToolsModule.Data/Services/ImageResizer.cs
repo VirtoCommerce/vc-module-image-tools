@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 
-namespace VirtoCommerce.ImageToolsModule.Web.Services
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     public class ImageDimensions
     {
@@ -25,7 +25,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
     /// <summary>
     /// Image resize library
     /// </summary>
-    class ImageResize: IImageResize
+    public class ImageResizer: IImageResizer
 	{
         public enum Dimensions 
 		{

@@ -1,16 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Configuration;
-using VirtoCommerce.ImageToolsModule.Web.Exceptions;
-using VirtoCommerce.ImageToolsModule.Web.Models;
+using VirtoCommerce.ImageToolsModule.Data.Exceptions;
+using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.Platform.Core.Settings;
 
-namespace VirtoCommerce.ImageToolsModule.Web.Services
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
 
     /// <summary>
@@ -23,17 +25,20 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
     public class ThumbnailService : IThumbnailService
     {
         protected readonly IBlobStorageProvider _blobStorageProvider;
-        protected readonly IImageResize _imageResize;
+        protected readonly IImageResizer _imageResize;
+        protected readonly ISettingsManager _settingsManager;
+        private const string settingsName = "ImageTools.Thumbnails.Parameters";
         private object progressLock = new object();
-        
-        
+
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public ThumbnailService(IBlobStorageProvider blobStorageProvider, IImageResize imageResize)
+        public ThumbnailService(IBlobStorageProvider blobStorageProvider, IImageResizer imageResize, ISettingsManager settingsManager)
         {
             _blobStorageProvider = blobStorageProvider;
             _imageResize = imageResize;
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -42,15 +47,15 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
         /// <param name="imageUrl">Original image.</param>
         /// <param name="thumbnailsParameters">ImageTools.ImageSizes settings.</param>
         /// <param name="isRegenerateAll">True to replace all existed thumbnails with a new ones.</param>
-        public async Task<bool> GenerateAsync(string imageUrl, string[] thumbnailsParameters, bool isRegenerateAll)
+        public async Task<bool> GenerateAsync(string imageUrl, bool isRegenerateAll)
         {
             if (string.IsNullOrEmpty(imageUrl))
                 throw new ArgumentNullException("imageUrl");
+
+            var thumbnailsParameters = GetThumbnailParameters();
             if (thumbnailsParameters == null)
                 throw new ArgumentNullException("thumbnailsParameters");
-
-            var thumbnailsSettings = thumbnailsParameters.Select(x => JsonConvert.DeserializeObject<ThumbnailParameters>(x)).ToArray();
-            if (!thumbnailsSettings.Any())
+            if (!thumbnailsParameters.Any())
                 throw new ThumbnailsParametersException("None ore wrong thumbnails parameters");
 
 
@@ -58,22 +63,41 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
             var format = GetImageFormat(originalImage);
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = GetMaxDegreeOfParallelism() };
 
-            //foreach (var specifications in resizeImageSpecifications)
-            Parallel.ForEach(thumbnailsSettings, parallelOptions, (thumbnailSettings) =>
+            Parallel.ForEach(thumbnailsParameters, parallelOptions, (parameters) =>
             {
-                var thumbnailUrl = AddAliasToImageUrl(imageUrl, "_" + thumbnailSettings.Alias);
+                var thumbnailUrl = AddAliasToImageUrl(imageUrl, "_" + parameters.Alias);
                 if (isRegenerateAll || !IsExists(thumbnailUrl))
                 {
-                    //one process could use Image object at the same time.
-                    Bitmap clone = null;
-                    lock (progressLock)
+                    ResizeType resizeType;
+                    if (Enum.TryParse<ResizeType>(parameters.Method, true, out resizeType))
                     {
-                        clone = (Bitmap)originalImage.Clone();
+                        //one process only can use an Image object at the same time.
+                        Image clone = null;
+                        lock (progressLock)
+                        {
+                            clone = (Image)originalImage.Clone();
+                        }
+                        
+                        //Generate a Thumbnail
+                        Image thumbnail = null;
+                        switch (resizeType)
+                        {
+                            case ResizeType.FixedSize:
+                                thumbnail = _imageResize.FixedSize(clone, parameters.Width, parameters.Height, parameters.Color);
+                                break;
+                        }
+
+                        //Save
+                        if (thumbnail != null)
+                        {
+                            SaveImage(thumbnailUrl, thumbnail, format);
+                        }
+                        else
+                        {
+                            throw new ThumbnailGenetationException(string.Format("Creation error of {0}, type", thumbnailUrl));
+                        }
                     }
-                    //Generate a Thumbnail
-                    var thumbnail = _imageResize.FixedSize(clone, thumbnailSettings.Width, thumbnailSettings.Height, thumbnailSettings.Color);
-                    //Save
-                    SaveImage(thumbnailUrl, thumbnail, format);
+
                 }
             });
             return true;
@@ -210,6 +234,13 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
             catch 
             {
             }
+            return result;
+        }
+
+        private IEnumerable<ThumbnailParameters> GetThumbnailParameters()
+        {
+            var settings = _settingsManager.GetArray<string>(settingsName, null);
+            var result = settings.Select(x => JsonConvert.DeserializeObject<ThumbnailParameters>(x));
             return result;
         }
 

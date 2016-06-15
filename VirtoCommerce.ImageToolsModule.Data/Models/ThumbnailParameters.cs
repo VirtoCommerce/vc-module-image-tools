@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace VirtoCommerce.ImageToolsModule.Web.Models
+namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
     /// <summary>
     /// Specification to generate a thumbnail.
@@ -26,7 +26,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Models
         /// If the original image has an aspect ratio different from thumbnail, 
         /// not covered part the thumbnail will be filled with that color.
         /// </summary>
-        public string Background { get; set; }
+        public Color Color { get; set; }
 
         /// <summary>
         /// Thumbnail alias (using to generate a thumbnail url as a suffix)  

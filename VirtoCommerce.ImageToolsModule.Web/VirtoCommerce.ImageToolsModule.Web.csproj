@@ -115,22 +115,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ThumbnailsGeneratorController.cs" />
-    <Compile Include="Exceptions\ThumbnailsParametersException.cs" />
-    <Compile Include="Exceptions\ImageToolsException.cs" />
-    <Compile Include="Models\GenerateThumbnailsResponse.cs" />
     <Compile Include="Models\GenerateThumbnailsRequest.cs" />
+    <Compile Include="Models\GenerateThumbnailsResponse.cs" />
     <Compile Include="Models\ThumbnailParameters.cs" />
-    <Compile Include="Models\Setting.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IImageResize.cs" />
-    <Compile Include="Services\ImageResize.cs" />
-    <Compile Include="Services\ThumbnailService.cs" />
-    <Compile Include="Services\IThumbnailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\css\" />
-    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj">
+      <Project>{57f492ce-df19-4117-bacf-70dd51052216}</Project>
+      <Name>VirtoCommerce.ImageToolsModule.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

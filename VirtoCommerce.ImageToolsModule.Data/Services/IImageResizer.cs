@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
 
-namespace VirtoCommerce.ImageToolsModule.Web.Services
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     /// <summary>
     /// Image resize library interface
     /// </summary>
-    public interface IImageResize
+    public interface IImageResizer
     {
         /// <summary>
         /// Resize image.

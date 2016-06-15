@@ -1,6 +1,9 @@
 ﻿
 namespace VirtoCommerce.ImageToolsModule.Web.Models
 {
+    /// <summary>
+    /// Request to generate Thumbnails
+    /// </summary>
     public class GenerateThumbnailsRequest
     {
         /// <summary>
@@ -13,9 +16,5 @@ namespace VirtoCommerce.ImageToolsModule.Web.Models
         /// </summary>
         public bool IsRegenerateAll { get; set; }
 
-        /// <summary>
-        /// ImageTools.Thumbnails.Parameters setting values.
-        /// </summary>
-        public string[] ThumbnailsParameters { get; set; }
     }
 }

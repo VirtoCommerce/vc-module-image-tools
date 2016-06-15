@@ -1,8 +1,6 @@
-﻿
-using System.Threading.Tasks;
-using VirtoCommerce.ImageToolsModule.Web.Models;
+﻿using System.Threading.Tasks;
 
-namespace VirtoCommerce.ImageToolsModule.Web.Services
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     /// <summary>
     /// Thumbnail of an image is an image with another size(resolution). 
@@ -17,9 +15,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Services
         /// Generate different thumbnails by given image url.
         /// </summary>
         /// <param name="imageUrl">Original image.</param>
-        /// <param name="thumbnailsParameters">ImageTools.ImageSizes settings.</param>
         /// <param name="isRegenerateAll">True to replace all existed thumbnails with a new ones.</param>
-        Task<bool> GenerateAsync(string imageUrl, string[] thumbnailsParameters, bool isRegenerateAll);
+        Task<bool> GenerateAsync(string imageUrl, bool isRegenerateAll);
 
         /// <summary>
         /// Get all existed thumbnails urls of given image.

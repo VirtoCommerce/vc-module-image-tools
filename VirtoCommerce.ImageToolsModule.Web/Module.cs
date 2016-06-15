@@ -1,14 +1,21 @@
 ﻿using Microsoft.Practices.Unity;
-using VirtoCommerce.ImageToolsModule.Web.Services;
+using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
+    /// <summary>
+    /// Module
+    /// </summary>
     public class Module : ModuleBase
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="container"></param>
         public Module(IUnityContainer container)
         {
             _container = container;
@@ -17,12 +24,14 @@ namespace VirtoCommerce.ImageToolsModule.Web
         #region IModule Members
 
 
+        /// <summary>
+        /// Initialization
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
             _container.RegisterType<IThumbnailService, ThumbnailService>();
-            _container.RegisterType<IImageResize, ImageResize>();
-
+            _container.RegisterType<IImageResizer, ImageResizer>();
         }
 
         #endregion

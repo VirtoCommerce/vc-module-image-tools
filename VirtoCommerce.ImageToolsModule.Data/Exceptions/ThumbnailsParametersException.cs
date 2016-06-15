@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace VirtoCommerce.ImageToolsModule.Web.Exceptions
+namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
 {
     public class ThumbnailsParametersException : ImageToolsException
     {
