@@ -5,14 +5,46 @@ VirtoCommerce.ImageTools module represents functionality for working with images
 Key features:
 * It allows you to make thumbnails of images in different ways
 
+
 # Documentation
-Thumbnails
-Use API to make thumbnails.
-There are several ways to make thumbnail:
-1. Resize the image to the desired size while maintaining the aspect ratio without cropping.
-2. Resize the image to the desired height while maintaining the aspect ratio.
-3. Resize the image to the desired width while maintaining the aspect ratio.
-4. Cut a part of image without change aspect ratio or resize.
+Use API to make thumbnails POST /api/image/thumbnails.
+There are two parameters:
+
+1. Url of original image
+2. isRegenerateAll - if the parameter set as true all thumbnails will replace with new. If false - will generate missed only.
+
+Use settings to define each thumbnail (width, hight, method for generating, etc)
+
+**"FixedSize" method example:**
+
+To resize the image to the desired size while maintaining the aspect ratio without cropping.
+{method: "FixedSize", width: 100 and height:75, alias: "red", background: "#B20000"} 
+In this case will generate thumbnail with width = 100, height = 75. Image will not be cropped. If aspect ratio of original image and the thumbnail doesn't match then white space will be filled with color of background. Url of thumbnail will receive the suffix by alias value, here is "red".
+
+**"FixedHeight" method example:**
+
+Resize the image to the desired height while maintaining the aspect ratio.
+```
+{method: "FixedHeight", height:75, alias: "small"}
+```
+In this case will generate thumbnail with height = 75. Image will not be cropped. Width of thumbnail will be calculated according aspect ratio. Url of thumbnail will receive the suffix by alias value, here is "small".
+
+**"FixedWidth" method example:**
+
+Resize the image to the desired width while maintaining the aspect ratio.
+```
+{method: "FixedWidth", width: 800, alias: "large"}
+```
+In this case will generate thumbnail with width = 800. Image will not be cropped. Height of thumbnail will be calculated according aspect ratio. Url of thumbnail will receive the suffix by alias value, here is "large".
+
+**"Cut" method example:**
+
+Cut a part of image without change aspect ratio or resize.
+```
+{method: "Cut", width: 100, height:75, alias: "topleft", anchorposition:"TopLeft"}
+```
+In this case will generate thumbnail with width = 100 and height = 75. The thumbnail will be cutted from original image from top left angle. You can specify other place of cutting: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
+
 
 # Installation
 Installing the module:
