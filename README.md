@@ -1,9 +1,11 @@
 
 
+
 # VirtoCommerce.ImageTools
 VirtoCommerce.ImageTools module represents functionality for working with images.
 Key features:
-* It allows you to make thumbnails of images in different ways
+* Make image thumbnails in different ways
+* All image formats supported
 
 
 # Documentation
@@ -13,7 +15,7 @@ There are two parameters:
 1. Url of original image
 2. isRegenerateAll - if the parameter set as true all thumbnails will replace with new. If false - will generate missed only.
 
-Use settings to define each thumbnail (width, hight, method for generating, etc)
+Use settings to define each thumbnail (width, height, method for generating, etc.)
 
 **"FixedSize" method example:**
 
@@ -52,7 +54,7 @@ Installing the module:
 * Manually: download module zip package from https://github.com/VirtoCommerce/vc-module-image-tools. In VC Manager go to Configuration -> Modules -> Advanced -> upload module package -> Install.
 
 # Settings
-* **VirtoCommerce.ImageTools.Thumbnails** -  manually defined ruls to resize images
+* **VirtoCommerce.ImageTools.Thumbnails** -  manually defined rules to resize images
 
 # Available resources
 * Module related service implementations as a <a href="https://www.nuget.org/packages/VirtoCommerce.ImageTools.Data" target="_blank">NuGet package</a>
@@ -72,5 +74,3 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 implied.
-Currently the module allows to make thumbnails from any image files.
- 
