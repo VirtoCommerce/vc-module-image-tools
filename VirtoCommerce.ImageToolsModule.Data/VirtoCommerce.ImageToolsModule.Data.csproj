@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="Exceptions\ImageToolsException.cs" />
     <Compile Include="Exceptions\ThumbnailGenetationException.cs" />
-    <Compile Include="Exceptions\ThumbnailsParametersException.cs" />
     <Compile Include="Models\AnchorPosition.cs" />
     <Compile Include="Models\ImageDimensions.cs" />
     <Compile Include="Models\ResizeType.cs" />

@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using VirtoCommerce.ImageToolsModule.Data.Exceptions;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
@@ -53,11 +54,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 throw new ArgumentNullException("imageUrl");
 
             var thumbnailsParameters = GetThumbnailParameters();
-            if (thumbnailsParameters == null)
-                throw new ArgumentNullException("thumbnailsParameters");
-            if (!thumbnailsParameters.Any())
-                throw new ThumbnailsParametersException("None ore wrong thumbnails parameters");
-
+            if (thumbnailsParameters.IsNullOrEmpty())
+                return false;
 
             var originalImage = await LoadImageAsync(imageUrl);
             var format = GetImageFormat(originalImage);
