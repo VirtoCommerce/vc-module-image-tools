@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Drawing;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
@@ -11,7 +13,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         /// Method of thumbnails generation
         /// 
         /// </summary>
-        public string Method { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ResizeType Method { get; set; }
 
         /// <summary>
         /// Thumbnail width.
@@ -32,6 +35,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         /// Thumbnail alias (using to generate a thumbnail url as a suffix)  
         /// </summary>
         public string Alias { get; set; }
+
+        /// <summary>
+        /// Anchor position to cropping
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AnchorPosition AnchorPosition { get; set; }
 
     }
 }

@@ -68,9 +68,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 var thumbnailUrl = AddAliasToImageUrl(imageUrl, "_" + parameters.Alias);
                 if (isRegenerateAll || !IsExists(thumbnailUrl))
                 {
-                    ResizeType resizeType;
-                    if (Enum.TryParse<ResizeType>(parameters.Method, true, out resizeType))
-                    {
                         //one process only can use an Image object at the same time.
                         Image clone = null;
                         lock (progressLock)
@@ -80,10 +77,19 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                         
                         //Generate a Thumbnail
                         Image thumbnail = null;
-                        switch (resizeType)
+                        switch (parameters.Method)
                         {
                             case ResizeType.FixedSize:
                                 thumbnail = _imageResize.FixedSize(clone, parameters.Width, parameters.Height, parameters.Color);
+                                break;
+                            case ResizeType.FixedWidth:
+                                thumbnail = _imageResize.FixedWidth(clone, parameters.Width, parameters.Color);
+                                break;
+                            case ResizeType.FixedHeight:
+                                thumbnail = _imageResize.FixedWidth(clone, parameters.Height, parameters.Color);
+                                break;
+                            case ResizeType.Cut:
+                                thumbnail = _imageResize.Cut(clone, parameters.Width, parameters.Height, parameters.AnchorPosition);
                                 break;
                         }
 
@@ -98,7 +104,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                         }
                     }
 
-                }
             });
             return true;
         }
