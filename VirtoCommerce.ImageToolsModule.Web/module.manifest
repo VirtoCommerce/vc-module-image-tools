@@ -28,7 +28,7 @@
         <group name="ImageTools|Thumbnails">
             <setting>
                 <name>ImageTools.Thumbnails.Parameters</name>
-                <valueType>string</valueType>
+                <valueType>longtext</valueType>
                 <defaultValue></defaultValue>
                 <title>Parameters of thumbnail generation (JSON)</title>
                 <description>Example {width: 200, height: 150, alias: "small", background: "#FFFFFF"}</description>
