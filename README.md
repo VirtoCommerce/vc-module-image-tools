@@ -37,7 +37,7 @@ Here are description of the settings:
 
 To resize the image to the desired size while maintaining the aspect ratio without cropping.
 ```
-{method: "FixedSize", alias: "red", width: 100 and height:75, background: "#B20000"} 
+{method: "FixedSize", alias: "red", width: 100, height:75, background: "#B20000"} 
 ```
 In this case will generate thumbnail with width = 100, height = 75. Image will not be cropped. If aspect ratio of original image and the thumbnail doesn't match then white space will be filled with color of background. Url of thumbnail will receive the suffix by alias value, here is "red".
 
