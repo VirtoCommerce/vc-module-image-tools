@@ -97,7 +97,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// Resize and trim excess.
         /// The image will have given size
         /// </summary>
-        public Image Cut(Image image, int width, int height, AnchorPosition anchor)
+        public Image Crop(Image image, int width, int height, AnchorPosition anchor)
         {
             var source = new ImageDimensions { Width = image.Width, Height = image.Height };
             var destination = new ImageDimensions();

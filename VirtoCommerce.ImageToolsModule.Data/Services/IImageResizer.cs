@@ -26,10 +26,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         Image FixedWidth(Image image, int width, Color backgroung);
 
         /// <summary>
-        /// Cut a part of image without change aspect ratio or resize.
+        /// Get a part of image without change aspect ratio or resize.
         /// Anchor defines, which part of original image will be used
         /// </summary>
-        Image Cut(Image image, int width, int height, AnchorPosition anchor);
+        Image Crop(Image image, int width, int height, AnchorPosition anchor);
 
     }
 }

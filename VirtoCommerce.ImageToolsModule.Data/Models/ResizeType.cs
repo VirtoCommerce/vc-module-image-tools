@@ -5,6 +5,6 @@
         FixedSize,
         FixedWidth,
         FixedHeight,
-        Cut
+        Crop
     }
 }

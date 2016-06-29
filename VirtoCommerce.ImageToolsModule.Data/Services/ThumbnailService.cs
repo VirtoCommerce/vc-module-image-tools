@@ -84,10 +84,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                                 thumbnail = _imageResize.FixedWidth(clone, parameters.Width, parameters.Color);
                                 break;
                             case ResizeType.FixedHeight:
-                                thumbnail = _imageResize.FixedWidth(clone, parameters.Height, parameters.Color);
+                                thumbnail = _imageResize.FixedHeight(clone, parameters.Height, parameters.Color);
                                 break;
-                            case ResizeType.Cut:
-                                thumbnail = _imageResize.Cut(clone, parameters.Width, parameters.Height, parameters.AnchorPosition);
+                            case ResizeType.Crop:
+                                thumbnail = _imageResize.Crop(clone, parameters.Width, parameters.Height, parameters.AnchorPosition);
                                 break;
                         }
 
