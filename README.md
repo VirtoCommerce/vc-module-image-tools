@@ -28,7 +28,7 @@ Use settings to define each thumbnail (width, height, method for generating, etc
 
 There are four methods of resizing image. You can specify  its own for any thumbnail.
 
-![image](https://cloud.githubusercontent.com/assets/7059355/16415707/e2d4df28-3d3e-11e6-8eba-5a7b8bdcc573.png)
+![image](https://cloud.githubusercontent.com/assets/7059355/16445900/38c49044-3de5-11e6-94d5-bb71de59444c.png)
 Settings of four thumbnails with different resize methods.
 
 Here are description of the settings:
