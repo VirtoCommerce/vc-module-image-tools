@@ -25,7 +25,7 @@ There are two settings:
   {method: "FixedSize", alias: "grande", width: 800, height:600, background: "#B20000"}
   {method: "FixedHeight", alias: "medium", height:240}
 ```
-There is a product in catalog with an image. There is the image in the platform blob storage.
+There is a product in catalog with an image. There is the image in the platform blob storage:
 ```
   https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg
 ```
