@@ -59,16 +59,14 @@ In this case will generate thumbnail with width = 800. Image will not be cropped
 
 **4. "Crop" method example:**
 
-Cut a part of image without change aspect ratio or resize.
+Resize the image until one of the sides will match to the given dimensions while maintaining the aspect ratio. Part of the image will be cut off.
 ```
 {method: "Crop", alias: "compact", width: 160, height:160, anchorposition:"TopLeft"}
 ```
-In this case will generate thumbnail with width = 100 and height = 75. The thumbnail will be cutted from original image from top left angle. You can specify other place of cutting: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
+In this case will generate thumbnail with width = 160 and height = 160. The thumbnail will be resized and cropped from bottom or right. You can specify an anchor to change cropping area: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
 
 
 # Available resources
-* Module related service implementations as a <a href="https://www.nuget.org/packages/VirtoCommerce.ImageTools.Data" target="_blank">NuGet package</a>
-* API client as a <a href="https://www.nuget.org/packages/VirtoCommerce.ImageToolsModule.Client" target="_blank">NuGet package</a>
 * API client documentation http://demo.virtocommerce.com/admin/docs/ui/index#!/Image_tools_module
 
 # License
