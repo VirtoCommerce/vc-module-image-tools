@@ -57,11 +57,11 @@ Resize the image to the desired width while maintaining the aspect ratio.
 ```
 In this case will generate thumbnail with width = 800. Image will not be cropped. Height of thumbnail will be calculated according aspect ratio. Url of thumbnail will receive the suffix by alias value, here is "large".
 
-**4. "Cut" method example:**
+**4. "Crop" method example:**
 
 Cut a part of image without change aspect ratio or resize.
 ```
-{method: "Cut", alias: "topleft", width: 100, height:75, anchorposition:"TopLeft"}
+{method: "Crop", alias: "topleft", width: 100, height:75, anchorposition:"TopLeft"}
 ```
 In this case will generate thumbnail with width = 100 and height = 75. The thumbnail will be cutted from original image from top left angle. You can specify other place of cutting: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
 
