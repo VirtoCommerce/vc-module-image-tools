@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Configuration;
 using VirtoCommerce.ImageToolsModule.Data.Exceptions;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.Assets;
@@ -28,7 +28,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         protected readonly IBlobStorageProvider _blobStorageProvider;
         protected readonly IImageResizer _imageResize;
         protected readonly ISettingsManager _settingsManager;
-        private const string settingsName = "ImageTools.Thumbnails.Parameters";
+        private const string _settingsName = "ImageTools.Thumbnails.Parameters";
         private object progressLock = new object();
 
 
@@ -227,7 +227,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             int result = 4;
             try
             {
-                var setting = WebConfigurationManager.AppSettings["MaxDegreeOfParallelism"];
+                var setting = ConfigurationManager.AppSettings["MaxDegreeOfParallelism"];
                 int settingValue = 0;
                 if (!string.IsNullOrEmpty(setting) && int.TryParse(setting, out settingValue))
                 {
@@ -242,7 +242,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         private IEnumerable<ThumbnailParameters> GetThumbnailParameters()
         {
-            var settings = _settingsManager.GetArray<string>(settingsName, null);
+            var settings = _settingsManager.GetArray<string>(_settingsName, null);
             var result = settings.Select(x => JsonConvert.DeserializeObject<ThumbnailParameters>(x));
             return result;
         }
