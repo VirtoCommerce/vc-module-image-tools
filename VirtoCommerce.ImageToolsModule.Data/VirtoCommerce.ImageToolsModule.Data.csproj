@@ -52,6 +52,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Exceptions\ImageToolsException.cs" />
     <Compile Include="Exceptions\ThumbnailGenetationException.cs" />
     <Compile Include="Models\AnchorPosition.cs" />
