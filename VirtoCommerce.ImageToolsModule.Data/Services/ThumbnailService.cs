@@ -1,12 +1,13 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using VirtoCommerce.ImageToolsModule.Data.Exceptions;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.Assets;
@@ -15,7 +16,6 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
-
     /// <summary>
     /// Thumbnail of an image is an image with another size(resolution). 
     /// The thumbnails size is less of original size.
@@ -25,30 +25,29 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// </summary>
     public class ThumbnailService : IThumbnailService
     {
-        protected readonly IBlobStorageProvider _blobStorageProvider;
-        protected readonly IImageResizer _imageResize;
-        protected readonly ISettingsManager _settingsManager;
         private const string _settingsName = "ImageTools.Thumbnails.Parameters";
-        private object progressLock = new object();
+        private readonly object _progressLock = new object();
 
+        protected IBlobStorageProvider BlobStorageProvider { get; private set; }
+        protected IImageResizer ImageResizer { get; private set; }
+        protected ISettingsManager SettingsManager { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ThumbnailService(IBlobStorageProvider blobStorageProvider, IImageResizer imageResize, ISettingsManager settingsManager)
+        public ThumbnailService(IBlobStorageProvider blobStorageProvider, IImageResizer imageResizer, ISettingsManager settingsManager)
         {
-            _blobStorageProvider = blobStorageProvider;
-            _imageResize = imageResize;
-            _settingsManager = settingsManager;
+            BlobStorageProvider = blobStorageProvider;
+            ImageResizer = imageResizer;
+            SettingsManager = settingsManager;
         }
 
         /// <summary>
         /// Generate different thumbnails by given image url.
         /// </summary>
         /// <param name="imageUrl">Original image.</param>
-        /// <param name="thumbnailsParameters">ImageTools.ImageSizes settings.</param>
         /// <param name="isRegenerateAll">True to replace all existed thumbnails with a new ones.</param>
-        public async Task<bool> GenerateAsync(string imageUrl, bool isRegenerateAll)
+        public virtual async Task<bool> GenerateAsync(string imageUrl, bool isRegenerateAll)
         {
             if (string.IsNullOrEmpty(imageUrl))
                 throw new ArgumentNullException("imageUrl");
@@ -64,45 +63,45 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             Parallel.ForEach(thumbnailsParameters, parallelOptions, (parameters) =>
             {
                 var thumbnailUrl = AddAliasToImageUrl(imageUrl, "_" + parameters.Alias);
-                if (isRegenerateAll || !IsExists(thumbnailUrl))
+                if (isRegenerateAll || !Exists(thumbnailUrl))
                 {
-                        //one process only can use an Image object at the same time.
-                        Image clone = null;
-                        lock (progressLock)
-                        {
-                            clone = (Image)originalImage.Clone();
-                        }
-                        
-                        //Generate a Thumbnail
-                        Image thumbnail = null;
-                        switch (parameters.Method)
-                        {
-                            case ResizeType.FixedSize:
-                                thumbnail = _imageResize.FixedSize(clone, parameters.Width, parameters.Height, parameters.Color);
-                                break;
-                            case ResizeType.FixedWidth:
-                                thumbnail = _imageResize.FixedWidth(clone, parameters.Width, parameters.Color);
-                                break;
-                            case ResizeType.FixedHeight:
-                                thumbnail = _imageResize.FixedHeight(clone, parameters.Height, parameters.Color);
-                                break;
-                            case ResizeType.Crop:
-                                thumbnail = _imageResize.Crop(clone, parameters.Width, parameters.Height, parameters.AnchorPosition);
-                                break;
-                        }
-
-                        //Save
-                        if (thumbnail != null)
-                        {
-                            SaveImage(thumbnailUrl, thumbnail, format);
-                        }
-                        else
-                        {
-                            throw new ThumbnailGenetationException(string.Format("Creation error of {0}, type", thumbnailUrl));
-                        }
+                    //one process only can use an Image object at the same time.
+                    Image clone;
+                    lock (_progressLock)
+                    {
+                        clone = (Image)originalImage.Clone();
                     }
 
+                    //Generate a Thumbnail
+                    Image thumbnail = null;
+                    switch (parameters.Method)
+                    {
+                        case ResizeType.FixedSize:
+                            thumbnail = ImageResizer.FixedSize(clone, parameters.Width, parameters.Height, parameters.Color);
+                            break;
+                        case ResizeType.FixedWidth:
+                            thumbnail = ImageResizer.FixedWidth(clone, parameters.Width, parameters.Color);
+                            break;
+                        case ResizeType.FixedHeight:
+                            thumbnail = ImageResizer.FixedHeight(clone, parameters.Height, parameters.Color);
+                            break;
+                        case ResizeType.Crop:
+                            thumbnail = ImageResizer.Crop(clone, parameters.Width, parameters.Height, parameters.AnchorPosition);
+                            break;
+                    }
+
+                    //Save
+                    if (thumbnail != null)
+                    {
+                        SaveImage(thumbnailUrl, thumbnail, format);
+                    }
+                    else
+                    {
+                        throw new ThumbnailGenetationException(string.Format(CultureInfo.InvariantCulture, "Cannot generate thumbnail for image '{0}'.", thumbnailUrl));
+                    }
+                }
             });
+
             return true;
         }
 
@@ -112,35 +111,35 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <param name="imageUrl">Image url.</param>
         /// <param name="aliases">Thumbnails aliases (suffixes).</param>
         /// <returns>List of existed thumbnails.</returns>
-        public string[] GetThumbnails(string imageUrl, string[] aliases)
+        public virtual string[] GetThumbnails(string imageUrl, string[] aliases)
         {
             if (string.IsNullOrEmpty(imageUrl))
                 throw new ArgumentNullException("imageUrl");
             if (aliases == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException("aliases");
 
             var thumbnailUrls = aliases
                 .Select(x => AddAliasToImageUrl(imageUrl, "_" + x))
-                .Where(x => IsExists(x))
+                .Where(Exists)
                 .ToArray();
 
             return thumbnailUrls;
         }
 
-        #region Private methods
+        #region Protected methods
 
         /// <summary>
         /// Load to Image from blob.
         /// </summary>
         /// <param name="imageUrl">image url.</param>
         /// <returns>Image object.</returns>
-        private async Task<Image> LoadImageAsync(string imageUrl)
+        protected virtual async Task<Image> LoadImageAsync(string imageUrl)
         {
-            using (var blobStream = _blobStorageProvider.OpenRead(imageUrl))
+            using (var blobStream = BlobStorageProvider.OpenRead(imageUrl))
             using (var stream = new MemoryStream())
             {
                 await blobStream.CopyToAsync(stream);
-                var result = Bitmap.FromStream(stream);
+                var result = Image.FromStream(stream);
                 return result;
             }
         }
@@ -151,9 +150,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <param name="imageUrl">Image url.</param>
         /// <param name="image">Image object.</param>
         /// <param name="format">Image object format.</param>
-        private void SaveImage(string imageUrl, Image image, ImageFormat format)
+        protected virtual void SaveImage(string imageUrl, Image image, ImageFormat format)
         {
-            using (var blobStream = _blobStorageProvider.OpenWrite(imageUrl))
+            using (var blobStream = BlobStorageProvider.OpenWrite(imageUrl))
             using (var stream = new MemoryStream())
             {
                 image.Save(stream, format);
@@ -167,9 +166,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
         /// <returns>True if image exist.</returns>
-        private bool IsExists(string imageUrl)
+        protected virtual bool Exists(string imageUrl)
         {
-            var blobInfo = _blobStorageProvider.GetBlobInfo(imageUrl);
+            var blobInfo = BlobStorageProvider.GetBlobInfo(imageUrl);
             return blobInfo != null;
         }
 
@@ -179,14 +178,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <param name="originalImageUrl"> original image url.</param>
         /// <param name="suffix">suffix.</param>
         /// <returns>Url with suffix.</returns>
-        private string AddAliasToImageUrl(string originalImageUrl, string suffix)
+        protected virtual string AddAliasToImageUrl(string originalImageUrl, string suffix)
         {
             var name = Path.GetFileNameWithoutExtension(originalImageUrl);
             var extention = Path.GetExtension(originalImageUrl);
             var newName = string.Concat(name, suffix, extention);
 
             var uri = new Uri(originalImageUrl);
-            string uriWithoutLastSegment = uri.AbsoluteUri.Remove(uri.AbsoluteUri.Length - uri.Segments.Last().Length);
+            var uriWithoutLastSegment = uri.AbsoluteUri.Remove(uri.AbsoluteUri.Length - uri.Segments.Last().Length);
 
             var result = new Uri(new Uri(uriWithoutLastSegment), newName);
 
@@ -198,7 +197,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        private ImageFormat GetImageFormat(Image image)
+        protected virtual ImageFormat GetImageFormat(Image image)
         {
             if (image.RawFormat.Equals(ImageFormat.Jpeg))
                 return ImageFormat.Jpeg;
@@ -218,36 +217,35 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 return ImageFormat.MemoryBmp;
             if (image.RawFormat.Equals(ImageFormat.Tiff))
                 return ImageFormat.Tiff;
-            else
-                return ImageFormat.Wmf;
+            return ImageFormat.Wmf;
         }
 
-        private int GetMaxDegreeOfParallelism()
+        protected virtual int GetMaxDegreeOfParallelism()
         {
-            int result = 4;
+            var result = 4;
             try
             {
                 var setting = ConfigurationManager.AppSettings["MaxDegreeOfParallelism"];
-                int settingValue = 0;
+                int settingValue;
                 if (!string.IsNullOrEmpty(setting) && int.TryParse(setting, out settingValue))
                 {
                     result = settingValue;
                 }
             }
-            catch 
+            catch
             {
             }
+
             return result;
         }
 
-        private IEnumerable<ThumbnailParameters> GetThumbnailParameters()
+        protected virtual IList<ThumbnailParameters> GetThumbnailParameters()
         {
-            var settings = _settingsManager.GetArray<string>(_settingsName, null);
-            var result = settings.Select(x => JsonConvert.DeserializeObject<ThumbnailParameters>(x));
+            var settings = SettingsManager.GetArray<string>(_settingsName, null);
+            var result = settings.Select(JsonConvert.DeserializeObject<ThumbnailParameters>).ToList();
             return result;
         }
 
         #endregion
-
     }
 }

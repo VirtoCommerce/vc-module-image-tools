@@ -9,7 +9,6 @@ namespace VirtoCommerce.ImageToolsModule.Web
     /// </summary>
     public class Module : ModuleBase
     {
-        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         /// <summary>
@@ -23,7 +22,6 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
         #region IModule Members
 
-
         /// <summary>
         /// Initialization
         /// </summary>
@@ -35,6 +33,5 @@ namespace VirtoCommerce.ImageToolsModule.Web
         }
 
         #endregion
-
     }
 }

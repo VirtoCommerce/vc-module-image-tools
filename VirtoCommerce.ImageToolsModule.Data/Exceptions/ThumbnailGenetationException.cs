@@ -1,12 +1,11 @@
 ﻿using System;
 
-
 namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
 {
     public class ThumbnailGenetationException : ImageToolsException
     {
         public ThumbnailGenetationException()
-            : base() { }
+        { }
 
         public ThumbnailGenetationException(string message)
             : base(message) { }
@@ -20,5 +19,4 @@ namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
         public ThumbnailGenetationException(string format, Exception innerException, params object[] args)
             : base(string.Format(format, args), innerException) { }
     }
-
 }

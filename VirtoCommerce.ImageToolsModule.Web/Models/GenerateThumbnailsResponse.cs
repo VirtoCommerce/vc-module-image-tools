@@ -1,5 +1,4 @@
-﻿
-namespace VirtoCommerce.ImageToolsModule.Web.Models
+﻿namespace VirtoCommerce.ImageToolsModule.Web.Models
 {
     /// <summary>
     /// Response of Thumbnails generation result 
@@ -10,6 +9,5 @@ namespace VirtoCommerce.ImageToolsModule.Web.Models
         /// Error of generation
         /// </summary>
         public string Error { get; set; }
-
     }
 }

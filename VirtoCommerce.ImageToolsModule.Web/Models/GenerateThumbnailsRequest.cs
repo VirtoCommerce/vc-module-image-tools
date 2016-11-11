@@ -1,5 +1,4 @@
-﻿
-namespace VirtoCommerce.ImageToolsModule.Web.Models
+﻿namespace VirtoCommerce.ImageToolsModule.Web.Models
 {
     /// <summary>
     /// Request to generate Thumbnails for image in a platform blob storage.

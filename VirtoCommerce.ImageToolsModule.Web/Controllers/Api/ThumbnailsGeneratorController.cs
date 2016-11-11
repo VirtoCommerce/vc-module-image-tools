@@ -4,7 +4,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Web.Models;
-using VirtoCommerce.Platform.Core.Assets;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -19,17 +18,14 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
     public class ThumbnailsController : ApiController
     {
         private readonly IThumbnailService _thumbnailsGenerator;
-        private readonly IBlobUrlResolver _blobUrlResolver;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ThumbnailsController(IThumbnailService thumbnailsGenerator, IBlobUrlResolver blobUrlResolver)
+        public ThumbnailsController(IThumbnailService thumbnailsGenerator)
         {
             _thumbnailsGenerator = thumbnailsGenerator;
-            _blobUrlResolver = blobUrlResolver;
         }
-
 
         /// <summary>
         /// Get all existed thumbnails urls of given image.
@@ -58,7 +54,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
             if (request == null)
                 throw new ArgumentNullException("request");
 
-                var result = await _thumbnailsGenerator.GenerateAsync(request.ImageUrl, request.IsRegenerateAll);
+            var result = await _thumbnailsGenerator.GenerateAsync(request.ImageUrl, request.IsRegenerateAll);
 
             return Ok(new GenerateThumbnailsResponse());
         }

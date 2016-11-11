@@ -1,5 +1,4 @@
-﻿
-namespace VirtoCommerce.ImageToolsModule.Data.Models
+﻿namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
     public enum AnchorPosition
     {

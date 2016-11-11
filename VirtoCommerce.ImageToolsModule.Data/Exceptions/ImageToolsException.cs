@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
 {
     public class ImageToolsException : Exception
     {
         public ImageToolsException()
-            : base() { }
+        { }
 
         public ImageToolsException(string message)
             : base(message) { }
@@ -22,5 +19,4 @@ namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
         public ImageToolsException(string format, Exception innerException, params object[] args)
             : base(string.Format(format, args), innerException) { }
     }
-
 }

@@ -1,15 +1,15 @@
-﻿using Moq;
-using Xunit;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
+using System.Resources;
+using System.Threading.Tasks;
+using Moq;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Settings;
-using System.IO;
-using System.Resources;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Test
 {
@@ -30,7 +30,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         [Fact]
         public async Task Generate_FixedSize_Thumbnail()
         {
-            var arrayValues = new string[]
+            var arrayValues = new[]
             {
                 "{method: 'FixedSize', alias: 'grande', width: 800, height:600, background: '#B20000'} "
             };
@@ -50,7 +50,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         [Fact]
         public async Task Generate_FixedHeight_Thumbnail()
         {
-            var arrayValues = new string[]
+            var arrayValues = new[]
             {
                 "{method: 'FixedHeight', alias: 'medium', height:240}"
             };
@@ -70,7 +70,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         [Fact]
         public async Task Generate_FixedWidth_Thumbnail()
         {
-            var arrayValues = new string[]
+            var arrayValues = new[]
             {
                 "{method: 'FixedWidth', alias: 'large', width: 480}"
             };
@@ -90,7 +90,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         [Fact]
         public async Task Generate_Crop_Thumbnail()
         {
-            var arrayValues = new string[]
+            var arrayValues = new[]
             {
                 "{method: 'Crop', alias: 'compact', width: 160, height:160, anchorposition:'TopLeft'}"
             };
@@ -110,7 +110,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         [Fact]
         public async Task Generate_All_Thumbnails()
         {
-            var arrayValues = new string[]
+            var arrayValues = new[]
             {
                 "{method: 'FixedSize', alias: 'grande', width: 800, height:600, background: '#B20000'}",
                 "{method: 'FixedHeight', alias: 'medium', height:240}",
@@ -148,7 +148,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
 
             var blobStorageProvider = new Mock<IBlobStorageProvider>();
             blobStorageProvider.Setup(x => x.OpenRead(It.IsAny<string>())).Returns(stream);
-            blobStorageProvider.Setup(x => x.OpenWrite(It.IsAny<string>())).Returns(()=> { var aa = new MemoryStream(); return aa; });
+            blobStorageProvider.Setup(x => x.OpenWrite(It.IsAny<string>())).Returns(() => { var aa = new MemoryStream(); return aa; });
             return blobStorageProvider.Object;
         }
 
@@ -170,7 +170,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         {
             var names = Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
-            Stream mfStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(names[0]);
+            var mfStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(names[0]);
 
             using (var resReader = new ResourceReader(mfStream))
             {
@@ -181,9 +181,9 @@ namespace VirtoCommerce.ImageToolsModule.Test
 
                 resReader.GetResourceData(fileName, out resType, out resData);
 
-                int startIndex = 0;
+                var startIndex = 0;
                 // Search begin of image
-                for (int i = 0; i < resData.Length - 1; i++)
+                for (var i = 0; i < resData.Length - 1; i++)
                 {
                     if (resData[i] == 0xFF && resData[i + 1] == 0xD8)
                     {

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Drawing;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Drawing;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
@@ -20,10 +20,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         /// Thumbnail width.
         /// </summary>
         public int Width { get; set; }
+
         /// <summary>
         /// Thumbnail height.
         /// </summary>
         public int Height { get; set; }
+
         /// <summary>
         /// Background layer color of image.
         /// If the original image has an aspect ratio different from thumbnail, 
@@ -41,6 +43,5 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public AnchorPosition AnchorPosition { get; set; }
-
     }
 }

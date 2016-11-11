@@ -16,7 +16,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public Size Size
         {
-            get { return new Size { Width = this.Width, Height = this.Height }; }
+            get { return new Size { Width = Width, Height = Height }; }
         }
     }
 }
