@@ -27,7 +27,7 @@
                 <valueType>longtext</valueType>
                 <defaultValue></defaultValue>
                 <title>Parameters of thumbnail generation (JSON)</title>
-                <description>Example {width: 200, height: 150, alias: "small", background: "#FFFFFF"}</description>
+                <description>Example {width: 200, height: 150, alias: "small", color: "#FFFFFF"}</description>
                 <isArray>true</isArray>
                 <arrayValues>
                 </arrayValues>

@@ -32,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         {
             var arrayValues = new[]
             {
-                "{method: 'FixedSize', alias: 'grande', width: 800, height:600, background: '#B20000'} "
+                "{method: 'FixedSize', alias: 'grande', width: 800, height:600, color: '#B20000'} "
             };
 
             _settings = new List<SettingEntry> { new SettingEntry
@@ -112,7 +112,7 @@ namespace VirtoCommerce.ImageToolsModule.Test
         {
             var arrayValues = new[]
             {
-                "{method: 'FixedSize', alias: 'grande', width: 800, height:600, background: '#B20000'}",
+                "{method: 'FixedSize', alias: 'grande', width: 800, height:600, color: '#B20000'}",
                 "{method: 'FixedHeight', alias: 'medium', height:240}",
                 "{method: 'FixedWidth', alias: 'large', width: 480}",
                 "{method: 'Crop', alias: 'compact', width: 160, height:160, anchorposition:'TopLeft'}"
