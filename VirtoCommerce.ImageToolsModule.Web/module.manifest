@@ -11,7 +11,7 @@
     <owners>
         <owner>Virto Commerce</owner>
     </owners>
-    <projectUrl>https://github.com/VirtoCommerce/vc-module-image-tools</projectUrl>
+    <projectUrl>https://virtocommerce.com/apps/extensions/image-tools-module</projectUrl>
     <iconUrl>Modules/$(VirtoCommerce.ImageTools)/Content/logo.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
     <copyright>Copyright © 2011-2016 Virto Commerce. All rights reserved</copyright>
