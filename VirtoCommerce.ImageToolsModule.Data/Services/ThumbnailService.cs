@@ -241,7 +241,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         protected virtual IList<ThumbnailParameters> GetThumbnailParameters()
         {
-            var settings = SettingsManager.GetArray<string>(_settingsName, null);
+            var setting = SettingsManager.GetSettingByName(_settingsName);
+            if (setting == null)
+                return new List<ThumbnailParameters>();
+
+            var settings = setting.ArrayValues ?? new string[] { };
             var result = settings.Select(JsonConvert.DeserializeObject<ThumbnailParameters>).ToList();
             return result;
         }
