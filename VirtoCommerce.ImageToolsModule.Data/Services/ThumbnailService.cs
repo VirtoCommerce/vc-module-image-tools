@@ -58,9 +58,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
             var originalImage = await LoadImageAsync(imageUrl);
             var format = GetImageFormat(originalImage);
-            var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = GetMaxDegreeOfParallelism() };
-
-            Parallel.ForEach(thumbnailsParameters, parallelOptions, (parameters) =>
+            foreach (var parameters in thumbnailsParameters)
             {
                 var thumbnailUrl = AddAliasToImageUrl(imageUrl, "_" + parameters.Alias);
                 if (isRegenerateAll || !Exists(thumbnailUrl))
@@ -100,8 +98,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                         throw new ThumbnailGenetationException(string.Format(CultureInfo.InvariantCulture, "Cannot generate thumbnail for image '{0}'.", thumbnailUrl));
                     }
                 }
-            });
-
+            }
             return true;
         }
 
@@ -218,25 +215,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             if (image.RawFormat.Equals(ImageFormat.Tiff))
                 return ImageFormat.Tiff;
             return ImageFormat.Wmf;
-        }
-
-        protected virtual int GetMaxDegreeOfParallelism()
-        {
-            var result = 4;
-            try
-            {
-                var setting = ConfigurationManager.AppSettings["MaxDegreeOfParallelism"];
-                int settingValue;
-                if (!string.IsNullOrEmpty(setting) && int.TryParse(setting, out settingValue))
-                {
-                    result = settingValue;
-                }
-            }
-            catch
-            {
-            }
-
-            return result;
         }
 
         protected virtual IList<ThumbnailParameters> GetThumbnailParameters()
