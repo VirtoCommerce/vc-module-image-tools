@@ -92,7 +92,7 @@ In this case will generate thumbnail with width = 160 and height = 160. The thum
 * API client documentation http://demo.virtocommerce.com/admin/docs/ui/index#!/Image_tools_module
 
 # License
-Copyright (c) Virtosoftware Ltd.  All rights reserved.
+Copyright (c) Virto Solutions LTD.  All rights reserved.
 
 Licensed under the Virto Commerce Open Software License (the "License"); you
 may not use this file except in compliance with the License. You may
