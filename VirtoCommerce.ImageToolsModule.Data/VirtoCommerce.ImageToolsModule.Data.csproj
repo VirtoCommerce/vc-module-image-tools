@@ -36,11 +36,18 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,18 +62,20 @@
       <HintPath>..\packages\VirtoCommerce.Platform.Core.2.12.0\lib\net451\VirtoCommerce.Platform.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="VirtoCommerce.Platform.Data">
+      <HintPath>..\..\..\Projects\vc-module-marketing\packages\VirtoCommerce.Platform.Data.2.13.15\lib\net461\VirtoCommerce.Platform.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Exceptions\ImageToolsException.cs" />
-    <Compile Include="Exceptions\ThumbnailGenetationException.cs" />
-    <Compile Include="Models\AnchorPosition.cs" />
-    <Compile Include="Models\ImageDimensions.cs" />
-    <Compile Include="Models\ResizeType.cs" />
-    <Compile Include="Models\ThumbnailParameters.cs" />
+    <Compile Include="Models\ThumbnailOptionEntity.cs" />
+    <Compile Include="Models\ThumbnailTaskEntity.cs" />
+    <Compile Include="Models\ThumbnailTaskOptionEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IThumbnailRepository.cs" />
+    <Compile Include="Repositories\ThumbnailRepositoryImpl.cs" />
     <Compile Include="Services\IImageResizer.cs" />
     <Compile Include="Services\ImageResizer.cs" />
     <Compile Include="Services\IThumbnailService.cs" />
@@ -76,6 +85,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="VirtoCommerce.ImageToolsModule.Data.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Core\VirtoCommerce.ImageToolsModule.Core.csproj">
+      <Project>{74326ee1-6b14-4b21-9afb-d243bf13daf6}</Project>
+      <Name>VirtoCommerce.ImageToolsModule.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

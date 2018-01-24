@@ -22,6 +22,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -123,9 +124,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Controllers\Api\ThumbnailsGeneratorController.cs" />
-    <Compile Include="Models\GenerateThumbnailsRequest.cs" />
-    <Compile Include="Models\GenerateThumbnailsResponse.cs" />
+    <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
+    <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
+    <Compile Include="Models\ThumbnailsTaskRunRequest.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

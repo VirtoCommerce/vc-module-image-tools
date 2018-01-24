@@ -1,6 +1,6 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.Models
+﻿namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
-    public enum ResizeType
+    public enum ResizeMethod
     {
         FixedSize,
         FixedWidth,
