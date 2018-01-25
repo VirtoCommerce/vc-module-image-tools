@@ -76,10 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IThumbnailRepository.cs" />
     <Compile Include="Repositories\ThumbnailRepositoryImpl.cs" />
-    <Compile Include="Services\IImageResizer.cs" />
-    <Compile Include="Services\ImageResizer.cs" />
-    <Compile Include="Services\IThumbnailService.cs" />
-    <Compile Include="Services\ThumbnailService.cs" />
+    <Compile Include="Services\ThumbnailOptionSearchService.cs" />
+    <Compile Include="Services\ThumbnailTaskSearchService.cs" />
+    <Compile Include="Services\ThumbnailTaskService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

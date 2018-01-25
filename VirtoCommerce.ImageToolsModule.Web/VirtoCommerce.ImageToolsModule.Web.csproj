@@ -127,11 +127,14 @@
     <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
     <Compile Include="Models\ThumbnailsTaskRunRequest.cs" />
-    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Core\VirtoCommerce.ImageToolsModule.Core.csproj">
+      <Project>{74326ee1-6b14-4b21-9afb-d243bf13daf6}</Project>
+      <Name>VirtoCommerce.ImageToolsModule.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj">
       <Project>{57f492ce-df19-4117-bacf-70dd51052216}</Project>
       <Name>VirtoCommerce.ImageToolsModule.Data</Name>

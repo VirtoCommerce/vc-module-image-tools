@@ -2,6 +2,8 @@
 {
     using System.Data.Entity;
     using System.Linq;
+
+    using VirtoCommerce.ImageToolsModule.Core.Services;
     using VirtoCommerce.Platform.Data.Infrastructure;
     using VirtoCommerce.ImageToolsModule.Data.Models;
 
@@ -10,18 +12,20 @@
     /// </summary>
     public class ThumbnailRepositoryImpl : EFRepositoryBase, IThumbnailRepository
     {
-        public ThumbnailRepositoryImpl()
+        private IThumbnailTaskSearchService thumbnailTaskSearchService;
+
+        private IThumbnailOptionService thumbnailOptionService;
+
+        private IThumbnailTaskService thumbnailTaskService;
+
+        public ThumbnailRepositoryImpl(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailOptionService thumbnailOptionService, IThumbnailTaskService thumbnailTaskService)
         {
-            
+            this.thumbnailTaskSearchService = thumbnailTaskSearchService;
+            this.thumbnailOptionService = thumbnailOptionService;
+            this.thumbnailTaskService = thumbnailTaskService;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            NewMethod(modelBuilder);
-
-        }
-
-        private static void NewMethod(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask");
             modelBuilder.Entity<ThumbnailTaskEntity>().HasKey(t => t.Id).Property(t => t.Id);
