@@ -12,19 +12,6 @@
     /// </summary>
     public class ThumbnailRepositoryImpl : EFRepositoryBase, IThumbnailRepository
     {
-        private IThumbnailTaskSearchService thumbnailTaskSearchService;
-
-        private IThumbnailOptionService thumbnailOptionService;
-
-        private IThumbnailTaskService thumbnailTaskService;
-
-        public ThumbnailRepositoryImpl(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailOptionService thumbnailOptionService, IThumbnailTaskService thumbnailTaskService)
-        {
-            this.thumbnailTaskSearchService = thumbnailTaskSearchService;
-            this.thumbnailOptionService = thumbnailOptionService;
-            this.thumbnailTaskService = thumbnailTaskService;
-        }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask");

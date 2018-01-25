@@ -6,6 +6,7 @@
     using System.Web.Http.Results;
 
     using VirtoCommerce.ImageToolsModule.Core.Models;
+    using VirtoCommerce.ImageToolsModule.Core.Services;
     using VirtoCommerce.ImageToolsModule.Data.Repositories;
 
     /// <summary>
@@ -14,11 +15,17 @@
     [RoutePrefix("api/image/thumbnails/tasks")]
     public class ThumbnailsTasksController : ApiController
     {
-        private readonly IThumbnailRepository _repository;
+        private IThumbnailTaskSearchService thumbnailTaskSearchService;
 
-        public ThumbnailsTasksController(IThumbnailRepository repository)
+        private IThumbnailOptionService thumbnailOptionService;
+
+        private IThumbnailTaskService thumbnailTaskService;
+
+        public ThumbnailsTasksController(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailOptionService thumbnailOptionService, IThumbnailTaskService thumbnailTaskService)
         {
-            this._repository = repository;
+            this.thumbnailTaskSearchService = thumbnailTaskSearchService;
+            this.thumbnailOptionService = thumbnailOptionService;
+            this.thumbnailTaskService = thumbnailTaskService;
         }
 
         [HttpPost]
