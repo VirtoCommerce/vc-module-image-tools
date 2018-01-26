@@ -12,6 +12,9 @@
         /// </summary>
         IQueryable<ThumbnailTaskEntity> ThumbnailTasks { get; }
 
+        /// <summary>
+        /// Gets the thumbnail options.
+        /// </summary>
         IQueryable<ThumbnailOptionEntity> ThumbnailOptions { get; }
 
         ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids);

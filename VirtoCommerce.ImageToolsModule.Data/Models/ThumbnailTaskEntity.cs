@@ -5,11 +5,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.ModelBinding;
-
     using VirtoCommerce.Platform.Core.Common;
 
-    class ThumbnailTaskEntity : AuditableEntity
+    public class ThumbnailTaskEntity : AuditableEntity
     {
         [Required]
         [StringLength(1024)]

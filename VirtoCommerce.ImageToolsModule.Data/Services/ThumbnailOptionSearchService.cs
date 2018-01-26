@@ -1,5 +1,7 @@
 ﻿namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
+    using System.Linq;
+
     using VirtoCommerce.ImageToolsModule.Core.Models;
     using VirtoCommerce.ImageToolsModule.Core.Services;
     using VirtoCommerce.ImageToolsModule.Data.Repositories;
@@ -15,12 +17,16 @@
 
         public void SaveChanges(ThumbnailOption[] options)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public ThumbnailOption[] GetByIds(string[] ids)
         {
-            throw new System.NotImplementedException();
+            return _repository.GetThumbnailOptionsByIds(ids).Select(o =>
+                {
+                    var option = new ThumbnailOption();
+                    return o.ToModel(option);
+                }).ToArray();
         }
 
         public void Delete(string[] ids)
