@@ -1,13 +1,10 @@
 ﻿namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.IO;
-    using System.Net.Mime;
-    using System.Runtime.Remoting.Channels;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -42,53 +39,41 @@
                                            {
                                                parallelOptions.CancellationToken.ThrowIfCancellationRequested();
 
-                                               using (var image = Image.FromFile(currentFile))
+                                               var image = Image.FromFile(currentFile);
+                                               Image destImage = null;
+
+                                               try
                                                {
+                                                   switch (option.ResizeMethod)
+                                                   {
+                                                       case ResizeMethod.FixedSize:
+                                                           destImage = ScaleImage(image, option.Width, option.Height);
+                                                           break;
+                                                       case ResizeMethod.FixedHeight:
+                                                           destImage = ResizeImage(image, image.Width, option.Height);
+                                                           break;
+                                                       case ResizeMethod.FixedWidth:
+                                                           destImage = ResizeImage(image, option.Width, image.Height);
+                                                           break;
+                                                       case ResizeMethod.Crop:
+                                                           destImage = CropImage(image, option.Width, option.Height);
+                                                           break;
+                                                   }
+
                                                    var newName =
                                                        Path.GetFileNameWithoutExtension(currentFile) + '_'
                                                                                                      + Guid.NewGuid()
                                                                                                      + option.FileSuffix;
                                                    var outFileName = Path.Combine(destPath, newName);
 
-                                                   var imageFormat = GetImageFormat(option.FileSuffix);
-
-                                                   switch (option.ResizeMethod)
-                                                   {
-                                                       case ResizeMethod.FixedSize:
-                                                           ScaleImage(
-                                                               image,
-                                                               outFileName,
-                                                               option.Width,
-                                                               option.Height,
-                                                               imageFormat);
-                                                           break;
-                                                       case ResizeMethod.FixedHeight:
-                                                           ScaleImage(
-                                                               image,
-                                                               outFileName,
-                                                               image.Width,
-                                                               option.Height,
-                                                               imageFormat);
-                                                           break;
-                                                       case ResizeMethod.FixedWidth:
-                                                           ScaleImage(
-                                                               image,
-                                                               outFileName,
-                                                               image.Width,
-                                                               option.Height,
-                                                               imageFormat);
-                                                           break;
-                                                       case ResizeMethod.Crop:
-                                                           CropImage(
-                                                               image,
-                                                               outFileName,
-                                                               image.Width,
-                                                               option.Height,
-                                                               imageFormat);
-                                                           break;
-                                                   }
+                                                   destImage?.Save(outFileName, GetImageFormat(option.FileSuffix));
 
                                                    rezVal.GeneratedThumbnails.Add(outFileName);
+                                               }
+                                               finally
+                                               {
+                                                   destImage?.Dispose();
+                                                   image.Dispose();
                                                }
                                            });
                                }
@@ -100,12 +85,7 @@
                            });
         }
 
-        private static void ScaleImage(
-            Image image,
-            string outFileName,
-            decimal width,
-            decimal height,
-            ImageFormat imageFormat)
+        private static Image ScaleImage(Image image, decimal width, decimal height)
         {
             decimal widthRatio = (decimal)image.Width / width;
             decimal heightRatio = (decimal)image.Height / height;
@@ -115,18 +95,10 @@
             int newWidth = Convert.ToInt32(Math.Floor((decimal)image.Width / ratio));
             int newHeight = Convert.ToInt32(Math.Floor((decimal)image.Height / ratio));
 
-            using (var thumbnail = image.GetThumbnailImage(newWidth, newHeight, null, IntPtr.Zero))
-            {
-                thumbnail.Save(outFileName, imageFormat);
-            }
+            return image.GetThumbnailImage(newWidth, newHeight, null, IntPtr.Zero);
         }
 
-        private static void ResizeImage(
-            Image image,
-            string outFileName,
-            decimal width,
-            decimal height,
-            ImageFormat imageFormat)
+        private static Image ResizeImage(Image image, decimal width, decimal height)
         {
             var rectangle = new Rectangle(0, 0, (int)width, (int)height);
             var destImage = new Bitmap((int)width, (int)height);
@@ -144,26 +116,29 @@
                 using (var attributes = new ImageAttributes())
                 {
                     attributes.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, rectangle, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
+                    graphics.DrawImage(
+                        image,
+                        rectangle,
+                        0,
+                        0,
+                        image.Width,
+                        image.Height,
+                        GraphicsUnit.Pixel,
+                        attributes);
                 }
             }
 
-            destImage.Save(outFileName, imageFormat);
+            return destImage;
         }
 
-        private static void CropImage(
-            Image image,
-            string outFileName,
-            decimal width,
-            decimal height,
-            ImageFormat imageFormat)
+        private static Image CropImage(Image image, decimal width, decimal height)
         {
             var leftMargin = (image.Width - width) / 2;
             var topMargin = (image.Height - height) / 2;
             var rectangle = new Rectangle((int)leftMargin, (int)topMargin, (int)width, (int)height);
             var bitmap = new Bitmap(image);
-            var outImage = bitmap.Clone(rectangle, PixelFormat.DontCare);
-            outImage.Save(outFileName, imageFormat);
+            var destImage = bitmap.Clone(rectangle, PixelFormat.DontCare);
+            return destImage;
         }
 
         private static ImageFormat GetImageFormat(string fileSuffix)
