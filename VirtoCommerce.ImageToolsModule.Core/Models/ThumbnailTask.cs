@@ -1,11 +1,13 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Core.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using VirtoCommerce.Platform.Core.Common;
+﻿using System;
+using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Common;
 
-    public class ThumbnailTask : AuditableEntity
+namespace VirtoCommerce.ImageToolsModule.Core.Models
+{
+    public class ThumbnailTask// : AuditableEntity
     {
+        public string Id { get; set; }
+        
         public string Name { get; set; }
 
         public DateTime? LastRun { get; set; }

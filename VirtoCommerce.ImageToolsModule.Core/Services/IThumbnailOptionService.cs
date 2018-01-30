@@ -1,7 +1,7 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Core.Services
-{
-    using VirtoCommerce.ImageToolsModule.Core.Models;
+﻿using VirtoCommerce.ImageToolsModule.Core.Models;
 
+namespace VirtoCommerce.ImageToolsModule.Core.Services
+{
     public interface IThumbnailOptionService
     {
         void SaveChanges(ThumbnailOption[] options);

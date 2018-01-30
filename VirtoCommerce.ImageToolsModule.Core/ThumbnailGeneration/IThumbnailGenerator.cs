@@ -5,7 +5,7 @@ using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
-    public interface IDefaultThumbnailGenerator
+    public interface IThumbnailGenerator
     {
         Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string sourse, string destination, ThumbnailOption option, CancellationToken token);
     }

@@ -1,14 +1,11 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
+﻿using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
+
+namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
-    using System.Net;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using System.Web.Http.Results;
-
-    using VirtoCommerce.ImageToolsModule.Core.Models;
-    using VirtoCommerce.ImageToolsModule.Core.Services;
-    using VirtoCommerce.ImageToolsModule.Data.Repositories;
-
     /// <summary>
     /// 
     /// </summary>

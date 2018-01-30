@@ -20,5 +20,7 @@
         ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids);
 
         ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids);
+        void DeletedThumbnailTasksByIds(string[] ids);
+        void DeletedThumbnailOptionsByIds(string[] ids);
     }
 }

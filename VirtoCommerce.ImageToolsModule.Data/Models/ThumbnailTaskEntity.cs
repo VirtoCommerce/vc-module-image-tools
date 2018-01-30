@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
-    using VirtoCommerce.Platform.Core.Common;
 
-    public class ThumbnailTaskEntity : AuditableEntity
+
+    public class ThumbnailTaskEntity// : AuditableEntity
     {
+        public string Id { get; set; }
+        
         [Required]
         [StringLength(1024)]
         public string Name { get; set; }

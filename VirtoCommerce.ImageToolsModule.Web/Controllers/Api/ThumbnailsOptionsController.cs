@@ -1,14 +1,11 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
+﻿using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
+
+namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
-    using System.Net;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using System.Web.Http.Results;
-
-    using VirtoCommerce.ImageToolsModule.Core.Models;
-    using VirtoCommerce.ImageToolsModule.Core.Services;
-    using VirtoCommerce.ImageToolsModule.Data.Repositories;
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,6 +18,12 @@
 
         private IThumbnailTaskService thumbnailTaskService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thumbnailTaskSearchService"></param>
+        /// <param name="thumbnailOptionService"></param>
+        /// <param name="thumbnailTaskService"></param>
         public ThumbnailsOptionsController(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailOptionService thumbnailOptionService, IThumbnailTaskService thumbnailTaskService)
         {
             this.thumbnailTaskSearchService = thumbnailTaskSearchService;
@@ -44,6 +47,11 @@
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(ThumbnailTask))]

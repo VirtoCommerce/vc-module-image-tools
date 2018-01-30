@@ -1,7 +1,7 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
+{
     public class ThumbnailGenerationResult
     {
         public ThumbnailGenerationResult()

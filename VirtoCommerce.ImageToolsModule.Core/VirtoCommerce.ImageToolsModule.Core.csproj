@@ -59,8 +59,10 @@
     <Compile Include="Services\IThumbnailOptionService.cs" />
     <Compile Include="Services\IThumbnailTaskSearchService.cs" />
     <Compile Include="Services\IThumbnailTaskService.cs" />
-    <Compile Include="ThumbnailGeneration\IDefaultThumbnailGenerator.cs" />
+    <Compile Include="ThumbnailGeneration\IThumbnailGenerator.cs" />
+    <Compile Include="ThumbnailGeneration\IThumbnailGenerationProcessor.cs" />
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationResult.cs" />
+    <Compile Include="ThumbnailGeneration\ThumbnailTaskProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

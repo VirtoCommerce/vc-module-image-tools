@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.Services
+﻿using System.Linq;
+
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     using VirtoCommerce.ImageToolsModule.Core.Models;
     using VirtoCommerce.ImageToolsModule.Core.Services;
@@ -20,10 +22,14 @@
 
         public ThumbnailTask[] GetByIds(string[] ids)
         {
-            throw new System.NotImplementedException();
         }
 
         public void Delete(string[] ids)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DeleteByIds(string[] ids)
         {
             throw new System.NotImplementedException();
         }

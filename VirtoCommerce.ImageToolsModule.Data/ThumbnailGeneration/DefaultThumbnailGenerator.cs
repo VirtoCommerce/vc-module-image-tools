@@ -1,18 +1,28 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+
+namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
-    using System;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using VirtoCommerce.ImageToolsModule.Core.Models;
-    using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-
-    public class DefaultThumbnailGenerator : IDefaultThumbnailGenerator
+    /// <summary>
+    /// Generates thumbnails by certain criteria
+    /// </summary>
+    public class DefaultThumbnailGenerator : IThumbnailGenerator
     {
+        /// <summary>
+        /// Generates thumbnails asynchronously
+        /// </summary>
+        /// <param name="sourcePath">Contains source pictures</param>
+        /// <param name="destPath">Target folder for generated thumbnails</param>
+        /// <param name="option">Represents generation options</param>
+        /// <param name="token">Allows cancel operation</param>
+        /// <returns></returns>
         public async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(
             string sourcePath,
             string destPath,
@@ -87,22 +97,20 @@
 
         private static Image ScaleImage(Image image, decimal width, decimal height)
         {
-            decimal widthRatio = (decimal)image.Width / width;
-            decimal heightRatio = (decimal)image.Height / height;
+            var widthRatio = image.Width / width;
+            var heightRatio = image.Height / height;
 
             // Resize to the greatest ratio
-            decimal ratio = heightRatio > widthRatio ? heightRatio : widthRatio;
-            int newWidth = Convert.ToInt32(Math.Floor((decimal)image.Width / ratio));
-            int newHeight = Convert.ToInt32(Math.Floor((decimal)image.Height / ratio));
+            var ratio = heightRatio > widthRatio ? heightRatio : widthRatio;
+            var newWidth = Convert.ToInt32(Math.Floor(image.Width / ratio));
+            var newHeight = Convert.ToInt32(Math.Floor(image.Height / ratio));
 
             return image.GetThumbnailImage(newWidth, newHeight, null, IntPtr.Zero);
         }
 
         private static Image ResizeImage(Image image, decimal width, decimal height)
         {
-            var rectangle = new Rectangle(0, 0, (int)width, (int)height);
             var destImage = new Bitmap((int)width, (int)height);
-
             destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
             using (var graphics = Graphics.FromImage(destImage))
@@ -116,6 +124,7 @@
                 using (var attributes = new ImageAttributes())
                 {
                     attributes.SetWrapMode(WrapMode.TileFlipXY);
+                    var rectangle = new Rectangle(0, 0, (int)width, (int)height);
                     graphics.DrawImage(
                         image,
                         rectangle,
@@ -137,8 +146,7 @@
             var topMargin = (image.Height - height) / 2;
             var rectangle = new Rectangle((int)leftMargin, (int)topMargin, (int)width, (int)height);
             var bitmap = new Bitmap(image);
-            var destImage = bitmap.Clone(rectangle, PixelFormat.DontCare);
-            return destImage;
+            return bitmap.Clone(rectangle, PixelFormat.DontCare);
         }
 
         private static ImageFormat GetImageFormat(string fileSuffix)

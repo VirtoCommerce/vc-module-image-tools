@@ -7,8 +7,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
     using VirtoCommerce.ImageToolsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Common;
 
-    class ThumbnailOptionEntity : AuditableEntity
+    public class ThumbnailOptionEntity // : AuditableEntity
     {
+        public string Id { get; set; }
+        
         [Required]
         [StringLength(1024)]
         public string Name { get; set; }

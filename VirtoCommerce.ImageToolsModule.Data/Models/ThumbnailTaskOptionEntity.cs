@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
-    internal class ThumbnailTaskOptionEntity
+    public class ThumbnailTaskOptionEntity
     {
         public string Id { get; set; }
 

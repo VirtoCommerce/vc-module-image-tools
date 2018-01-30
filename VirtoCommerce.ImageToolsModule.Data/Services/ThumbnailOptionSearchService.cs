@@ -10,7 +10,12 @@
     {
         private readonly IThumbnailRepository _repository;
 
-        public ThumbnailsOptionsController(IThumbnailRepository repository)
+        public ThumbnailOptionSearchService()
+        {
+            
+        }
+
+        public ThumbnailOptionSearchService(IThumbnailRepository repository)
         {
             this._repository = repository;
         }
