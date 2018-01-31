@@ -1,54 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NUnit.Framework;
 using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
 {
-    [TestFixture]
     public class ThumbnailOptionSearchServiceTests
     {
-        [Test]
+        private class ThumbnailOptionEntityComparer : IEqualityComparer<ThumbnailOptionEntity>
+        {
+            public bool Equals(ThumbnailOptionEntity x, ThumbnailOptionEntity y)
+            {
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(ThumbnailOptionEntity obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+        
+        [Fact]
         public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailOption()
         {
-            var optionEntites = new ThumbnailOptionEntity[10];
-
-            for (int i = 0; i < optionEntites.Length; i++)
-            {
-                var task = new ThumbnailOptionEntity();
-                task.Id = Guid.NewGuid().ToString();
-                optionEntites[i] = task;
-            }
+            var optionEntites = ThumbnailOptionEntitesDataSource.ToArray();
 
             var ids = optionEntites.Select(t => t.Id).ToArray();
             var tasks = optionEntites.Select(t => t.ToModel(new ThumbnailOption())).ToArray();
             
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids))).Returns(optionEntites);
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids))).Returns(optionEntites.Where(o => ids.Contains(o.Id)).ToArray());
 
             var sut = new ThumbnailTaskService(mock.Object);
             var result = sut.GetByIds(ids);
             
-            Assert.That(result, Is.EqualTo(tasks));
+            Assert.Equal(result, tasks, new ThumbnailOptionEntityComparer());
         }
 
-        [Test]
+        [Fact]
         public void Delete_ThumbnailOptionIds_DeletedThumbnailOptionWithPassedIds()
         {
-            var optionEntites = new List<ThumbnailOptionEntity>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                var task = new ThumbnailOptionEntity();
-                task.Id = Guid.NewGuid().ToString();
-                optionEntites.Add(task);
-            }
+            var optionEntites = ThumbnailOptionEntitesDataSource.ToList();
 
             var ids = optionEntites.Select(t => t.Id).ToArray();
 
@@ -66,7 +62,61 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var sut = new ThumbnailTaskService(mock.Object);
             sut.DeleteByIds(ids);
             
-            Assert.That(optionEntites, Is.Empty);    
+            Assert.Empty(optionEntites);
+        }
+        
+        [Fact]
+        public void SaveChanges_ArrayOfThumbnailOptions_ThumbnailOptionsUpdated()
+        {
+            var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
+            var options = ThumbnailOptionDataSource.ToArray();
+            
+            var mock = new Mock<IThumbnailRepository>();
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
+                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
+            
+            var sut = new ThumbnailOptionSearchService(mock.Object);
+            sut.SaveChanges(options);
+            
+            Assert.Contains(optionEntities, o => o.Name == "New Name");
+        }
+        
+        [Fact]
+        public void SaveChanges_ArrayOfThumbnailOptions_NewThumbnailOptionsSaved()
+        {
+            var options = ThumbnailOptionDataSource.ToArray();
+            var optionEntities = new List<ThumbnailOptionEntity>();
+            
+            var mock = new Mock<IThumbnailRepository>();
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
+                .Returns((string[] ids) => {return optionEntities.Where(t => ids.Contains(t.Id)).ToArray();});
+            
+            var sut = new ThumbnailOptionSearchService(mock.Object);
+            sut.SaveChanges(options);
+            
+            Assert.NotEmpty(optionEntities);
+        }
+
+        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
+        {
+            get
+            {
+                int i = 0;
+                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
+                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
+                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
+            }
+        }
+        
+        private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
+        {
+            get
+            {
+                int i = 0;
+                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
+                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
+                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
+            }
         }
     }
 }

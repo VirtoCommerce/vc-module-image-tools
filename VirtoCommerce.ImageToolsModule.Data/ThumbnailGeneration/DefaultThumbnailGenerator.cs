@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.Platform.Core.Assets;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
@@ -15,6 +16,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     /// </summary>
     public class DefaultThumbnailGenerator : IThumbnailGenerator
     {
+        private IBlobStorageProvider _storageProvider;
+
+        public DefaultThumbnailGenerator(IBlobStorageProvider storageProvider)
+        {
+            _storageProvider = storageProvider;
+        }
+
         /// <summary>
         /// Generates thumbnails asynchronously
         /// </summary>
