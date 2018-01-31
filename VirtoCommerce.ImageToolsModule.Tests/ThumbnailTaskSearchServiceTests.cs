@@ -46,10 +46,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public void SerchTasks_KeywordString_ReturnsKeywordMatchingGenericSearchResponseOfTasks()
         {
-            var taskEntitys = ThumbnailTaskEntitysDataSource.ToArray();
-            var expectedTasks = ThumbnailTasksDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
-
             var keyword = "New Name";
+            var taskEntitys = ThumbnailTaskEntitysDataSource.ToArray();
+            var expectedTasks = ThumbnailTasksDataSource.Where(t => t.Name == keyword).ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
@@ -83,6 +82,5 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 yield return new ThumbnailTask() {Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path"};
             }
         }
-
     }
 }
