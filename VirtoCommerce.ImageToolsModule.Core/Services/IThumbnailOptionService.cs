@@ -4,10 +4,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
 {
     public interface IThumbnailOptionService
     {
-        void SaveChanges(ThumbnailOption[] options);
+        void SaveThumbnailOptions(ThumbnailOption[] options);
 
         ThumbnailOption[] GetByIds(string[] ids);
 
-        void Delete(string[] ids);
+        void RemoveByIds(string[] ids);
     }
 }

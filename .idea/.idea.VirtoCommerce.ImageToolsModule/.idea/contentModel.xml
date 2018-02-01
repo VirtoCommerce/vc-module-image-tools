@@ -11,6 +11,7 @@
       <e p="VirtoCommerce.ImageToolsModule.Core" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
         <e p="Models" t="Include">
+          <e p="GenericSearchResponse.cs" t="Include" />
           <e p="ResizeMethod.cs" t="Include" />
           <e p="SearchCriteriaBase.cs" t="Include" />
           <e p="ThumbnailOption.cs" t="Include" />

@@ -38,7 +38,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var sut = new ThumbnailTaskService(mock.Object);
             var result = sut.GetByIds(ids);
             
-            Assert.Equal(result, tasks, new ThumbnailOptionEntityComparer());
+            Assert.Equal(result, tasks);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var ids = optionEntites.Select(t => t.Id).ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.DeletedThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
+            mock.Setup(r => r.RemoveThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
                 .Callback((string[] arr) =>
                 {
                     var entities = optionEntites.Where(e => arr.Contains(e.Id));
@@ -60,7 +60,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 } );
 
             var sut = new ThumbnailTaskService(mock.Object);
-            sut.DeleteByIds(ids);
+            sut.RemoveByIds(ids);
             
             Assert.Empty(optionEntites);
         }
@@ -76,7 +76,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
             
             var sut = new ThumbnailOptionSearchService(mock.Object);
-            sut.SaveChanges(options);
+            sut.SaveThumbnailOptions(options);
             
             Assert.Contains(optionEntities, o => o.Name == "New Name");
         }
@@ -92,7 +92,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Returns((string[] ids) => {return optionEntities.Where(t => ids.Contains(t.Id)).ToArray();});
             
             var sut = new ThumbnailOptionSearchService(mock.Object);
-            sut.SaveChanges(options);
+            sut.SaveThumbnailOptions(options);
             
             Assert.NotEmpty(optionEntities);
         }

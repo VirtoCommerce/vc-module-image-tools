@@ -4,10 +4,8 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
-    public class ThumbnailTask// : AuditableEntity
+    public class ThumbnailTask : AuditableEntity
     {
-        public string Id { get; set; }
-        
         public string Name { get; set; }
 
         public DateTime? LastRun { get; set; }

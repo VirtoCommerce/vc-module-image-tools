@@ -11,19 +11,6 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ThumbnailTaskSearchServiceTests
     {
-        private class ThumbnailTaskEntityComparer : IEqualityComparer<ThumbnailTaskEntity>
-        {
-            public bool Equals(ThumbnailTaskEntity x, ThumbnailTaskEntity y)
-            {
-                return x.Id == y.Id;
-            }
-
-            public int GetHashCode(ThumbnailTaskEntity obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-        
         [Fact]
         public void SerchTasks_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
@@ -40,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var resultTasks = sut.SerchTasks(criteria);
             
-            Assert.Equal(resultTasks, expectedTasks, new ThumbnailTaskEntityComparer());
+            Assert.Equal(resultTasks, expectedTasks);
         }
         
         [Fact]
@@ -58,7 +45,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var resultTasks = sut.SerchTasks(keyword);
             
-            Assert.Equal(resultTasks, expectedTasks, new ThumbnailTaskEntityComparer());
+            Assert.Equal(resultTasks, expectedTasks);
         }
         
         private static IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitysDataSource

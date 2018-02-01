@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\GenericSearchResponse.cs" />
     <Compile Include="Models\ResizeMethod.cs" />
     <Compile Include="Models\SearchCriteriaBase.cs" />
     <Compile Include="Models\ThumbnailOption.cs" />

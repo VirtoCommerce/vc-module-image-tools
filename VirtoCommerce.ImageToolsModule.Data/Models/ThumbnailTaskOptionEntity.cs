@@ -1,15 +1,15 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.Models
-{
-    public class ThumbnailTaskOptionEntity
-    {
-        public string Id { get; set; }
+﻿using VirtoCommerce.Platform.Core.Common;
 
+namespace VirtoCommerce.ImageToolsModule.Data.Models
+{
+    public class ThumbnailTaskOptionEntity : AuditableEntity
+    {
         public string TaskId { get; set; }
 
         public ThumbnailTaskEntity TaskEntity { get; set; }
 
         public string OptionId { get; set; }
 
-        public ThumbnailTaskOptionEntity OptionEntity { get; set; }
+        public ThumbnailOptionEntity OptionEntity { get; set; }
     }
 }

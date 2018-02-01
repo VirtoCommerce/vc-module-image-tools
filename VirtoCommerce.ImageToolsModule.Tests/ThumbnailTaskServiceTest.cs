@@ -12,19 +12,6 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ThumbnailTaskServiceTest
     {
-        private class ThumbnailTaskEntityComparer : IEqualityComparer<ThumbnailTaskEntity>
-        {
-            public bool Equals(ThumbnailTaskEntity x, ThumbnailTaskEntity y)
-            {
-                return x.Id == y.Id;
-            }
-
-            public int GetHashCode(ThumbnailTaskEntity obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-        
         [Fact]
         public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailTasksWithPassedIds()
         {
@@ -40,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var sut = new ThumbnailTaskService(mock.Object);
             var result = sut.GetByIds(ids);
             
-            Assert.Equal(result, tasks, new ThumbnailTaskEntityComparer());
+            Assert.Equal(result, tasks);
         }
 
         [Fact]
@@ -51,7 +38,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var ids = taskEntites.Select(t => t.Id).ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.DeletedThumbnailTasksByIds(It.IsIn<string[]>(ids)))
+            mock.Setup(r => r.RemoveThumbnailTasksByIds(It.IsIn<string[]>(ids)))
                 .Callback((string[] arr) =>
                 {
                     var entities = taskEntites.Where(e => arr.Contains(e.Id));
@@ -62,7 +49,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 } );
 
             var sut = new ThumbnailTaskService(mock.Object);
-            sut.DeleteByIds(ids);
+            sut.RemoveByIds(ids);
             
             Assert.Empty(taskEntites);
         }
@@ -78,7 +65,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Returns((string[] ids) => { return taskEntitys.Where(t => ids.Contains(t.Id)).ToArray(); });
             
             var sut = new ThumbnailTaskService(mock.Object);
-            sut.SaveChanges(tasks);
+            sut.SaveThumbnailTasks(tasks);
             
             Assert.Contains(taskEntitys, t => t.Name == "New Name");
             Assert.Contains(taskEntitys, t => t.WorkPath == "New Path");
@@ -96,7 +83,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Returns((string[] ids) => { return taskEntitys.Where(t => ids.Contains(t.Id)).ToArray(); });
             
             var sut = new ThumbnailTaskService(mock.Object);
-            sut.SaveChanges(tasks);
+            sut.SaveThumbnailTasks(tasks);
             
             Assert.NotEmpty(taskEntitys);
             Assert.Equal(taskEntitys.Count, tasks.Length);

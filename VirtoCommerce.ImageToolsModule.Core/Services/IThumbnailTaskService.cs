@@ -4,10 +4,8 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
 {
     public interface IThumbnailTaskService
     {
-        void SaveChanges(ThumbnailTask[] options);
-
+        void SaveThumbnailTasks(ThumbnailTask[] options);
         ThumbnailTask[] GetByIds(string[] ids);
-
-        void Delete(string[] ids);
+        void RemoveByIds(string[] ids);
     }
 }

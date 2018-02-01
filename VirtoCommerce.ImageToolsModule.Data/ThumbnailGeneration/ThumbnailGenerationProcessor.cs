@@ -17,7 +17,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         public Task ProcessTasksAsync(ThumbnailTask[] tasks, Action<ThumbnailTaskProgress> progressCallback, CancellationToken token)
         {
-
+            throw new Exception();
         }
     }
 }
