@@ -24,7 +24,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>(ids)))
                 .Returns(taskEntites.Where(t => ids.Contains(t.Id)).ToArray());
 
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             var result = sut.GetByIds(ids);
             
             Assert.Equal(result, tasks);
@@ -48,7 +48,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 } );
 
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             sut.RemoveByIds(ids);
             
             Assert.Empty(taskEntites);
@@ -64,12 +64,12 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
                 .Returns((string[] ids) => { return taskEntitys.Where(t => ids.Contains(t.Id)).ToArray(); });
             
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             sut.SaveThumbnailTasks(tasks);
             
             Assert.Contains(taskEntitys, t => t.Name == "New Name");
             Assert.Contains(taskEntitys, t => t.WorkPath == "New Path");
-            Assert.Contains(taskEntitys, t => t.ThumbnailTaskOptions == tasks.First().ThumbnailOptions);
+            Assert.Contains(taskEntitys, t => t.ThumbnailTaskOptionEntities == tasks.First().ThumbnailOptions);
         }
         
         [Fact]
@@ -82,7 +82,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
                 .Returns((string[] ids) => { return taskEntitys.Where(t => ids.Contains(t.Id)).ToArray(); });
             
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             sut.SaveThumbnailTasks(tasks);
             
             Assert.NotEmpty(taskEntitys);

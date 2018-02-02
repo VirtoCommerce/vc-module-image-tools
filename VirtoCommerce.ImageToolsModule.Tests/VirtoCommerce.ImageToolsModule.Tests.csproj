@@ -11,8 +11,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.ImageToolsModule.Tests</RootNamespace>
     <AssemblyName>VirtoCommerce.ImageToolsModule.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,6 +57,9 @@
     <Reference Include="VirtoCommerce.Platform.Core, Version=2.12.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\VirtoCommerce.ImageToolsModule.Web\Bin\VirtoCommerce.Platform.Core.dll</HintPath>
     </Reference>
+    <Reference Include="VirtoCommerce.Platform.Data">
+      <HintPath>..\..\..\Projects\vc-module-marketing\packages\VirtoCommerce.Platform.Data.2.13.15\lib\net461\VirtoCommerce.Platform.Data.dll</HintPath>
+    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
       <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
     </Reference>
@@ -83,7 +87,7 @@
       <Name>VirtoCommerce.ImageToolsModule.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj">
-      <Project>{57f492ce-df19-4117-bacf-70dd51052216}</Project>
+      <Project>{5afd9d53-fd80-4860-9660-151f79e5cf21}</Project>
       <Name>VirtoCommerce.ImageToolsModule.Data</Name>
     </ProjectReference>
   </ItemGroup>

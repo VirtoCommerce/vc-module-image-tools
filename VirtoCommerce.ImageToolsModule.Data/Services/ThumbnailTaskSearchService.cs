@@ -37,7 +37,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
                 var query = repository.ThumbnailTaskEntities.OrderBySortInfos(sortInfos);
 
-                var retVal = new GenericSearchResponse<ThumbnailTask> {TotalCount = query.Count()};
+                var retVal = new GenericSearchResponse<ThumbnailTask> { TotalCount = query.Count() };
 
                 var ids = query.Skip(criteria.Skip).Take(criteria.Take).Select(x => x.Id).ToArray();
                 retVal.Results = repository.GetThumbnailTasksByIds(ids)
@@ -46,10 +46,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 return retVal;
             }
         }
-        
+
         public GenericSearchResponse<ThumbnailTask> SerchTasks(string keyword)
         {
-            return SerchTasks(new ThumbnailOptionSearchCriteria() {SearchPhrase = keyword});
+            return SerchTasks(new ThumbnailOptionSearchCriteria() { SearchPhrase = keyword });
         }
     }
 }

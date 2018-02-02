@@ -29,9 +29,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         public ThumbnailOptionEntity FromModel(ThumbnailOption option, PrimaryKeyResolvingMap pkMap)
         {
             if (option == null) throw new ArgumentNullException(nameof(option));
-            
+
             pkMap.AddPair(option, this);
-            
+
             Name = option.Name;
             FileSuffix = option.FileSuffix;
             ResizeMethod = option.ResizeMethod.ToString();
@@ -39,8 +39,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             CreatedDate = option.CreatedDate;
             ModifiedBy = option.ModifiedBy;
             ModifiedDate = option.ModifiedDate;
-            
-            
 
             return this;
         }
@@ -56,7 +54,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             option.CreatedDate = CreatedDate;
             option.ModifiedBy = ModifiedBy;
             option.ModifiedDate = ModifiedDate;
-            
+
             return option;
         }
 

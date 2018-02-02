@@ -15,23 +15,23 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         public ThumbnailOptionSearchService(Func<IThumbnailRepository> thumbnailRepositoryFactory)
         {
-            _thumbnailRepositoryFactory = thumbnailRepositoryFactory;
+            this._thumbnailRepositoryFactory = thumbnailRepositoryFactory;
         }
 
-        public void SaveThumbnailOptions(ThumbnailOption[] options)
+        public void SaveOrUpdate(ThumbnailOption[] options)
         {
             var pkMap = new PrimaryKeyResolvingMap();
-            using (var repository = _thumbnailRepositoryFactory())
+            using (var repository = this._thumbnailRepositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
-                var existPlanEntities = repository.GetThumbnailOptionsByIds(options.Select(t => t.Id).ToArray());
+                var existOptionEntities = repository.GetThumbnailOptionsByIds(options.Select(t => t.Id).ToArray());
                 foreach (var option in options)
                 {
                     var sourceOptionsEntity = AbstractTypeFactory<ThumbnailOptionEntity>.TryCreateInstance();
                     if (sourceOptionsEntity != null)
                     {
                         sourceOptionsEntity = sourceOptionsEntity.FromModel(option, pkMap);
-                        var targetOptionsEntity = existPlanEntities.FirstOrDefault(x => x.Id == option.Id);
+                        var targetOptionsEntity = existOptionEntities.FirstOrDefault(x => x.Id == option.Id);
                         if (targetOptionsEntity != null)
                         {
                             changeTracker.Attach(targetOptionsEntity);
@@ -51,19 +51,49 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         public ThumbnailOption[] GetByIds(string[] ids)
         {
-            using (var repository = _thumbnailRepositoryFactory())
+            using (var repository = this._thumbnailRepositoryFactory())
             {
                 return repository.GetThumbnailOptionsByIds(ids)
-                    .Select(x => x.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();             
+                    .Select(x => x.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
             }
         }
 
         public void RemoveByIds(string[] ids)
         {
-            using (var repository = _thumbnailRepositoryFactory())
+            using (var repository = this._thumbnailRepositoryFactory())
             {
                 repository.RemoveThumbnailTasksByIds(ids);
                 CommitChanges(repository);
+            }
+        }
+
+        public GenericSearchResponse<ThumbnailOption> Search(ThumbnailOptionSearchCriteria criteria)
+        {
+            using (var repository = _thumbnailRepositoryFactory())
+            {
+                var sortInfos = criteria.SortInfos;
+
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[]
+                                    {
+                                        new SortInfo
+                                            {
+                                                SortColumn = ReflectionUtility.GetPropertyName<ThumbnailTask>(t => t.CreatedDate),
+                                                SortDirection = SortDirection.Descending
+                                            }
+                                    };
+                }
+
+                var query = repository.ThumbnailTaskEntities.OrderBySortInfos(sortInfos);
+
+                var retVal = new GenericSearchResponse<ThumbnailOption> { TotalCount = query.Count() };
+
+                var ids = query.Skip(criteria.Skip).Take(criteria.Take).Select(x => x.Id).ToArray();
+                retVal.Results = repository.GetThumbnailOptionsByIds(ids)
+                    .Select(t => t.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
+
+                return retVal;
             }
         }
     }

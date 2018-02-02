@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Moq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
@@ -34,12 +34,12 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             Assert.Equal(true, called);
         }
-        
+
         [Fact]
         public async Task ProcessTasksAsync_ValidValues_GenerationProcessWasInterrupted()
         {
             var genResult = new ThumbnailGenerationResult();
-            
+
             var mock = new Mock<IThumbnailGenerator>();
             mock.Setup(g => g.GenerateThumbnailsAsync(It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<ThumbnailOption>(), It.IsAny<CancellationToken>()))
@@ -48,11 +48,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     for (int i = 0; i < 5; i++)
                     {
                         if (token.IsCancellationRequested) return genResult;
-                            
+
                         Thread.Sleep(100);
                     }
 
-                    genResult.GeneratedThumbnails.AddRange(new[]{"Nail 1", "Nail 2", "Nail 3"});
+                    genResult.GeneratedThumbnails.AddRange(new[] { "Nail 1", "Nail 2", "Nail 3" });
                     return genResult;
                 });
 
@@ -65,20 +65,20 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 Thread.Sleep(100);
                 source.Cancel();
             });
-            
-            await sud.ProcessTasksAsync(tasks, p => { } , source.Token);
-            
+
+            await sud.ProcessTasksAsync(tasks, p => { }, source.Token);
+
             Assert.Empty(genResult.GeneratedThumbnails);
         }
-        
+
         private static IEnumerable<ThumbnailTask> ThumbnailTasksDataSource
         {
             get
             {
                 int i = 0;
-                yield return new ThumbnailTask() {Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path"};
-                yield return new ThumbnailTask() {Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path"};
-                yield return new ThumbnailTask() {Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path"};
+                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
+                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
+                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
             }
         }
     }

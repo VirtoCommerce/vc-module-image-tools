@@ -4,6 +4,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
+
     public abstract class SearchCriteriaBase
     {
         public string ResponseGroup { get; set; }

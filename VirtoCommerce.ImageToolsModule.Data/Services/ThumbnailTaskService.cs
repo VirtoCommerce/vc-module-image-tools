@@ -43,7 +43,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                         }
                     }
                 }
-                
+
                 pkMap.ResolvePrimaryKeys();
                 CommitChanges(repository);
             }

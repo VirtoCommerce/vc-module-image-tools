@@ -1,15 +1,13 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.ImageToolsModule.Data.Models;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 {
     /// <summary>
-    /// The thumbnail repository impl.
+    /// The thumbnail repository implementation.
     /// </summary>
     public class ThumbnailRepositoryImpl : EFRepositoryBase, IThumbnailRepository
     {
@@ -28,40 +26,39 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             #region ThumbnailTaskEntity
 
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask").HasKey(t => t.Id).Property(t => t.Id);
-            modelBuilder.Entity<ThumbnailTaskEntity>().HasMany(t => t.ThumbnailTaskOptions)
-                .WithRequired(x => x.TaskEntity).WillCascadeOnDelete();
+            modelBuilder.Entity<ThumbnailTaskEntity>().HasMany(t => t.ThumbnailTaskOptionEntities)
+                .WithRequired(x => x.ThumbnailTaskEntity).WillCascadeOnDelete();
 
-            #endregion
+            #endregion ThumbnailTaskEntity
 
             #region ThumbnailOptionEntity
 
             modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption").HasKey(t => t.Id).Property(t => t.Id);
             modelBuilder.Entity<ThumbnailOptionEntity>().HasMany(o => o.ThumbnailTaskOptions)
-                .WithRequired(x => x.OptionEntity).WillCascadeOnDelete();
+                .WithRequired(x => x.ThumbnailOptionEntity).WillCascadeOnDelete();
 
-            #endregion
+            #endregion ThumbnailOptionEntity
 
             #region ThumbnailTaskOptionEntity
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
-            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.TaskEntity)
-                .WithMany(t => t.ThumbnailTaskOptions).WillCascadeOnDelete();
-            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.OptionEntity)
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailTaskEntity)
+                .WithMany(t => t.ThumbnailTaskOptionEntities).WillCascadeOnDelete();
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailOptionEntity)
                 .WithMany(o => o.ThumbnailTaskOptions).WillCascadeOnDelete();
 
-            #endregion
+            #endregion ThumbnailTaskOptionEntity
         }
 
         public IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities => GetAsQueryable<ThumbnailTaskEntity>();
 
         public IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities => GetAsQueryable<ThumbnailOptionEntity>();
-        
+
         public IQueryable<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities => GetAsQueryable<ThumbnailTaskOptionEntity>();
-        
 
         public ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids)
         {
-            return ThumbnailTaskEntities.Include(t => t.ThumbnailTaskOptions).Where(t => ids.Contains(t.Id)).ToArray();
+            return ThumbnailTaskEntities.Include(t => t.ThumbnailTaskOptionEntities).Where(t => ids.Contains(t.Id)).ToArray();
         }
 
         public ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids)
@@ -76,12 +73,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
                 Remove(taskEntity);
             }
         }
-        
+
         public void RemoveThumbnailOptionsByIds(string[] ids)
         {
             foreach (var optionEntity in GetThumbnailOptionsByIds(ids))
             {
                 Remove(optionEntity);
+               
             }
         }
     }

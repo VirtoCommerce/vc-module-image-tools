@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Moq;
+using System.Collections.Generic;
 using System.Linq;
-using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
@@ -11,19 +11,6 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ThumbnailOptionSearchServiceTests
     {
-        private class ThumbnailOptionEntityComparer : IEqualityComparer<ThumbnailOptionEntity>
-        {
-            public bool Equals(ThumbnailOptionEntity x, ThumbnailOptionEntity y)
-            {
-                return x.Id == y.Id;
-            }
-
-            public int GetHashCode(ThumbnailOptionEntity obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-        
         [Fact]
         public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailOption()
         {
@@ -31,14 +18,14 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var ids = optionEntites.Select(t => t.Id).ToArray();
             var tasks = optionEntites.Select(t => t.ToModel(new ThumbnailOption())).ToArray();
-            
+
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids))).Returns(optionEntites.Where(o => ids.Contains(o.Id)).ToArray());
 
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             var result = sut.GetByIds(ids);
-            
-            Assert.Equal(result, tasks);
+
+            Assert.Equal(result.Length, tasks.Length);
         }
 
         [Fact]
@@ -57,43 +44,43 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     {
                         optionEntites.Remove(entity);
                     }
-                } );
+                });
 
-            var sut = new ThumbnailTaskService(mock.Object);
+            var sut = new ThumbnailTaskService(() => mock.Object);
             sut.RemoveByIds(ids);
-            
+
             Assert.Empty(optionEntites);
         }
-        
+
         [Fact]
         public void SaveChanges_ArrayOfThumbnailOptions_ThumbnailOptionsUpdated()
         {
             var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
             var options = ThumbnailOptionDataSource.ToArray();
-            
+
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
                 .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
-            
-            var sut = new ThumbnailOptionSearchService(mock.Object);
-            sut.SaveThumbnailOptions(options);
-            
+
+            var sut = new ThumbnailOptionSearchService(() => mock.Object);
+            sut.SaveOrUpdate(options);
+
             Assert.Contains(optionEntities, o => o.Name == "New Name");
         }
-        
+
         [Fact]
         public void SaveChanges_ArrayOfThumbnailOptions_NewThumbnailOptionsSaved()
         {
             var options = ThumbnailOptionDataSource.ToArray();
             var optionEntities = new List<ThumbnailOptionEntity>();
-            
+
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => {return optionEntities.Where(t => ids.Contains(t.Id)).ToArray();});
-            
-            var sut = new ThumbnailOptionSearchService(mock.Object);
-            sut.SaveThumbnailOptions(options);
-            
+                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
+
+            var sut = new ThumbnailOptionSearchService(() => mock.Object);
+            sut.SaveOrUpdate(options);
+
             Assert.NotEmpty(optionEntities);
         }
 
@@ -102,20 +89,20 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             get
             {
                 int i = 0;
-                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
-                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
-                yield return new ThumbnailOptionEntity() {Id = $"Option {++i}"};
+                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
+                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
+                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
             }
         }
-        
+
         private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
         {
             get
             {
                 int i = 0;
-                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
-                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
-                yield return new ThumbnailOption() {Id = $"Option {++i}", Name = "New Name"};
+                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
+                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
+                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
             }
         }
     }

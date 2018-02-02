@@ -8,18 +8,21 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
     public interface IThumbnailRepository : IRepository
     {
         /// <summary>
-        /// Gets the thumbnail tasks.
+        /// Gets the thumbnail tasks entities.
         /// </summary>
         IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities { get; }
 
         /// <summary>
-        /// Gets the thumbnail options.
+        /// Gets the thumbnail options entities.
         /// </summary>
         IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities { get; }
 
         ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids);
+
         ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids);
+
         void RemoveThumbnailTasksByIds(string[] ids);
+
         void RemoveThumbnailOptionsByIds(string[] ids);
     }
 }
