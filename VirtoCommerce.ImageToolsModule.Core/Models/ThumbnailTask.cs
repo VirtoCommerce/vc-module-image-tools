@@ -1,9 +1,9 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Core.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using VirtoCommerce.Platform.Core.Common;
+﻿using System;
+using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Common;
 
+namespace VirtoCommerce.ImageToolsModule.Core.Models
+{
     public class ThumbnailTask : AuditableEntity
     {
         public string Name { get; set; }

@@ -1,59 +1,86 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.Repositories
+﻿using System.Data.Entity;
+using System.Linq;
+using VirtoCommerce.ImageToolsModule.Data.Models;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+
+namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 {
-    using System.Data.Entity;
-    using System.Linq;
-
-    using VirtoCommerce.ImageToolsModule.Core.Services;
-    using VirtoCommerce.Platform.Data.Infrastructure;
-    using VirtoCommerce.ImageToolsModule.Data.Models;
-
     /// <summary>
-    /// The thumbnail repository impl.
+    /// The thumbnail repository implementation.
     /// </summary>
     public class ThumbnailRepositoryImpl : EFRepositoryBase, IThumbnailRepository
     {
-        private IThumbnailTaskSearchService thumbnailTaskSearchService;
-
-        private IThumbnailOptionService thumbnailOptionService;
-
-        private IThumbnailTaskService thumbnailTaskService;
-
-        public ThumbnailRepositoryImpl(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailOptionService thumbnailOptionService, IThumbnailTaskService thumbnailTaskService)
+        public ThumbnailRepositoryImpl() : base()
         {
-            this.thumbnailTaskSearchService = thumbnailTaskSearchService;
-            this.thumbnailOptionService = thumbnailOptionService;
-            this.thumbnailTaskService = thumbnailTaskService;
+        }
+
+        public ThumbnailRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Database.SetInitializer<ThumbnailRepositoryImpl>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask");
-            modelBuilder.Entity<ThumbnailTaskEntity>().HasKey(t => t.Id).Property(t => t.Id);
-            modelBuilder.Entity<ThumbnailTaskEntity>().HasMany(t => t.ThumbnailTaskOptions)
-                 .WithRequired(o => o.TaskEntity).WillCascadeOnDelete();
+            #region ThumbnailTaskEntity
 
-            modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption");
-            modelBuilder.Entity<ThumbnailOptionEntity>().HasKey(t => t.Id).Property(t => t.Id);
+            modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask").HasKey(t => t.Id).Property(t => t.Id);
+            modelBuilder.Entity<ThumbnailTaskEntity>().HasMany(t => t.ThumbnailTaskOptionEntities)
+                .WithRequired(x => x.ThumbnailTaskEntity).WillCascadeOnDelete();
+
+            #endregion ThumbnailTaskEntity
+
+            #region ThumbnailOptionEntity
+
+            modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption").HasKey(t => t.Id).Property(t => t.Id);
+            modelBuilder.Entity<ThumbnailOptionEntity>().HasMany(o => o.ThumbnailTaskOptions)
+                .WithRequired(x => x.ThumbnailOptionEntity).WillCascadeOnDelete();
+
+            #endregion ThumbnailOptionEntity
+
+            #region ThumbnailTaskOptionEntity
+
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailTaskEntity)
+                .WithMany(t => t.ThumbnailTaskOptionEntities).WillCascadeOnDelete();
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailOptionEntity)
+                .WithMany(o => o.ThumbnailTaskOptions).WillCascadeOnDelete();
+
+            #endregion ThumbnailTaskOptionEntity
         }
 
-        public IQueryable<ThumbnailTaskEntity> ThumbnailTasks
-        {
-            get { return GetAsQueryable<ThumbnailTaskEntity>(); }
-        }
+        public IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities => GetAsQueryable<ThumbnailTaskEntity>();
 
-        public IQueryable<ThumbnailOptionEntity> ThumbnailOptions
-        {
-            get { return GetAsQueryable<ThumbnailOptionEntity>(); }
-        } 
+        public IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities => GetAsQueryable<ThumbnailOptionEntity>();
+
+        public IQueryable<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities => GetAsQueryable<ThumbnailTaskOptionEntity>();
 
         public ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids)
         {
-            return ThumbnailTasks.Where(t => ids.Contains(t.Id)).ToArray();
+            return ThumbnailTaskEntities.Include(t => t.ThumbnailTaskOptionEntities).Where(t => ids.Contains(t.Id)).ToArray();
         }
 
         public ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids)
         {
-            return ThumbnailOptions.Where(o => ids.Contains(o.Id)).ToArray();
+            return ThumbnailOptionsEntities.Where(o => ids.Contains(o.Id)).ToArray();
+        }
+
+        public void RemoveThumbnailTasksByIds(string[] ids)
+        {
+            foreach (var taskEntity in GetThumbnailTasksByIds(ids))
+            {
+                Remove(taskEntity);
+            }
+        }
+
+        public void RemoveThumbnailOptionsByIds(string[] ids)
+        {
+            foreach (var optionEntity in GetThumbnailOptionsByIds(ids))
+            {
+                Remove(optionEntity);
+               
+            }
         }
     }
 }

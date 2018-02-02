@@ -1,21 +1,28 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Data.Repositories
+﻿using System;
+using System.Linq;
+using VirtoCommerce.ImageToolsModule.Data.Models;
+using VirtoCommerce.Platform.Core.Common;
+
+namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 {
-    using System.Linq;
-    using System.Web.UI.WebControls.WebParts;
-
-    using VirtoCommerce.ImageToolsModule.Data.Models;
-
-    public interface IThumbnailRepository
+    public interface IThumbnailRepository : IRepository
     {
         /// <summary>
-        /// Gets the thumbnail tasks.
+        /// Gets the thumbnail tasks entities.
         /// </summary>
-        IQueryable<ThumbnailTaskEntity> ThumbnailTasks { get; }
+        IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities { get; }
 
-        IQueryable<ThumbnailOptionEntity> ThumbnailOptions { get; }
+        /// <summary>
+        /// Gets the thumbnail options entities.
+        /// </summary>
+        IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities { get; }
 
         ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids);
 
         ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids);
+
+        void RemoveThumbnailTasksByIds(string[] ids);
+
+        void RemoveThumbnailOptionsByIds(string[] ids);
     }
 }

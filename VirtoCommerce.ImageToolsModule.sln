@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Web", "VirtoCommerce.ImageToolsModule.Web\VirtoCommerce.ImageToolsModule.Web.csproj", "{78867A67-9838-4A96-B3BC-3E89AB19CCD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Data", "VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj", "{57F492CE-DF19-4117-BACF-70DD51052216}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Test", "VirtoCommerce.ImageToolsModule.Test\VirtoCommerce.ImageToolsModule.Test.csproj", "{A6EAAEEE-51FF-426C-8320-6E9F6EE1BA16}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Core", "VirtoCommerce.ImageToolsModule.Core\VirtoCommerce.ImageToolsModule.Core.csproj", "{74326EE1-6B14-4B21-9AFB-D243BF13DAF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Tests", "VirtoCommerce.ImageToolsModule.Tests\VirtoCommerce.ImageToolsModule.Tests.csproj", "{9CF967DE-5F2E-4F0F-BF0A-07E477179C14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Data", "VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj", "{5AFD9D53-FD80-4860-9660-151F79E5CF21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +21,18 @@ Global
 		{78867A67-9838-4A96-B3BC-3E89AB19CCD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78867A67-9838-4A96-B3BC-3E89AB19CCD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78867A67-9838-4A96-B3BC-3E89AB19CCD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57F492CE-DF19-4117-BACF-70DD51052216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57F492CE-DF19-4117-BACF-70DD51052216}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57F492CE-DF19-4117-BACF-70DD51052216}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57F492CE-DF19-4117-BACF-70DD51052216}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6EAAEEE-51FF-426C-8320-6E9F6EE1BA16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6EAAEEE-51FF-426C-8320-6E9F6EE1BA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6EAAEEE-51FF-426C-8320-6E9F6EE1BA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6EAAEEE-51FF-426C-8320-6E9F6EE1BA16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74326EE1-6B14-4B21-9AFB-D243BF13DAF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74326EE1-6B14-4B21-9AFB-D243BF13DAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74326EE1-6B14-4B21-9AFB-D243BF13DAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74326EE1-6B14-4B21-9AFB-D243BF13DAF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CF967DE-5F2E-4F0F-BF0A-07E477179C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CF967DE-5F2E-4F0F-BF0A-07E477179C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CF967DE-5F2E-4F0F-BF0A-07E477179C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CF967DE-5F2E-4F0F-BF0A-07E477179C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AFD9D53-FD80-4860-9660-151F79E5CF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFD9D53-FD80-4860-9660-151F79E5CF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFD9D53-FD80-4860-9660-151F79E5CF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFD9D53-FD80-4860-9660-151F79E5CF21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

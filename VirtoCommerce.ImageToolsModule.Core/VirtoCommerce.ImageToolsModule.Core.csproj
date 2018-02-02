@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.ImageToolsModule.Core</RootNamespace>
     <AssemblyName>VirtoCommerce.ImageToolsModule.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.Platform.Core, Version=2.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VirtoCommerce.Platform.Core, Version=2.12.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\VirtoCommerce.Platform.Core.2.12.0\lib\net451\VirtoCommerce.Platform.Core.dll</HintPath>
     </Reference>
     <Reference Include="VirtoCommerce.Platform.Data">
@@ -49,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\GenericSearchResponse.cs" />
     <Compile Include="Models\ResizeMethod.cs" />
     <Compile Include="Models\SearchCriteriaBase.cs" />
     <Compile Include="Models\ThumbnailOption.cs" />
@@ -59,6 +61,10 @@
     <Compile Include="Services\IThumbnailOptionService.cs" />
     <Compile Include="Services\IThumbnailTaskSearchService.cs" />
     <Compile Include="Services\IThumbnailTaskService.cs" />
+    <Compile Include="ThumbnailGeneration\IThumbnailGenerator.cs" />
+    <Compile Include="ThumbnailGeneration\IThumbnailGenerationProcessor.cs" />
+    <Compile Include="ThumbnailGeneration\ThumbnailGenerationResult.cs" />
+    <Compile Include="ThumbnailGeneration\ThumbnailTaskProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

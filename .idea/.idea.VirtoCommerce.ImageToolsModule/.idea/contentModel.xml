@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\ttttt\vc-module-image-tools" t="IncludeFlat">
+      <e p="CommonAssemblyInfo.cs" t="Include" />
+      <e p="packages" t="ExcludeRecursive">
+        <e p="xunit.runner.visualstudio.2.1.0\build\_common\xunit.abstractions.dll" t="Include" />
+        <e p="xunit.runner.visualstudio.2.1.0\build\_common\xunit.runner.utility.desktop.dll" t="Include" />
+        <e p="xunit.runner.visualstudio.2.1.0\build\_common\xunit.runner.visualstudio.testadapter.dll" t="Include" />
+      </e>
+      <e p="VirtoCommerce.ImageToolsModule.Core" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Models" t="Include">
+          <e p="GenericSearchResponse.cs" t="Include" />
+          <e p="ResizeMethod.cs" t="Include" />
+          <e p="SearchCriteriaBase.cs" t="Include" />
+          <e p="ThumbnailOption.cs" t="Include" />
+          <e p="ThumbnailOptionSearchCriteria.cs" t="Include" />
+          <e p="ThumbnailTask.cs" t="Include" />
+          <e p="ThumbnailTaskSearchCriteria.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="IThumbnailOptionService.cs" t="Include" />
+          <e p="IThumbnailTaskSearchService.cs" t="Include" />
+          <e p="IThumbnailTaskService.cs" t="Include" />
+        </e>
+        <e p="ThumbnailGeneration" t="Include">
+          <e p="IThumbnailGenerationProcessor.cs" t="Include" />
+          <e p="IThumbnailGenerator.cs" t="Include" />
+          <e p="ThumbnailGenerationResult.cs" t="Include" />
+          <e p="ThumbnailTaskProgress.cs" t="Include" />
+        </e>
+        <e p="VirtoCommerce.ImageToolsModule.Core.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="VirtoCommerce.ImageToolsModule.Data" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Models" t="Include">
+          <e p="ThumbnailOptionEntity.cs" t="Include" />
+          <e p="ThumbnailTaskEntity.cs" t="Include" />
+          <e p="ThumbnailTaskOptionEntity.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Repositories" t="Include">
+          <e p="IThumbnailRepository.cs" t="Include" />
+          <e p="ThumbnailRepositoryImpl.cs" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="ThumbnailOptionSearchService.cs" t="Include" />
+          <e p="ThumbnailTaskSearchService.cs" t="Include" />
+          <e p="ThumbnailTaskService.cs" t="Include" />
+        </e>
+        <e p="ThumbnailGeneration" t="Include">
+          <e p="DefaultThumbnailGenerator.cs" t="Include" />
+          <e p="ThumbnailGenerationProcessor.cs" t="Include" />
+        </e>
+        <e p="VirtoCommerce.ImageToolsModule.Data.csproj" t="IncludeRecursive" />
+        <e p="VirtoCommerce.ImageToolsModule.Data.nuspec" t="Include" />
+      </e>
+      <e p="VirtoCommerce.ImageToolsModule.sln" t="IncludeFlat" />
+      <e p="VirtoCommerce.ImageToolsModule.Test" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ControllerTest.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Resource.Designer.cs" t="Include" />
+        <e p="Resource.resx" t="Include" />
+        <e p="Resources" t="Include">
+          <e p="Image1.jpg" t="Include" />
+        </e>
+        <e p="ThumbnailServiceTest.cs" t="Include" />
+        <e p="VirtoCommerce.ImageToolsModule.Test.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="VirtoCommerce.ImageToolsModule.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DefaultThumbnailGeneratorTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="ThumbnailGenerationProcessorTest.cs" t="Include" />
+        <e p="ThumbnailOptionSearchServiceTests.cs" t="Include" />
+        <e p="ThumbnailTaskSearchServiceTests.cs" t="Include" />
+        <e p="ThumbnailTaskServiceTest.cs" t="Include" />
+        <e p="VirtoCommerce.ImageToolsModule.Tests.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="VirtoCommerce.ImageToolsModule.Web" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Content" t="Include">
+          <e p="logo.png" t="Include" />
+        </e>
+        <e p="Controllers" t="Include">
+          <e p="Api" t="Include">
+            <e p="ThumbnailsOptionsController.cs" t="Include" />
+            <e p="ThumbnailsTasksController.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Models" t="Include">
+          <e p="ThumbnailsTaskRunRequest.cs" t="Include" />
+        </e>
+        <e p="module.manifest" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="VirtoCommerce.ImageToolsModule.Web.csproj" t="IncludeRecursive" />
+        <e p="Web.config" t="Include" />
+        <e p="Web.Debug.config" t="Include" />
+        <e p="Web.Release.config" t="Include" />
+      </e>
+    </e>
+    <e p="C:\Users\Andre\.Rider2017.3\system\resharper-host\local\Transient\ReSharperHost\v11\SolutionCaches\_VirtoCommerce.ImageToolsModule.1266974426.00" t="ExcludeRecursive" />
+  </component>
+</project>
