@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
-namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
+using VirtoCommerce.ImageToolsModule.Core.Models;
+
+namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IThumbnailGenerator
     {
