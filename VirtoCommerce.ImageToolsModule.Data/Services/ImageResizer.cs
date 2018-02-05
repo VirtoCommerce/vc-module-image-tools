@@ -144,7 +144,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         protected virtual Image Transform(Image original, ImageDimensions source, ImageDimensions destination, Size canvasSize, Color? backgroundColor)
         {
-            var bitmap = new Bitmap(canvasSize.Width, canvasSize.Height, PixelFormat.Format24bppRgb);
+            var bitmap = new Bitmap(canvasSize.Width, canvasSize.Height, PixelFormat.Format32bppArgb);
             bitmap.SetResolution(original.HorizontalResolution, original.VerticalResolution);
 
             using (var graphics = Graphics.FromImage(bitmap))
