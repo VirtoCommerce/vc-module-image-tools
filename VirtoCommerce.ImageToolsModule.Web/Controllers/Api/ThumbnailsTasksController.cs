@@ -96,7 +96,7 @@
         [ResponseType(typeof(SearchResult<ThumbnailTask>))]
         public SearchResult<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria)
         {
-            var result = this._thumbnailTaskSearchService.SerchTasks(criteria);
+            var result = this._thumbnailTaskSearchService.Search(criteria);
 
             var searchResult =
                 new SearchResult<ThumbnailTask> { Result = result.Results.ToArray(), TotalCount = result.TotalCount };

@@ -4,6 +4,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
 {
     public interface IThumbnailTaskSearchService
     {
-        GenericSearchResponse<ThumbnailTask> SerchTasks(ThumbnailTaskSearchCriteria criteria);
+        GenericSearchResponse<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria);
     }
 }

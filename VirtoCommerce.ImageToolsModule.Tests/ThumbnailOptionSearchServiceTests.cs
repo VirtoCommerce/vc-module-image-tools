@@ -12,7 +12,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     public class ThumbnailOptionSearchServiceTests
     {
         [Fact]
-        public void SerchTasks_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
+        public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
             var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
             var expectedOptions = ThumbnailOptionDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.Width).ToArray();
