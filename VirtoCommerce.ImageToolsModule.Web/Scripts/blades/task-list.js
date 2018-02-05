@@ -37,7 +37,6 @@
 
 
             $scope.taskRun = function (itemsSelect) {
-                debugger;
                 var dialog = {
                     id: "confirmTaskRun",
                     callback: function (doReindex) {
@@ -48,7 +47,6 @@
                             };
                         });
                         thumbnailApi.taskRun(options).then(function openProgressBlade(data) {
-                            debugger;
                             var newBlade = {
                                 id: 'thumbnailProgress',
                                 notification: data,
@@ -60,7 +58,6 @@
                         });
                     }
                 }
-                debugger;
                 dialogService.showDialog(dialog, '$(Platform)/Scripts/app/thumbnail/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
 
