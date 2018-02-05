@@ -3,6 +3,7 @@
     <id>VirtoCommerce.ImageTools</id>
     <version>1.0.2</version>
     <platformVersion>2.12.0</platformVersion>
+
     <title>Image tools module</title>
     <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
     <authors>
@@ -11,6 +12,7 @@
     <owners>
         <owner>Virto Commerce</owner>
     </owners>
+
     <projectUrl>https://virtocommerce.com/apps/extensions/image-tools-module</projectUrl>
     <iconUrl>Modules/$(VirtoCommerce.ImageTools)/Content/logo.png</iconUrl>
     <releaseNotes>First version.</releaseNotes>
@@ -19,6 +21,13 @@
 
     <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
     <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
+
+    <styles>
+        <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+    </styles>
+    <scripts>
+        <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+    </scripts>
 
     <settings>
         <group name="ImageTools|Thumbnails">
@@ -34,5 +43,15 @@
             </setting>
         </group>
     </settings>
+
+    <permissions>
+        <group name="Thumbnail">
+            <permission id="thumbnail:access" name="" description=""/>
+            <permission id="thumbnail:create" name="" description=""/>
+            <permission id="thumbnail:read" name="" description=""/>
+            <permission id="thumbnail:update" name="" description=""/>
+            <permission id="thumbnail:delete" name="" description=""/>
+        </group>
+    </permissions>
 
 </module>
