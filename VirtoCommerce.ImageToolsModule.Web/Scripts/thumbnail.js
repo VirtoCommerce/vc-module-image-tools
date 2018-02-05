@@ -1,6 +1,9 @@
-﻿var imageToolsModuleName = "virtoCommerce.imageToolsModule";
+﻿var moduleName = "virtoCommerce.imageToolsModule";
 
-angular.module(imageToolsModuleName, ['ui.grid.infiniteScroll'])
+if (AppDependencies != undefined) {
+    AppDependencies.push(moduleName);
+}
+angular.module(moduleName, ['ui.grid.infiniteScroll'])
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('workspace.thumbnail', {
@@ -32,19 +35,4 @@ angular.module(imageToolsModuleName, ['ui.grid.infiniteScroll'])
         mainMenuService.addMenuItem(menuItem);
 
         // ToDo register notification template
-
-        //pushNotificationTemplateResolver.register({
-        //    priority: 900,
-        //    satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'IndexProgressPushNotification'; },
-        //    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
-        //    action: function (notify) {
-        //        var blade = {
-        //            id: 'indexProgress',
-        //            notification: notify,
-        //            controller: 'virtoCommerce.coreModule.indexProgressController',
-        //            template: 'Modules/$(VirtoCommerce.Core)/Scripts/SearchIndex/blades/index-progress.tpl.html'
-        //        };
-        //        bladeNavigationService.showBlade(blade);
-        //    }
-        //});
     }]);

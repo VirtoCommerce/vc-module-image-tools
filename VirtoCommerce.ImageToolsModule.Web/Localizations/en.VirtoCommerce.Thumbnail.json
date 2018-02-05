@@ -1,7 +1,6 @@
 ﻿{
-    "thumbnail": {
-        "main-menu-title": "Thumbnails generation tasks list",
-        "main-blade-title": "List of all tasks for thumbnails generations",
+    "imageTools": {
+        "main-menu-title": "Thumbnails",
         "title": "Thumbnails generation tasks list",
         "subtitle": "List of all tasks for thumbnails generations",
         "blades": {
