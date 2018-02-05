@@ -17,7 +17,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var taskEntitys = ThumbnailTaskEntitysDataSource.ToArray();
             var expectedTasks = ThumbnailTasksDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
 
-            var criteria = new ThumbnailOptionSearchCriteria { Sort = "Name:asc;WorkPath:desc" };
+            var criteria = new ThumbnailTaskSearchCriteria { Sort = "Name:asc;WorkPath:desc" };
 
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
