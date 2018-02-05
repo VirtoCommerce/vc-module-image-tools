@@ -21,7 +21,6 @@ angular.module(imageToolsModuleName, ['ui.grid.infiniteScroll'])
     }])
     .run(
         ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
-        debugger;
         var menuItem = {
             path: 'browse/thumbnail',
             icon: 'fa fa-picture-o',

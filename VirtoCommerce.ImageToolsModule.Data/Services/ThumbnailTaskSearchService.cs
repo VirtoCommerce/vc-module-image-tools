@@ -49,7 +49,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
         public GenericSearchResponse<ThumbnailTask> SerchTasks(string keyword)
         {
-            return SerchTasks(new ThumbnailOptionSearchCriteria() { SearchPhrase = keyword });
+            return SerchTasks(new ThumbnailTaskSearchCriteria());
         }
     }
 }
