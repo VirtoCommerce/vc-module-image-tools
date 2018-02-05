@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .factory('platformWebApp.thumbnail.api', ['$resource', '$timeout', function ($resource, $timeout) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .factory('virtoCommerce.imageToolsModule.api', ['$resource', '$timeout', function ($resource, $timeout) {
         return {
             getTaskList: function () {
                 var list = [

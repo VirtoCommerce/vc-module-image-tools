@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api',
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.api',
         function ($scope, bladeNavigationService, thumbnailApi) {
             var blade = $scope.blade;
 
@@ -25,8 +25,8 @@
             function showDetailBlade(bladeData) {
                 var newBlade = {
                     id: 'optionDetail',
-                    controller: 'platformWebApp.thumbnail.optionDetailController',
-                    template: '$(Platform)/Scripts/app/thumbnail/blades/option-detail.tpl.html'
+                    controller: 'virtoCommerce.imageToolsModule.optionDetailController',
+                    template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/option-detail.tpl.html'
                 };
                 angular.extend(newBlade, bladeData);
                 bladeNavigationService.showBlade(newBlade, blade);

@@ -1,10 +1,10 @@
 ﻿{
     "imageTools": {
         "main-menu-title": "Thumbnails",
-        "title": "Thumbnails generation tasks list",
-        "subtitle": "List of all tasks for thumbnails generations",
         "blades": {
             "tasks-list": {
+                "title": "Thumbnails generation tasks list",
+                "subtitle": "List of all tasks for thumbnails generations",
                 "labels": {
                     "task-name": "Task Name",
                     "last-run": "Last run"
@@ -74,6 +74,9 @@
                 "btn-changes": "Progress changes",
                 "btn-regenerate": "Regenerate"
             }
-        }
+        },
+        "commands": {
+            "run": "Run" 
+        } 
     }
 }

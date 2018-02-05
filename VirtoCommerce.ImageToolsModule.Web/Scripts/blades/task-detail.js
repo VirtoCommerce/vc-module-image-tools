@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api', function ($rootScope, $scope, bladeNavigationService, thumbnailApi) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.api', function ($rootScope, $scope, bladeNavigationService, thumbnailApi) {
         var blade = $scope.blade;
 
         blade.refresh = function (parentRefresh) {
@@ -80,7 +80,7 @@
                 }
             },
             {
-                name: "platform.commands.run",
+                name: "imageTools.commands.run",
                 icon: 'fa fa-exclamation',
                 executeMethod: blade.refresh,
                 canExecuteMethod: function () {
@@ -101,10 +101,10 @@
             var newBlade = {
                 id: 'optionListDetail',
                 currentEntityId: blade.itemId,
-                title: 'platform.blades.thumbnail.blades.setting-managment.title',
-                subtitle: 'platform.blades.thumbnail.blades.setting-managment.subtitle',
-                controller: 'platformWebApp.thumbnail.optionListController',
-                template: '$(Platform)/Scripts/app/thumbnail/blades/option-list.tpl.html'
+                title: 'imageTools.blades.setting-managment.title',
+                subtitle: 'imageTools.blades.setting-managment.subtitle',
+                controller: 'virtoCommerce.imageToolsModule.optionListController',
+                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/option-list.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };

@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api', 'platformWebApp.thumbnail.resizeMethod', function ($rootScope, $scope, dialogService, bladeNavigationService, thumbnailApi, resizeMethod) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.api', 'virtoCommerce.imageToolsModule.resizeMethod', function ($rootScope, $scope, dialogService, bladeNavigationService, thumbnailApi, resizeMethod) {
         var blade = $scope.blade;
 
         blade.resizeMethodTypes = resizeMethod.get();
@@ -12,8 +12,8 @@
             blade.origEntity = data;
             blade.isLoading = false;
 
-            blade.title = blade.isNew ? 'platform.blades.thumbnail.blades.setting-detail.title' : data.name;
-            blade.subtitle = 'platform.blades.thumbnail.blades.setting-detail.subtitle';
+            blade.title = blade.isNew ? 'imageTools.blades.setting-detail.title' : data.name;
+            blade.subtitle = 'imageTools.blades.setting-detail.subtitle';
         };
 
 

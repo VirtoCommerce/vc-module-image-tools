@@ -7,11 +7,11 @@
                     <div class="form-group clearfix">
                         <div class="column">
                             <div class="form-group __info list">
-                                <label class="form-label">{{ 'platform.blades.thumbnail.blades.task-detail.labels.name' | translate }}</label>
+                                <label class="form-label">{{ 'imageTools.blades.task-detail.labels.name' | translate }}</label>
                                 <div class="form-input">
                                     <input ng-class="{'error': detailForm.name.$invalid && !detailForm.name.$pristine}" placeholder="{{ 'catalog.blades.item-detail.placeholders.gtin' | translate }}" class="form-control" ng-model="blade.item.name" name="name" type="text" />
                                 </div>
-                                <div class="list-descr">{{ 'platform.blades.thumbnail.blades.task-detail.descriptions.name' | translate }}</div>
+                                <div class="list-descr">{{ 'imageTools.blades.task-detail.descriptions.name' | translate }}</div>
                             </div>
                         </div>
                     </div>
@@ -19,14 +19,14 @@
                     <div class="form-group">
                         <div class="column">
                             <div class="form-group __info list">
-                                <label class="form-label">{{ 'platform.blades.thumbnail.blades.task-detail.labels.path-images' | translate }}</label>
+                                <label class="form-label">{{ 'imageTools.blades.task-detail.labels.path-images' | translate }}</label>
                                 <div class="form-input __file">
                                     <input ng-model="blade.item.workPath" placeholder="{{ 'catalog.blades.images.placeholders.image-url' | translate }}" tabindex="-1">
                                     <button class="btn __file" type="button" ng-click="addImageFromUrl()" title="Add image by URL">
                                         <i class="btn-ico fa fa-folder-open-o"></i>
                                     </button>
                                 </div>
-                                <div class="list-descr">{{ 'platform.blades.thumbnail.blades.task-detail.descriptions.path-images' | translate }}</div>
+                                <div class="list-descr">{{ 'imageTools.blades.task-detail.descriptions.path-images' | translate }}</div>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <div class="column">
                             <div class="form-group __info list">
                                 <div class="form-input">
-                                    <label class="form-label">{{ 'platform.blades.thumbnail.blades.task-detail.labels.thumbnail-settings' | translate }} <a href="" ng-click="blade.openSettingManagement()" class="form-edit" va-permission="customer:read"><i class="form-ico fa fa-pencil"></i></a></label>
+                                    <label class="form-label">{{ 'imageTools.blades.task-detail.labels.thumbnail-settings' | translate }} <a href="" ng-click="blade.openSettingManagement()" class="form-edit" va-permission="customer:read"><i class="form-ico fa fa-pencil"></i></a></label>
                                     <div class="form-input">
                                         <ui-select multiple ng-model="blade.item.thumbnailOptions" ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required">
                                             <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
@@ -45,7 +45,7 @@
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>
-                                    <div class="list-descr">{{ 'platform.blades.thumbnail.blades.task-detail.descriptions.thumbnail-settings' | translate }}</div>
+                                    <div class="list-descr">{{ 'imageTools.blades.task-detail.descriptions.thumbnail-settings' | translate }}</div>
                                 </div>
                             </div>
                         </div>

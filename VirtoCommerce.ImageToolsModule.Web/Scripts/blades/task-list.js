@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.thumbnail.api', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService',
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'virtoCommerce.imageToolsModule.api', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService',
         function ($scope, bladeNavigationService, bladeUtils, thumbnailApi, uiGridHelper, dialogService) {
             var blade = $scope.blade;
 
@@ -27,10 +27,10 @@
                 var newBlade = {
                     id: "listTaskDetail",
                     itemId: listItem.id,
-                    title: 'platform.blades.thumbnail.blades.task-detail.title',
-                    subtitle: 'platform.blades.thumbnail.blades.task-detail.subtitle',
-                    controller: 'platformWebApp.thumbnail.taskDetailController',
-                    template: '$(Platform)/Scripts/app/thumbnail/blades/task-detail.tpl.html'
+                    title: 'imageTools.blades.task-detail.title',
+                    subtitle: 'imageTools.blades.task-detail.subtitle',
+                    controller: 'virtoCommerce.imageToolsModule.taskDetailController',
+                    template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
@@ -93,7 +93,7 @@
                     }
                 },
                 {
-                    name: "platform.commands.run",
+                    name: "imageTools.commands.run",
                     icon: 'fa fa-exclamation',
                     canExecuteMethod: function () {
                         return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
