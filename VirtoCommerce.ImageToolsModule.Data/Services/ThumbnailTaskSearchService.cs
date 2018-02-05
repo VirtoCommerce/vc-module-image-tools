@@ -17,7 +17,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             _thumbnailRepositoryFactory = thumbnailThumbnailRepositoryFactoryFactory;
         }
 
-        public GenericSearchResponse<ThumbnailTask> SerchTasks(ThumbnailOptionSearchCriteria criteria)
+        public GenericSearchResponse<ThumbnailTask> SerchTasks(ThumbnailTaskSearchCriteria criteria)
         {
             using (var repository = _thumbnailRepositoryFactory())
             {

@@ -8,16 +8,13 @@ using VirtoCommerce.ImageToolsModule.Web.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [RoutePrefix("api/image/thumbnails/options")]
     public class ThumbnailsOptionsController : ApiController
     {
         private IThumbnailOptionService _thumbnailOptionService;
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
         /// <param name="thumbnailOptionService"></param>
         public ThumbnailsOptionsController(IThumbnailOptionService thumbnailOptionService)
@@ -68,20 +65,20 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Searches for thumbnail options
+        /// Searches thumbnail options
         /// </summary>
         /// <param name="criteria">Search criteria</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(SearchResult))]
-        public SearchResult Search(ThumbnailOptionSearchCriteria criteria)
+        [ResponseType(typeof(SearchResult<ThumbnailOption>))]
+        public SearchResult<ThumbnailOption> Search(ThumbnailOptionSearchCriteria criteria)
         {
             var result = _thumbnailOptionService.Search(criteria);
 
-            var searchResult = new SearchResult()
+            var searchResult = new SearchResult<ThumbnailOption>
             {
-                ThumbnailOptions = result.Results.ToArray(),
+                Result = result.Results.ToArray(),
                 TotalCount = result.TotalCount
             };
 

@@ -5,12 +5,12 @@
     /// <summary>
     /// 
     /// </summary>
-    public class SearchResult
+    public class SearchResult<TItem>
     {
         /// <summary>
         /// 
         /// </summary>
-        public ThumbnailOption[] ThumbnailOptions { get; set; }
+        public TItem[] Result { get; set; }
 
         /// <summary>
         /// 

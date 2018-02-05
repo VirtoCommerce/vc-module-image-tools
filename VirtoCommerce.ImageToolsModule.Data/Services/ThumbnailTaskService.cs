@@ -18,7 +18,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             _thumbnailRepositoryFactory = thumbnailRepositoryFactory;
         }
 
-        public void SaveThumbnailTasks(ThumbnailTask[] tasks)
+        public void SaveOrUpdate(ThumbnailTask[] tasks)
         {
             var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _thumbnailRepositoryFactory())
