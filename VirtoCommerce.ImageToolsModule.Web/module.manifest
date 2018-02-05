@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.ImageTools</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <platformVersion>2.12.0</platformVersion>
     <title>Image tools module</title>
     <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
