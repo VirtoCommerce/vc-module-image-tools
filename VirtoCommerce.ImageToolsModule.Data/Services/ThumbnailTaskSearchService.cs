@@ -17,7 +17,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             _thumbnailRepositoryFactory = thumbnailThumbnailRepositoryFactoryFactory;
         }
 
-        public GenericSearchResponse<ThumbnailTask> SerchTasks(ThumbnailTaskSearchCriteria criteria)
+        public GenericSearchResponse<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria)
         {
             using (var repository = _thumbnailRepositoryFactory())
             {
@@ -47,9 +47,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             }
         }
 
-        public GenericSearchResponse<ThumbnailTask> SerchTasks(string keyword)
+        public GenericSearchResponse<ThumbnailTask> Search(string keyword)
         {
-            return SerchTasks(new ThumbnailTaskSearchCriteria { SearchPhrase = keyword });
+            return this.Search(new ThumbnailTaskSearchCriteria { SearchPhrase = keyword });
         }
     }
 }

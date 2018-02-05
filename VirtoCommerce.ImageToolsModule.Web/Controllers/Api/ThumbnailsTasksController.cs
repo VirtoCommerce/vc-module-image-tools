@@ -9,6 +9,9 @@
     using VirtoCommerce.ImageToolsModule.Core.Services;
     using VirtoCommerce.ImageToolsModule.Web.Models;
 
+    /// <summary>
+    /// Thumbnails tasks controller
+    /// </summary>
     [RoutePrefix("api/image/thumbnails/tasks")]
     public class ThumbnailsTasksController : ApiController
     {
@@ -28,17 +31,12 @@
             this._thumbnailTaskService = thumbnailTaskService;
         }
 
-        /// <summary>
-        /// Cancels thumbnail task by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("{id}/cancel")]
-        public IHttpActionResult Cancel(string id)
-        {
-            return this.Ok();
-        }
+//        [HttpGet]
+//        [Route("{id}/cancel")]
+//        public IHttpActionResult Cancel(string id)
+//        {
+//            return this.Ok();
+//        }
 
         /// <summary>
         /// Creates thumbnail task
@@ -81,17 +79,12 @@
             return this.Ok(task);
         }
 
-        /// <summary>
-        /// Runs thumbnail task by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("{id}/run")]
-        public IHttpActionResult Run(string id)
-        {
-            return this.Ok();
-        }
+//        [HttpGet]
+//        [Route("{id}/run")]
+//        public IHttpActionResult Run(string id)
+//        {
+//            return this.Ok();
+//        }
 
         /// <summary>
         /// Searches thumbnail options by certain criteria
@@ -103,7 +96,7 @@
         [ResponseType(typeof(SearchResult<ThumbnailTask>))]
         public SearchResult<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria)
         {
-            var result = this._thumbnailTaskSearchService.SerchTasks(criteria);
+            var result = this._thumbnailTaskSearchService.Search(criteria);
 
             var searchResult =
                 new SearchResult<ThumbnailTask> { Result = result.Results.ToArray(), TotalCount = result.TotalCount };
