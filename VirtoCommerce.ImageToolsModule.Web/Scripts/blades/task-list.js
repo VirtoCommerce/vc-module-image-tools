@@ -36,6 +36,40 @@
             };
 
 
+            $scope.selectNode = function (node, isNew) {
+                $scope.selectedNodeId = node.id;
+
+                var newBlade = {
+                    id: 'listTaskDetail',
+                    controller: 'virtoCommerce.imageToolsModule.taskDetailController',
+                    template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-detail.tpl.html'
+                };
+
+                if (isNew) {
+                    angular.extend(newBlade, {
+                        title: 'pricing.blades.pricelist-detail.title-new',
+                        isNew: true,
+                        saveCallback: function (newPricelist) {
+                            newBlade.isNew = false;
+                            blade.refresh(true).then(function () {
+                                newBlade.currentEntityId = newPricelist.id;
+                                bladeNavigationService.showBlade(newBlade, blade);
+                            });
+                        }
+                        // onChangesConfirmedFn: callback,
+                    });
+                } else {
+                    angular.extend(newBlade, {
+                        currentEntityId: node.id,
+                        title: node.name,
+                        subtitle: 'imageTools.blades.task-detail.subtitle'
+                    });
+                }
+
+                bladeNavigationService.showBlade(newBlade, blade);
+            };
+
+
             $scope.taskRun = function (itemsSelect) {
                 var dialog = {
                     id: "confirmTaskRun",
@@ -61,6 +95,14 @@
                 dialogService.showDialog(dialog, '$(Platform)/Scripts/app/thumbnail/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
 
+            function isItemsChecked() {
+                return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+            }
+
+            function getSelectedItems() {
+                return $scope.gridApi.selection.getSelectedRows();
+            }
+
 
             blade.headIcon = 'fa fa-picture-o';
             blade.toolbarCommands = [
@@ -73,20 +115,9 @@
                     }
                 },
                 {
-                    name: "platform.commands.add",
-                    icon: 'fa fa-plus',
+                    name: "platform.commands.add", icon: 'fa fa-plus',
                     executeMethod: function () {
-                        $scope.selectedNodeId = undefined;
-
-                        var newBlade = {
-                            id: 'listItemChild',
-                            title: 'catalog.blades.catalog-add.title',
-                            subtitle: 'catalog.blades.catalog-add.subtitle',
-                            controller: 'virtoCommerce.catalogModule.catalogAddController',
-                            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-add.tpl.html'
-                        };
-
-                        bladeNavigationService.showBlade(newBlade, blade);
+                        $scope.selectNode({}, true);
                     },
                     canExecuteMethod: function () {
                         return true;
@@ -95,22 +126,17 @@
                 {
                     name: "imageTools.commands.run",
                     icon: 'fa fa-exclamation',
-                    canExecuteMethod: function () {
-                        return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
-                    },
+                    canExecuteMethod: isItemsChecked,
                     executeMethod: function () {
-                        $scope.taskRun($scope.gridApi.selection.getSelectedRows());
+                        $scope.taskRun(getSelectedItems());
                     }
                 },
                 {
-                    name: "platform.commands.delete",
-                    icon: 'fa fa-trash-o',
-                    canExecuteMethod: function () {
-                        return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
-                    },
+                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
                     executeMethod: function () {
-                        $scope.taskDelete($scope.gridApi.selection.getSelectedRows());
-                    }
+                        $scope.taskDelete(getSelectedItems());
+                    },
+                    canExecuteMethod: isItemsChecked
                 }
             ];
 

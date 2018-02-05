@@ -9,7 +9,7 @@
                             <div class="form-group __info list">
                                 <label class="form-label">{{ 'imageTools.blades.task-detail.labels.name' | translate }}</label>
                                 <div class="form-input">
-                                    <input ng-class="{'error': detailForm.name.$invalid && !detailForm.name.$pristine}" placeholder="{{ 'catalog.blades.item-detail.placeholders.gtin' | translate }}" class="form-control" ng-model="blade.item.name" name="name" type="text" />
+                                    <input ng-class="{'error': detailForm.name.$invalid && !detailForm.name.$pristine}" required placeholder="{{ 'imageTools.blades.task-detail.placeholders.name' | translate }}" class="form-control" ng-model="blade.currentEntity.name" name="name" type="text" />
                                 </div>
                                 <div class="list-descr">{{ 'imageTools.blades.task-detail.descriptions.name' | translate }}</div>
                             </div>
@@ -21,8 +21,8 @@
                             <div class="form-group __info list">
                                 <label class="form-label">{{ 'imageTools.blades.task-detail.labels.path-images' | translate }}</label>
                                 <div class="form-input __file">
-                                    <input ng-model="blade.item.workPath" placeholder="{{ 'catalog.blades.images.placeholders.image-url' | translate }}" tabindex="-1">
-                                    <button class="btn __file" type="button" ng-click="addImageFromUrl()" title="Add image by URL">
+                                    <input ng-model="blade.currentEntity.workPath" required placeholder="{{ 'imageTools.blades.task-detail.placeholders.path-images' | translate }}" tabindex="-1">
+                                    <button class="btn __file" type="button" ng-click="blade.openFolderPath()" title="Add image by URL">
                                         <i class="btn-ico fa fa-folder-open-o"></i>
                                     </button>
                                 </div>
@@ -38,8 +38,8 @@
                                 <div class="form-input">
                                     <label class="form-label">{{ 'imageTools.blades.task-detail.labels.thumbnail-settings' | translate }} <a href="" ng-click="blade.openSettingManagement()" class="form-edit" va-permission="customer:read"><i class="form-ico fa fa-pencil"></i></a></label>
                                     <div class="form-input">
-                                        <ui-select multiple ng-model="blade.item.thumbnailOptions" ng-disabled="currentEntity.isReadOnly" ng-required="currentEntity.required">
-                                            <ui-select-match placeholder="Select value">{{$item.name}}</ui-select-match>
+                                        <ui-select multiple ng-model="blade.currentEntity.thumbnailOptions" required>
+                                            <ui-select-match placeholder="{{ 'imageTools.blades.task-detail.placeholders.thumbnail-settings' | translate }}">{{$item.name}}</ui-select-match>
                                             <ui-select-choices repeat="option in blade.optionList | filter: {name: $select.search} | orderBy: 'name'">
                                                 <span ng-bind-html="option.name | highlight: $select.search"></span>
                                             </ui-select-choices>

@@ -43,7 +43,7 @@
                 return $timeout(function () { return list; }, 1000);
             },
 
-            getTask: function (id) {
+            getTask: function (id, callback ) {
                 var item =
                     {
                         id: '778810c7629c44688db7ce997c2f18f1',
@@ -75,7 +75,9 @@
                         ]
                     };
 
-                return $timeout(function () { return item; }, 1000);
+                $timeout(function () { return {}; }, 1000).then(function () {
+                    callback(item);
+                });
             },
 
             getListOptions: function () {

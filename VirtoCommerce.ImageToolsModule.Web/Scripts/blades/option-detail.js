@@ -41,8 +41,8 @@
         function deleteEntry() {
             var dialog = {
                 id: "confirmDelete",
-                title: "core.dialogs.currency-delete.title",
-                message: "core.dialogs.currency-delete.message",
+                title: "imageTools.dialogs.setting-delete.title",
+                message: "imageTools.dialogs.setting-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         blade.isLoading = true;
@@ -76,7 +76,7 @@
 
 
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.currency-save.title", "core.dialogs.currency-save.message");
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "imageTools.dialogs.setting-save.title", "imageTools.dialogs.setting-save.message");
         };
 
         blade.toolbarCommands = [

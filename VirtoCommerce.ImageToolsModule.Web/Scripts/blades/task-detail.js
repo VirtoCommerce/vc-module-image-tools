@@ -3,40 +3,29 @@
         var blade = $scope.blade;
 
         blade.refresh = function (parentRefresh) {
-
+            debugger;
             thumbnailApi.getListOptions().then(function (data) {
                 blade.optionList = data;
             });
 
-            thumbnailApi.getTask(blade.itemId).then(function (item) {
-
-                initializeBlade(item);
-
-                if (blade.childrenBlades) {
-                    _.each(blade.childrenBlades, function (x) {
-                        if (x.refresh) {
-                            x.refresh(blade.currentEntity);
-                        }
-                    });
-                }
-
-                if (parentRefresh) {
-                    blade.parentBlade.refresh();
-                }
+            if (blade.isNew) {
+                initializeBlade({});
+            } else {
+                thumbnailApi.getTask({ id: blade.currentEntityId }, function (data) {
+                    initializeBlade(data);
+                    if (parentRefresh) {
+                        blade.parentBlade.refresh();
+                    }
+                });
             }
-            );
         };
 
         function initializeBlade(data) {
+            debugger;
             blade.item = angular.copy(data);
             blade.currentEntity = blade.item;
             blade.origEntity = data;
             blade.isLoading = false;
-        };
-
-        blade.codeValidator = function (value) {
-            var pattern = /[$+;=%{}[\]|\\\/@ ~!^*&()?:'<>,]/;
-            return !pattern.test(value);
         };
 
         function isDirty() {
@@ -56,7 +45,7 @@
         };
 
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.category-save.title", "catalog.dialogs.category-save.message");
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "imageTools.dialogs.task-save.title", "imageTools.dialogs.task-save.message");
         };
 
         blade.formScope = null;
@@ -96,6 +85,23 @@
                 }
             }
         ];
+        function folderPath(folderPath) {
+            if (folderPath && folderPath.length === 1 && folderPath[0].type === 'folder') {
+                blade.currentEntity.workPath = folderPath[0].relativeUrl;
+            } else {
+                
+            }
+        }
+
+        blade.openFolderPath = function () {
+            var newBlade = {
+                title: 'imageTools.blades.setting-managment.title',
+                subtitle: 'imageTools.blades.setting-managment.subtitle',
+                onSelect: folderPath,
+                controller: 'platformWebApp.assets.assetSelectController'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
 
         blade.openSettingManagement = function () {
             var newBlade = {
