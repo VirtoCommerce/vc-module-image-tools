@@ -1,5 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
+using VirtoCommerce.ImageToolsModule.Data.Repositories;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
@@ -9,6 +13,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
     public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
+        private static readonly string _connectionString = ConfigurationHelper.GetNonEmptyConnectionStringValue("VirtoCommerce");
 
         /// <summary>
         /// Constructor
@@ -20,6 +25,18 @@ namespace VirtoCommerce.ImageToolsModule.Web
         }
 
         #region IModule Members
+
+        public override void SetupDatabase()
+        {
+            base.SetupDatabase();
+
+            using (var db = new ThumbnailRepositoryImpl(_connectionString, _container.Resolve<AuditableInterceptor>()))
+            {
+                var initializer = new SetupDatabaseInitializer<ThumbnailRepositoryImpl, Data.Migrations.Configuration>();
+
+                initializer.InitializeDatabase(db);
+            }
+        }
 
         /// <summary>
         /// Initialization

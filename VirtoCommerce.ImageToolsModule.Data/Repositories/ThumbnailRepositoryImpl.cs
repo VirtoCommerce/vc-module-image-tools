@@ -23,31 +23,19 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            #region ThumbnailTaskEntity
-
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask").HasKey(t => t.Id).Property(t => t.Id);
-            modelBuilder.Entity<ThumbnailTaskEntity>().HasMany(t => t.ThumbnailTaskOptionEntities)
-                .WithRequired(x => x.ThumbnailTaskEntity).WillCascadeOnDelete();
-
-            #endregion ThumbnailTaskEntity
-
-            #region ThumbnailOptionEntity
-
             modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption").HasKey(t => t.Id).Property(t => t.Id);
-            modelBuilder.Entity<ThumbnailOptionEntity>().HasMany(o => o.ThumbnailTaskOptions)
-                .WithRequired(x => x.ThumbnailOptionEntity).WillCascadeOnDelete();
-
-            #endregion ThumbnailOptionEntity
-
-            #region ThumbnailTaskOptionEntity
-
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
-            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailTaskEntity)
-                .WithMany(t => t.ThumbnailTaskOptionEntities).WillCascadeOnDelete();
-            modelBuilder.Entity<ThumbnailTaskOptionEntity>().HasRequired(x => x.ThumbnailOptionEntity)
-                .WithMany(o => o.ThumbnailTaskOptions).WillCascadeOnDelete();
 
-            #endregion ThumbnailTaskOptionEntity
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>()
+                .HasRequired(x => x.ThumbnailTaskEntity)
+                .WithMany(t => t.ThumbnailTaskOptionEntities)
+                .HasForeignKey(x => x.ThumbnailTaskEntityId);
+
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>()
+                .HasRequired(x => x.ThumbnailOptionEntity)
+                .WithMany()
+                .HasForeignKey(x=>x.ThumbnailOptionEntityId);
         }
 
         public IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities => GetAsQueryable<ThumbnailTaskEntity>();

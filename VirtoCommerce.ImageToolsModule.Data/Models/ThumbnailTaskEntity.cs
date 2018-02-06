@@ -9,17 +9,24 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
     public class ThumbnailTaskEntity : AuditableEntity
     {
-        public DateTime? LastRun { get; set; }
+        public ThumbnailTaskEntity()
+        {
+            ThumbnailTaskOptionEntities = new ObservableCollection<ThumbnailTaskOptionEntity>();
+        }
 
         [Required]
         [StringLength(1024)]
         public string Name { get; set; }
-        public ObservableCollection<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities { get; set; }
 
         [Required]
         [StringLength(2048)]
         public string WorkPath { get; set; }
-        public ThumbnailTaskEntity FromModel(ThumbnailTask task, PrimaryKeyResolvingMap pkMap)
+
+        public DateTime? LastRun { get; set; }
+
+        public ObservableCollection<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities { get; set; }
+
+        public virtual ThumbnailTaskEntity FromModel(ThumbnailTask task, PrimaryKeyResolvingMap pkMap)
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
 
@@ -32,6 +39,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             CreatedDate = task.CreatedDate;
             ModifiedBy = task.ModifiedBy;
             ModifiedDate = task.ModifiedDate;
+
+            if (task.ThumbnailOptions != null)
+            {
+                this.ThumbnailTaskOptionEntities = new ObservableCollection<ThumbnailTaskOptionEntity>(task.ThumbnailOptions.Select(x =>
+                {
+                    return new ThumbnailTaskOptionEntity()
+                    {
+                        
+                    };
+
+                }));
+            }
 
             var newOptionEntitys = task.ThumbnailOptions.Select(o =>
             {
@@ -55,20 +74,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             return this;
         }
 
-        public void Patch(ThumbnailTaskEntity target)
-        {
-            target.CreatedBy = CreatedBy;
-            target.CreatedDate = CreatedDate;
-            target.Id = Id;
-            target.LastRun = LastRun;
-            target.ModifiedBy = ModifiedBy;
-            target.ModifiedDate = ModifiedDate;
-            target.Name = Name;
-            target.ThumbnailTaskOptionEntities = ThumbnailTaskOptionEntities;
-            target.WorkPath = WorkPath;
-        }
-
-        public ThumbnailTask ToModel(ThumbnailTask task)
+        public virtual ThumbnailTask ToModel(ThumbnailTask task)
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
 
@@ -80,9 +86,24 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             task.Name = Name;
             task.WorkPath = WorkPath;
 
-            task.ThumbnailOptions = this.ThumbnailTaskOptionEntities.Select(o => o.ThumbnailOptionEntity.ToModel(new ThumbnailOption())).ToArray();
+            task.ThumbnailOptions = ThumbnailTaskOptionEntities.Select(o => o.ThumbnailOptionEntity.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
 
             return task;
+        }
+
+        public virtual void Patch(ThumbnailTaskEntity target)
+        {
+            target.Id = Id;
+            target.LastRun = LastRun;
+            target.Name = Name;
+            target.ThumbnailTaskOptionEntities = ThumbnailTaskOptionEntities;
+            target.WorkPath = WorkPath;
+
+            if (!ThumbnailTaskOptionEntities.IsNullCollection())
+            {
+                var comparer = AnonymousComparer.Create((ThumbnailTaskOptionEntity x) => x.ThumbnailOptionEntityId);
+                ThumbnailTaskOptionEntities.Patch(target.ThumbnailTaskOptionEntities, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+            }
         }
     }
 }

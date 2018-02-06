@@ -74,6 +74,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201802060917433_Initial.cs" />
+    <Compile Include="Migrations\201802060917433_Initial.Designer.cs">
+      <DependentUpon>201802060917433_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ThumbnailOptionEntity.cs" />
     <Compile Include="Models\ThumbnailTaskEntity.cs" />
     <Compile Include="Models\ThumbnailTaskOptionEntity.cs" />
@@ -88,7 +93,9 @@
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <EmbeddedResource Include="Migrations\201802060917433_Initial.resx">
+      <DependentUpon>201802060917433_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

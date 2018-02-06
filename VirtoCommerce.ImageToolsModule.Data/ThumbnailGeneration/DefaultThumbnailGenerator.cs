@@ -59,22 +59,24 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                                                var image = Image.FromFile(currentFile);
                                                Image destImage = null;
+                                               var height = option.Height ?? image.Height;
+                                               var width = option.Width ?? image.Width;
 
                                                try
                                                {
                                                    switch (option.ResizeMethod)
                                                    {
                                                        case ResizeMethod.FixedSize:
-                                                           destImage = ScaleImage(image, option.Width, option.Height);
+                                                           destImage = ScaleImage(image, width, height);
                                                            break;
                                                        case ResizeMethod.FixedHeight:
-                                                           destImage = ResizeImage(image, image.Width, option.Height);
+                                                           destImage = ResizeImage(image, image.Width, height);
                                                            break;
                                                        case ResizeMethod.FixedWidth:
-                                                           destImage = ResizeImage(image, option.Width, image.Height);
+                                                           destImage = ResizeImage(image, width, image.Height);
                                                            break;
                                                        case ResizeMethod.Crop:
-                                                           destImage = CropImage(image, option.Width, option.Height);
+                                                           destImage = CropImage(image, width, height);
                                                            break;
                                                    }
 
