@@ -8,29 +8,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
     public class ThumbnailTaskOptionEntity : Entity
     {
-        public string ThumbnailTaskEntityId { get; set; }
+        public string ThumbnailTaskId { get; set; }
 
-        public ThumbnailTaskEntity ThumbnailTaskEntity { get; set; }
+        public ThumbnailTaskEntity ThumbnailTask { get; set; }
 
-        public string ThumbnailOptionEntityId { get; set; }
+        public string ThumbnailOptionId { get; set; }
 
-        public ThumbnailOptionEntity ThumbnailOptionEntity { get; set; }
+        public ThumbnailOptionEntity ThumbnailOption { get; set; }
 
         public virtual void Patch(ThumbnailTaskOptionEntity target)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
 
-            var patchInjection = new PatchInjection<ThumbnailTaskOptionEntity>(x => x.ThumbnailOptionEntityId, x => x.ThumbnailTaskEntityId);
+            var patchInjection = new PatchInjection<ThumbnailTaskOptionEntity>(x => x.ThumbnailOptionId, x => x.ThumbnailTaskId);
             target.InjectFrom(patchInjection, this);
 
-        }
-
-        public virtual ThumbnailTaskOptionEntity ToModel(ThumbnailOption option)
-        {
-            var result = new ThumbnailTaskOptionEntity();
-            result.ThumbnailOptionEntityId = option.Id;
-            return result;
         }
     }
 

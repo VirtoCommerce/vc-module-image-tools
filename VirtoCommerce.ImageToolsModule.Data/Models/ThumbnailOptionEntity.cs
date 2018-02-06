@@ -19,10 +19,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         [StringLength(64)]
         public string ResizeMethod { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string ThumbnailTaskId { get; set; }
-
         public decimal? Width { get; set; }
 
         public decimal? Height { get; set; }

@@ -27,14 +27,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        ThumbnailTaskEntityId = c.String(nullable: false, maxLength: 128),
-                        ThumbnailOptionEntityId = c.String(nullable: false, maxLength: 128),
+                        ThumbnailTaskId = c.String(nullable: false, maxLength: 128),
+                        ThumbnailOptionId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ThumbnailOption", t => t.ThumbnailOptionEntityId, cascadeDelete: true)
-                .ForeignKey("dbo.ThumbnailTask", t => t.ThumbnailTaskEntityId, cascadeDelete: true)
-                .Index(t => t.ThumbnailTaskEntityId)
-                .Index(t => t.ThumbnailOptionEntityId);
+                .ForeignKey("dbo.ThumbnailOption", t => t.ThumbnailOptionId, cascadeDelete: true)
+                .ForeignKey("dbo.ThumbnailTask", t => t.ThumbnailTaskId, cascadeDelete: true)
+                .Index(t => t.ThumbnailTaskId)
+                .Index(t => t.ThumbnailOptionId);
             
             CreateTable(
                 "dbo.ThumbnailOption",
@@ -44,7 +44,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Migrations
                         Name = c.String(nullable: false, maxLength: 1024),
                         FileSuffix = c.String(nullable: false, maxLength: 128),
                         ResizeMethod = c.String(nullable: false, maxLength: 64),
-                        ThumbnailTaskId = c.String(nullable: false, maxLength: 128),
                         Width = c.Decimal(precision: 18, scale: 2),
                         Height = c.Decimal(precision: 18, scale: 2),
                         BackgroundColor = c.String(),
@@ -59,10 +58,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.ThumbnailTaskOption", "ThumbnailTaskEntityId", "dbo.ThumbnailTask");
-            DropForeignKey("dbo.ThumbnailTaskOption", "ThumbnailOptionEntityId", "dbo.ThumbnailOption");
-            DropIndex("dbo.ThumbnailTaskOption", new[] { "ThumbnailOptionEntityId" });
-            DropIndex("dbo.ThumbnailTaskOption", new[] { "ThumbnailTaskEntityId" });
+            DropForeignKey("dbo.ThumbnailTaskOption", "ThumbnailTaskId", "dbo.ThumbnailTask");
+            DropForeignKey("dbo.ThumbnailTaskOption", "ThumbnailOptionId", "dbo.ThumbnailOption");
+            DropIndex("dbo.ThumbnailTaskOption", new[] { "ThumbnailOptionId" });
+            DropIndex("dbo.ThumbnailTaskOption", new[] { "ThumbnailTaskId" });
             DropTable("dbo.ThumbnailOption");
             DropTable("dbo.ThumbnailTaskOption");
             DropTable("dbo.ThumbnailTask");

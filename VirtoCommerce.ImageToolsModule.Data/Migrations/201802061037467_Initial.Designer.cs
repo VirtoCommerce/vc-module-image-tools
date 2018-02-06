@@ -13,7 +13,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201802060917433_Initial"; }
+            get { return "201802061037467_Initial"; }
         }
         
         string IMigrationMetadata.Source

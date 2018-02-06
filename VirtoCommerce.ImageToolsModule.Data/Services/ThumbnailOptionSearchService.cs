@@ -36,7 +36,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                                             }
                                     };
 
-                var query = repository.ThumbnailTaskEntities.OrderBySortInfos(sortInfos);
+                var query = repository.ThumbnailTasks.OrderBySortInfos(sortInfos);
 
                 var retVal = new GenericSearchResponse<ThumbnailOption> { TotalCount = query.Count() };
 

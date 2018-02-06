@@ -74,9 +74,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201802060917433_Initial.cs" />
-    <Compile Include="Migrations\201802060917433_Initial.Designer.cs">
-      <DependentUpon>201802060917433_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201802061037467_Initial.cs" />
+    <Compile Include="Migrations\201802061037467_Initial.Designer.cs">
+      <DependentUpon>201802061037467_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ThumbnailOptionEntity.cs" />
@@ -93,11 +93,6 @@
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201802060917433_Initial.resx">
-      <DependentUpon>201802060917433_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -106,6 +101,11 @@
       <Project>{74326ee1-6b14-4b21-9afb-d243bf13daf6}</Project>
       <Name>VirtoCommerce.ImageToolsModule.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201802061037467_Initial.resx">
+      <DependentUpon>201802061037467_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

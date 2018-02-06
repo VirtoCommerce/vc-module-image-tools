@@ -11,7 +11,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
     {
         public ThumbnailTaskEntity()
         {
-            ThumbnailTaskOptionEntities = new ObservableCollection<ThumbnailTaskOptionEntity>();
+            ThumbnailTaskOptions = new NullCollection<ThumbnailTaskOptionEntity>();
         }
 
         [Required]
@@ -24,7 +24,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public DateTime? LastRun { get; set; }
 
-        public ObservableCollection<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities { get; set; }
+        public ObservableCollection<ThumbnailTaskOptionEntity> ThumbnailTaskOptions { get; set; }
 
         public virtual ThumbnailTaskEntity FromModel(ThumbnailTask task, PrimaryKeyResolvingMap pkMap)
         {
@@ -42,36 +42,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
             if (task.ThumbnailOptions != null)
             {
-                this.ThumbnailTaskOptionEntities = new ObservableCollection<ThumbnailTaskOptionEntity>(task.ThumbnailOptions.Select(x =>
-                {
-                    return new ThumbnailTaskOptionEntity()
-                    {
-                        
-                    };
-
-                }));
+                this.ThumbnailTaskOptions = new ObservableCollection<ThumbnailTaskOptionEntity>(task.ThumbnailOptions.Select(FromModel));
             }
 
-            var newOptionEntitys = task.ThumbnailOptions.Select(o =>
-            {
-                var optionEntity = new ThumbnailOptionEntity();
-                return optionEntity.FromModel(o, pkMap);
-            });
-
-            var existingOptionEntityIds = ThumbnailTaskOptionEntities.Select(e => e.ThumbnailOptionEntityId);
-
-            var newTaskOptionEntities = newOptionEntitys.Where(e => !existingOptionEntityIds.Contains(e.Id)).Select(
-                e => new ThumbnailTaskOptionEntity()
-                {
-                    ThumbnailTaskEntity = this,
-                    ThumbnailTaskEntityId = this.Id,
-                    ThumbnailOptionEntity = e,
-                    ThumbnailOptionEntityId = e.Id
-                });
-
-            ThumbnailTaskOptionEntities.AddRange(newTaskOptionEntities);
-
             return this;
+        }
+
+        public virtual ThumbnailTaskOptionEntity FromModel(ThumbnailOption option)
+        {
+            var result = new ThumbnailTaskOptionEntity();
+            result.ThumbnailOptionId = option.Id;
+            return result;
         }
 
         public virtual ThumbnailTask ToModel(ThumbnailTask task)
@@ -86,7 +67,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             task.Name = Name;
             task.WorkPath = WorkPath;
 
-            task.ThumbnailOptions = ThumbnailTaskOptionEntities.Select(o => o.ThumbnailOptionEntity.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
+            task.ThumbnailOptions = ThumbnailTaskOptions.Select(o => o.ThumbnailOption.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
 
             return task;
         }
@@ -96,13 +77,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             target.Id = Id;
             target.LastRun = LastRun;
             target.Name = Name;
-            target.ThumbnailTaskOptionEntities = ThumbnailTaskOptionEntities;
+            target.ThumbnailTaskOptions = ThumbnailTaskOptions;
             target.WorkPath = WorkPath;
 
-            if (!ThumbnailTaskOptionEntities.IsNullCollection())
+            if (!ThumbnailTaskOptions.IsNullCollection())
             {
-                var comparer = AnonymousComparer.Create((ThumbnailTaskOptionEntity x) => x.ThumbnailOptionEntityId);
-                ThumbnailTaskOptionEntities.Patch(target.ThumbnailTaskOptionEntities, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                var comparer = AnonymousComparer.Create((ThumbnailTaskOptionEntity x) => x.ThumbnailOptionId);
+                ThumbnailTaskOptions.Patch(target.ThumbnailTaskOptions, comparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
         }
     }

@@ -28,30 +28,30 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>()
-                .HasRequired(x => x.ThumbnailTaskEntity)
-                .WithMany(t => t.ThumbnailTaskOptionEntities)
-                .HasForeignKey(x => x.ThumbnailTaskEntityId);
+                .HasRequired(x => x.ThumbnailTask)
+                .WithMany(t => t.ThumbnailTaskOptions)
+                .HasForeignKey(x => x.ThumbnailTaskId);
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>()
-                .HasRequired(x => x.ThumbnailOptionEntity)
+                .HasRequired(x => x.ThumbnailOption)
                 .WithMany()
-                .HasForeignKey(x=>x.ThumbnailOptionEntityId);
+                .HasForeignKey(x=>x.ThumbnailOptionId);
         }
 
-        public IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities => GetAsQueryable<ThumbnailTaskEntity>();
+        public IQueryable<ThumbnailTaskEntity> ThumbnailTasks => GetAsQueryable<ThumbnailTaskEntity>();
 
-        public IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities => GetAsQueryable<ThumbnailOptionEntity>();
+        public IQueryable<ThumbnailOptionEntity> ThumbnailOptions => GetAsQueryable<ThumbnailOptionEntity>();
 
-        public IQueryable<ThumbnailTaskOptionEntity> ThumbnailTaskOptionEntities => GetAsQueryable<ThumbnailTaskOptionEntity>();
+        public IQueryable<ThumbnailTaskOptionEntity> ThumbnailTaskOption => GetAsQueryable<ThumbnailTaskOptionEntity>();
 
         public ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids)
         {
-            return ThumbnailTaskEntities.Include(t => t.ThumbnailTaskOptionEntities).Where(t => ids.Contains(t.Id)).ToArray();
+            return ThumbnailTasks.Include(t => t.ThumbnailTaskOptions).Where(t => ids.Contains(t.Id)).ToArray();
         }
 
         public ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids)
         {
-            return ThumbnailOptionsEntities.Where(o => ids.Contains(o.Id)).ToArray();
+            return ThumbnailOptions.Where(o => ids.Contains(o.Id)).ToArray();
         }
 
         public void RemoveThumbnailTasksByIds(string[] ids)
@@ -67,7 +67,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             foreach (var optionEntity in GetThumbnailOptionsByIds(ids))
             {
                 Remove(optionEntity);
-               
             }
         }
     }
