@@ -1,13 +1,14 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
-{
-    using System.Linq;
-    using System.Net;
-    using System.Web.Http;
-    using System.Web.Http.Description;
+﻿using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Description;
 
-    using VirtoCommerce.ImageToolsModule.Core.Models;
-    using VirtoCommerce.ImageToolsModule.Core.Services;
-    using VirtoCommerce.ImageToolsModule.Web.Models;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Web.Models;
+
+namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
+{
 
     /// <summary>
     /// Thumbnails tasks controller

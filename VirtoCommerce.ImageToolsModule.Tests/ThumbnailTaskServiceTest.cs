@@ -138,7 +138,7 @@
 
             Assert.Contains(taskEntitys, t => t.Name == "New Name");
             Assert.Contains(taskEntitys, t => t.WorkPath == "New Path");
-            Assert.Contains(taskEntitys, t => t.ThumbnailTaskOptionEntities == tasks.First().ThumbnailOptions);
+            Assert.Contains(taskEntitys, t => t.ThumbnailTaskOptions == tasks.First().ThumbnailOptions);
         }
     }
 }
