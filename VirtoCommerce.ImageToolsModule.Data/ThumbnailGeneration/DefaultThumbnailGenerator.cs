@@ -102,7 +102,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                                }
 
                                return rezVal;
-                           });
+                           }, token);
         }
 
         private static Image ScaleImage(Image image, decimal width, decimal height)

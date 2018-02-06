@@ -5,6 +5,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
     public class ThumbnailGenerationResult
     {
         public IList<string> GeneratedThumbnails { get; }
+
         public IList<string> Errors { get; }
         
         public ThumbnailGenerationResult()

@@ -8,16 +8,28 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
-        private IThumbnailGenerator _generator;
+        private readonly IThumbnailGenerator _generator;
 
         public ThumbnailGenerationProcessor(IThumbnailGenerator generator)
         {
             _generator = generator;
         }
 
-        public Task ProcessTasksAsync(ThumbnailTask[] tasks, Action<ThumbnailTaskProgress> progressCallback, CancellationToken token)
+        public async Task ProcessTasksAsync(ThumbnailTask[] tasks, Action<ThumbnailTaskProgress> progressCallback, CancellationToken token)
         {
-            throw new Exception();
+            //find initial files count
+            var progressInfo = new ThumbnailTaskProgress { Message = "Reading the options..." };
+            progressCallback(progressInfo);
+
+            foreach (var task in tasks)
+            {
+                foreach (var option in task.ThumbnailOptions)
+                {
+                    var result = await _generator.GenerateThumbnailsAsync(task.WorkPath, task.WorkPath, option, token);
+
+                    progressCallback(progressInfo);
+                }
+            }
         }
     }
 }
