@@ -46,7 +46,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 
         public ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids)
         {
-            return ThumbnailTasks.Include(t => t.ThumbnailTaskOptions).Where(t => ids.Contains(t.Id)).ToArray();
+            return ThumbnailTasks.Include(t => t.ThumbnailTaskOptions.Select(x=>x.ThumbnailOption))
+                .Where(t => ids.Contains(t.Id))
+                .ToArray();
         }
 
         public ThumbnailOptionEntity[] GetThumbnailOptionsByIds(string[] ids)

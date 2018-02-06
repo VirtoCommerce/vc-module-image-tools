@@ -31,6 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
             pkMap.AddPair(option, this);
 
+            Id = option.Id;
             Name = option.Name;
             FileSuffix = option.FileSuffix;
             ResizeMethod = option.ResizeMethod.ToString();
@@ -49,13 +50,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         {
             if (option == null) throw new ArgumentNullException(nameof(option));
 
+            option.Id = Id;
             option.Name = Name;
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.ResizeMethod.Crop);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;
-
             option.CreatedBy = CreatedBy;
             option.CreatedDate = CreatedDate;
             option.ModifiedBy = ModifiedBy;
@@ -66,7 +67,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public virtual void Patch(ThumbnailOptionEntity target)
         {
-            target.Id = Id;
             target.Name = Name;
             target.FileSuffix = FileSuffix;
             target.ResizeMethod = ResizeMethod;

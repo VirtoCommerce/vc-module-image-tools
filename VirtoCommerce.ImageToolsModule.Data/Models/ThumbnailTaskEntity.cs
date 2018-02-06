@@ -32,6 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
             pkMap.AddPair(task, this);
 
+            Id = task.Id;
             Name = task.Name;
             LastRun = task.LastRun;
             WorkPath = task.WorkPath;
@@ -42,15 +43,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
             if (task.ThumbnailOptions != null)
             {
-                this.ThumbnailTaskOptions = new ObservableCollection<ThumbnailTaskOptionEntity>(task.ThumbnailOptions.Select(FromModel));
+                this.ThumbnailTaskOptions = new ObservableCollection<ThumbnailTaskOptionEntity>(task.ThumbnailOptions.Select(x=>FromModel(x, task)));
             }
 
             return this;
         }
 
-        public virtual ThumbnailTaskOptionEntity FromModel(ThumbnailOption option)
+        public virtual ThumbnailTaskOptionEntity FromModel(ThumbnailOption option, ThumbnailTask task)
         {
             var result = new ThumbnailTaskOptionEntity();
+            result.ThumbnailTaskId = task.Id;
             result.ThumbnailOptionId = option.Id;
             return result;
         }
@@ -59,6 +61,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
 
+            task.Id = Id;
             task.CreatedBy = CreatedBy;
             task.CreatedDate = CreatedDate;
             task.LastRun = LastRun;
@@ -74,10 +77,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public virtual void Patch(ThumbnailTaskEntity target)
         {
-            target.Id = Id;
             target.LastRun = LastRun;
             target.Name = Name;
-            target.ThumbnailTaskOptions = ThumbnailTaskOptions;
             target.WorkPath = WorkPath;
 
             if (!ThumbnailTaskOptions.IsNullCollection())
