@@ -84,6 +84,10 @@
     <Compile Include="Migrations\201802061037467_Initial.Designer.cs">
       <DependentUpon>201802061037467_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802070844489_AddAnchor.cs" />
+    <Compile Include="Migrations\201802070844489_AddAnchor.Designer.cs">
+      <DependentUpon>201802070844489_AddAnchor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ThumbnailOptionEntity.cs" />
     <Compile Include="Models\ThumbnailTaskEntity.cs" />
@@ -111,6 +115,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201802061037467_Initial.resx">
       <DependentUpon>201802061037467_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802070844489_AddAnchor.resx">
+      <DependentUpon>201802070844489_AddAnchor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
