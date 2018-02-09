@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using VirtoCommerce.Domain.Commerce.Model.Search;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
-    using System;
-
     public class ThumbnailTaskSearchCriteria : SearchCriteriaBase
     {
-
     }
 }

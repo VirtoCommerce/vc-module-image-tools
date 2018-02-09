@@ -8,8 +8,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
 
         ThumbnailOption[] GetByIds(string[] ids);
 
-        void RemoveByIds(string[] ids);
-
-        GenericSearchResponse<ThumbnailOption> Search(ThumbnailOptionSearchCriteria criteria);
+        void RemoveByIds(string[] ids);        
     }
 }

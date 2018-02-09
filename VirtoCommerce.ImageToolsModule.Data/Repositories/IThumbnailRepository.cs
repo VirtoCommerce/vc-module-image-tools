@@ -10,12 +10,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
         /// <summary>
         /// Gets the thumbnail tasks entities.
         /// </summary>
-        IQueryable<ThumbnailTaskEntity> ThumbnailTaskEntities { get; }
+        IQueryable<ThumbnailTaskEntity> ThumbnailTasks { get; }
 
         /// <summary>
         /// Gets the thumbnail options entities.
         /// </summary>
-        IQueryable<ThumbnailOptionEntity> ThumbnailOptionsEntities { get; }
+        IQueryable<ThumbnailOptionEntity> ThumbnailOptions { get; }
 
         ThumbnailTaskEntity[] GetThumbnailTasksByIds(string[] ids);
 

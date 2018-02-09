@@ -12,76 +12,22 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     public class ThumbnailOptionSearchServiceTests
     {
         [Fact]
-        public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailOption()
-        {
-            var optionEntites = ThumbnailOptionEntitesDataSource.ToArray();
-
-            var ids = optionEntites.Select(t => t.Id).ToArray();
-            var tasks = optionEntites.Select(t => t.ToModel(new ThumbnailOption())).ToArray();
-
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids))).Returns(optionEntites.Where(o => ids.Contains(o.Id)).ToArray());
-
-            var sut = new ThumbnailTaskService(() => mock.Object);
-            var result = sut.GetByIds(ids);
-
-            Assert.Equal(result.Length, tasks.Length);
-        }
-
-        [Fact]
-        public void Delete_ThumbnailOptionIds_DeletedThumbnailOptionWithPassedIds()
-        {
-            var optionEntites = ThumbnailOptionEntitesDataSource.ToList();
-
-            var ids = optionEntites.Select(t => t.Id).ToArray();
-
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.RemoveThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
-                .Callback((string[] arr) =>
-                {
-                    var entities = optionEntites.Where(e => arr.Contains(e.Id));
-                    foreach (var entity in entities)
-                    {
-                        optionEntites.Remove(entity);
-                    }
-                });
-
-            var sut = new ThumbnailTaskService(() => mock.Object);
-            sut.RemoveByIds(ids);
-
-            Assert.Empty(optionEntites);
-        }
-
-        [Fact]
-        public void SaveChanges_ArrayOfThumbnailOptions_ThumbnailOptionsUpdated()
+        public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
             var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
-            var options = ThumbnailOptionDataSource.ToArray();
+            var expectedOptions = ThumbnailOptionDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.Width).ToArray();
+
+            var criteria = new ThumbnailOptionSearchCriteria { Sort = "Name:asc;Width:desc" };
 
             var mock = new Mock<IThumbnailRepository>();
             mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
                 .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
 
             var sut = new ThumbnailOptionSearchService(() => mock.Object);
-            sut.SaveOrUpdate(options);
 
-            Assert.Contains(optionEntities, o => o.Name == "New Name");
-        }
+            var resultTasks = sut.Search(criteria);
 
-        [Fact]
-        public void SaveChanges_ArrayOfThumbnailOptions_NewThumbnailOptionsSaved()
-        {
-            var options = ThumbnailOptionDataSource.ToArray();
-            var optionEntities = new List<ThumbnailOptionEntity>();
-
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
-
-            var sut = new ThumbnailOptionSearchService(() => mock.Object);
-            sut.SaveOrUpdate(options);
-
-            Assert.NotEmpty(optionEntities);
+            Assert.Equal(expectedOptions, resultTasks.Results);
         }
 
         private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
