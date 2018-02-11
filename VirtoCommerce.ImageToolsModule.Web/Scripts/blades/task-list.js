@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'virtoCommerce.imageToolsModule.api', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService',
-        function ($scope, bladeNavigationService, bladeUtils, thumbnailApi, uiGridHelper, dialogService) {
+    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'virtoCommerce.imageToolsModule.api', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
+        function ($scope, bladeNavigationService, bladeUtils, thumbnailApi, uiGridHelper, dialogService, taskApi) {
             var blade = $scope.blade;
 
             $scope.uiGridConstants = uiGridHelper.uiGridConstants;
@@ -10,11 +10,14 @@
             blade.refresh = function () {
                 blade.isLoading = true;
 
-                thumbnailApi.getTaskList().then(function (results) {
-
+                //todo: paging
+                taskApi.search({
+                    skip: 0
+                }, function (data) {
+                    $scope.items = data.result;
+                    $scope.hasMore = data.result.length === $scope.pageSettings.itemsPerPageCount;
+                }).$promise.finally(function() {
                     blade.isLoading = false;
-                    $scope.items = results;
-                    $scope.hasMore = results.length === $scope.pageSettings.itemsPerPageCount;
                 });
             };
 
@@ -26,7 +29,7 @@
                 blade.setSelectedItem(listItem);
                 var newBlade = {
                     id: "listTaskDetail",
-                    itemId: listItem.id,
+                    currentEntityId: listItem.id,
                     title: 'imageTools.blades.task-detail.title',
                     subtitle: 'imageTools.blades.task-detail.subtitle',
                     controller: 'virtoCommerce.imageToolsModule.taskDetailController',
@@ -92,7 +95,7 @@
                         });
                     }
                 }
-                dialogService.showDialog(dialog, '$(Platform)/Scripts/app/thumbnail/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+                dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.ImageTools)/Scripts/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
 
             function isItemsChecked() {
@@ -134,11 +137,29 @@
                 {
                     name: "platform.commands.delete", icon: 'fa fa-trash-o',
                     executeMethod: function () {
-                        $scope.taskDelete(getSelectedItems());
+                        deleteList(getSelectedItems());
                     },
                     canExecuteMethod: isItemsChecked
                 }
             ];
+
+            function deleteList(selection) {
+                var dialog = {
+                    id: "confirmDelete",
+                    title: "imageTools.dialogs.task-delete.title",
+                    message: "imageTools.dialogs.task-delete.message",
+                    callback: function (remove) {
+                        if (remove) {
+                            blade.isLoading = true;
+                            bladeNavigationService.closeChildrenBlades(blade);
+                            var ids = _.map(selection, function(task) { return task.id });
+                            taskApi.delete({ ids: ids }, function() {
+                                    blade.refresh();
+                                })};
+                        }
+                }
+                dialogService.showConfirmationDialog(dialog);
+            }
 
             // ui-grid
             $scope.setGridOptions = function (gridOptions) {

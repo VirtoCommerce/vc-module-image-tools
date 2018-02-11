@@ -1,19 +1,20 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.api',
-        function ($scope, bladeNavigationService, thumbnailApi) {
+    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.optionApi',
+        function ($scope, bladeNavigationService, optionApi) {
             var blade = $scope.blade;
 
             blade.refresh = function (parentRefresh) {
 
                 blade.isLoading = true;
-
-                thumbnailApi.getListOptions().then(function (results) {
+                optionApi.search({
+                    skip: 0
+                }, function (data) {
                     blade.isLoading = false;
-                    blade.currentEntities = results;
+                    blade.currentEntities = data.result;
                 });
 
-                if (parentRefresh && blade.parentRefresh) {
-                    blade.parentRefresh(results);
+                if (parentRefresh && blade.parentBlade.refresh) {
+                    blade.parentBlade.refresh();
                 }
 
             };
@@ -34,7 +35,7 @@
 
             $scope.selectNode = function (listItem) {
                 blade.setSelectedId(listItem.id);
-                showDetailBlade({ data: listItem });
+                showDetailBlade({ currentEntityId: listItem.id });
             };
 
             blade.toolbarCommands = [
