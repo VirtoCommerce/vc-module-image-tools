@@ -19,11 +19,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         [StringLength(64)]
         public string ResizeMethod { get; set; }
 
-        public decimal? Width { get; set; }
+        public int? Width { get; set; }
 
-        public decimal? Height { get; set; }
+        public int? Height { get; set; }
 
         public string BackgroundColor { get; set; }
+
+        [StringLength(64)]
+        public string AnchorPosition { get; set; }
 
         public virtual ThumbnailOptionEntity FromModel(ThumbnailOption option, PrimaryKeyResolvingMap pkMap)
         {
@@ -38,6 +41,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             Width = option.Width;
             Height = option.Height;
             BackgroundColor = option.BackgroundColor;
+            AnchorPosition = option.AnchorPosition.ToString();
             CreatedBy = option.CreatedBy;
             CreatedDate = option.CreatedDate;
             ModifiedBy = option.ModifiedBy;
@@ -54,6 +58,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             option.Name = Name;
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.ResizeMethod.Crop);
+            option.AnchorPosition = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.AnchorPosition.Center);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;
@@ -73,6 +78,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             target.Width = Width;
             target.Height = Height;
             target.BackgroundColor = BackgroundColor;
+            target.AnchorPosition = AnchorPosition;
         }
     }
 }

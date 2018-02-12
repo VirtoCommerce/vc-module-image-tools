@@ -1,30 +1,24 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api', function ($rootScope, $scope, bladeNavigationService, thumbnailApi) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.taskApi', 'virtoCommerce.imageToolsModule.optionApi', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, taskApi, optionApi, dialogService) {
         var blade = $scope.blade;
-
+        
         blade.refresh = function (parentRefresh) {
-
-            thumbnailApi.getListOptions().then(function (data) {
-                blade.optionList = data;
+            optionApi.search({
+                skip: 0
+            }, function (data) {
+                blade.optionList = data.result;
             });
 
-            thumbnailApi.getTask(blade.itemId).then(function (item) {
-
-                initializeBlade(item);
-
-                if (blade.childrenBlades) {
-                    _.each(blade.childrenBlades, function (x) {
-                        if (x.refresh) {
-                            x.refresh(blade.currentEntity);
-                        }
-                    });
-                }
-
-                if (parentRefresh) {
-                    blade.parentBlade.refresh();
-                }
+            if (blade.isNew) {
+                initializeBlade({});
+            } else {
+                taskApi.get({ id: blade.currentEntityId }, function (data) {
+                    initializeBlade(data);
+                    if (parentRefresh) {
+                        blade.parentBlade.refresh();
+                    }
+                });
             }
-            );
         };
 
         function initializeBlade(data) {
@@ -32,11 +26,6 @@
             blade.currentEntity = blade.item;
             blade.origEntity = data;
             blade.isLoading = false;
-        };
-
-        blade.codeValidator = function (value) {
-            var pattern = /[$+;=%{}[\]|\\\/@ ~!^*&()?:'<>,]/;
-            return !pattern.test(value);
         };
 
         function isDirty() {
@@ -49,14 +38,32 @@
 
         function saveChanges() {
             blade.isLoading = true;
-            categories.update({}, blade.currentEntity, function (data, headers) {
-                blade.refresh(true);
-            },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            var promise = saveOrUpdate();
+            promise.catch(function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            }).finally(function () {
+                blade.isLoading = false;
+            });
         };
 
+        function saveOrUpdate() {
+            if (blade.isNew) {
+                return taskApi.save(blade.currentEntity,
+                    function (data) {
+                        blade.isNew = false;
+                        blade.currentEntityId = data.id;
+                        blade.refresh(true);
+                    }).$promise;
+            } else {
+                return taskApi.update(blade.currentEntity,
+                    function () {
+                        blade.refresh(true);
+                    }).$promise;
+            }
+        }
+
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.category-save.title", "catalog.dialogs.category-save.message");
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "imageTools.dialogs.task-save.title", "imageTools.dialogs.task-save.message");
         };
 
         blade.formScope = null;
@@ -66,45 +73,91 @@
             {
                 name: "platform.commands.save",
                 icon: 'fa fa-save',
-                executeMethod: blade.refresh,
+                executeMethod: function () {
+                    saveChanges();
+                },
                 canExecuteMethod: function () {
-                    return true;
+                    return canSave();
                 }
             },
             {
                 name: "platform.commands.reset",
                 icon: 'fa fa-undo',
-                executeMethod: blade.refresh,
+                executeMethod: function () {
+                    blade.item = angular.copy(blade.origEntity);
+                    blade.currentEntity = blade.item;
+                },
                 canExecuteMethod: function () {
-                    return true;
+                    return isDirty();
                 }
             },
             {
-                name: "platform.commands.run",
+                name: "imageTools.commands.run",
                 icon: 'fa fa-exclamation',
-                executeMethod: blade.refresh,
+                executeMethod: function() {
+                    //todo: run
+                },
                 canExecuteMethod: function () {
-                    return true;
+                    return !blade.isNew;
                 }
             },
             {
                 name: "platform.commands.delete",
                 icon: 'fa fa-trash-o',
-                executeMethod: blade.refresh,
+                executeMethod: function () {
+                    deleteTask();
+                },
                 canExecuteMethod: function () {
-                    return true;
+                    return !blade.isNew;
                 }
             }
         ];
 
+        function folderPath(folderPath) {
+            if (folderPath && folderPath.length === 1 && folderPath[0].type === 'folder') {
+                blade.currentEntity.workPath = folderPath[0].relativeUrl;
+            } else {
+
+            }
+        }
+
+        function deleteTask() {
+            var dialog = {
+                id: "confirmDelete",
+                title: "imageTools.dialogs.task-delete.title",
+                message: "imageTools.dialogs.task-delete.message",
+                callback: function (remove) {
+                    if (remove) {
+                        blade.isLoading = true;
+                        taskApi.delete({ ids: blade.currentEntityId }, function() {
+                            bladeNavigationService.closeBlade(blade, function() {
+                                blade.parentBlade.refresh();
+                            });
+                        });
+                    };
+                }
+            }
+            dialogService.showConfirmationDialog(dialog);
+        }
+
+        blade.openFolderPath = function () {
+            var newBlade = {
+                title: 'imageTools.blades.setting-managment.title',
+                subtitle: 'imageTools.blades.setting-managment.subtitle',
+                onSelect: folderPath,
+                controller: 'platformWebApp.assets.assetSelectController'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
+
         blade.openSettingManagement = function () {
             var newBlade = {
                 id: 'optionListDetail',
-                currentEntityId: blade.itemId,
-                title: 'platform.blades.thumbnail.blades.setting-managment.title',
-                subtitle: 'platform.blades.thumbnail.blades.setting-managment.subtitle',
-                controller: 'platformWebApp.thumbnail.optionListController',
-                template: '$(Platform)/Scripts/app/thumbnail/blades/option-list.tpl.html'
+                currentEntityId: blade.currentEntityId,
+                title: 'imageTools.blades.setting-managment.title',
+                subtitle: 'imageTools.blades.setting-managment.subtitle',
+                controller: 'virtoCommerce.imageToolsModule.optionListController',
+                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/option-list.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };

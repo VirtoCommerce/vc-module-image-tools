@@ -63,7 +63,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         {
             using (var repository = this._thumbnailRepositoryFactory())
             {
-                repository.RemoveThumbnailTasksByIds(ids);
+                repository.RemoveThumbnailOptionsByIds(ids);
                 CommitChanges(repository);
             }
         }

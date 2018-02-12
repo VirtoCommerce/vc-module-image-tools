@@ -12,8 +12,8 @@ angular.module(moduleName, ['ui.grid.infiniteScroll'])
                 controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                     var blade = {
                         id: 'thumbnailList',
-                        title: 'platform.blades.thumbnail.title',
-                        subtitle: 'platform.blades.thumbnail.subtitle',
+                        title: 'imageTools.blades.tasks-list.title',
+                        subtitle: 'imageTools.blades.tasks-list.subtitle',
                         controller: 'virtoCommerce.imageToolsModule.taskListController',
                         template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-list.tpl.html',
                         isClosingDisabled: true

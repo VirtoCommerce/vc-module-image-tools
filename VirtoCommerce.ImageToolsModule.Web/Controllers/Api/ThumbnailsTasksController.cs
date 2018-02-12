@@ -52,8 +52,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpDelete]
+        [Route("")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Delete([FromBody] string[] ids)
+        public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _thumbnailTaskService.RemoveByIds(ids);
             return StatusCode(HttpStatusCode.NoContent);
@@ -69,8 +70,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(ThumbnailTask))]
         public IHttpActionResult Get(string id)
         {
-            var task = _thumbnailTaskService.GetByIds(new[] { id });
-            return Ok(task);
+            var task = this._thumbnailTaskService.GetByIds(new[] { id });
+            return this.Ok(task.FirstOrDefault());
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         /// <param name="criteria"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
+        [Route("search")]
         [ResponseType(typeof(SearchResult<ThumbnailTask>))]
         public SearchResult<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria)
         {

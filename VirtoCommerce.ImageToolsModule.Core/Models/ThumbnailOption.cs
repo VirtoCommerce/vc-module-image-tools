@@ -10,10 +10,12 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
 
         public ResizeMethod ResizeMethod { get; set; }
 
-        public decimal? Width { get; set; }
+        public int? Width { get; set; }
 
-        public decimal? Height { get; set; }
+        public int? Height { get; set; }
 
         public string BackgroundColor { get; set; }
+
+        public AnchorPosition AnchorPosition { get; set; }
     }
 }

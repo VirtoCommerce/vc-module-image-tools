@@ -1,10 +1,10 @@
 ﻿{
     "imageTools": {
         "main-menu-title": "Thumbnails",
-        "title": "Thumbnails generation tasks list",
-        "subtitle": "List of all tasks for thumbnails generations",
         "blades": {
             "tasks-list": {
+                "title": "Thumbnails generation tasks list",
+                "subtitle": "List of all tasks for thumbnails generations",
                 "labels": {
                     "task-name": "Task Name",
                     "last-run": "Last run"
@@ -18,6 +18,11 @@
                     "path-images": "Path to images",
                     "thumbnail-settings": "Thumbnail settings"
                 },
+                "placeholders": {
+                    "name": "Enter name",
+                    "path-images": "Select images path",
+                    "thumbnail-settings": "Select settings..."
+                },
                 "descriptions": {
                     "name": "The display task name",
                     "path-images": "The path in asset system which will be used for images discovery. Allimages in this folder will be processed recursively",
@@ -29,7 +34,8 @@
                 "subtitle": "Manage a thumbnails settings",
                 "background": "background",
                 "height": "height",
-                "width": "width"
+                "width": "width",
+                "no-settings": "No settings" 
             },
             "setting-detail": {
                 "title": "Thumbnail option detail",
@@ -73,7 +79,26 @@
                 "msg3": "Regenerate: force to generation progress for all images",
                 "btn-changes": "Progress changes",
                 "btn-regenerate": "Regenerate"
+            },
+            "task-save": {
+                "title": "Save changes",
+                "message": "The Task has been modified. Do you want to save changes?"
+            },
+            "task-delete": {
+                "title": "Delete confirmation",
+                "message": "Are you sure you want to delete this Task?"
+            },
+            "setting-save": {
+                "title": "Save changes",
+                "message": "The Setting has been modified. Do you want to save changes?"
+            },
+            "setting-delete": {
+                "title": "Delete confirmation",
+                "message": "Are you sure you want to delete this Setting?"
             }
-        }
+        },
+        "commands": {
+            "run": "Run" 
+        } 
     }
 }

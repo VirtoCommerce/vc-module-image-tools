@@ -1,19 +1,20 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api',
-        function ($scope, bladeNavigationService, thumbnailApi) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.optionApi',
+        function ($scope, bladeNavigationService, optionApi) {
             var blade = $scope.blade;
 
             blade.refresh = function (parentRefresh) {
 
                 blade.isLoading = true;
-
-                thumbnailApi.getListOptions().then(function (results) {
+                optionApi.search({
+                    skip: 0
+                }, function (data) {
                     blade.isLoading = false;
-                    blade.currentEntities = results;
+                    blade.currentEntities = data.result;
                 });
 
-                if (parentRefresh && blade.parentRefresh) {
-                    blade.parentRefresh(results);
+                if (parentRefresh && blade.parentBlade.refresh) {
+                    blade.parentBlade.refresh();
                 }
 
             };
@@ -25,8 +26,8 @@
             function showDetailBlade(bladeData) {
                 var newBlade = {
                     id: 'optionDetail',
-                    controller: 'platformWebApp.thumbnail.optionDetailController',
-                    template: '$(Platform)/Scripts/app/thumbnail/blades/option-detail.tpl.html'
+                    controller: 'virtoCommerce.imageToolsModule.optionDetailController',
+                    template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/option-detail.tpl.html'
                 };
                 angular.extend(newBlade, bladeData);
                 bladeNavigationService.showBlade(newBlade, blade);
@@ -34,7 +35,7 @@
 
             $scope.selectNode = function (listItem) {
                 blade.setSelectedId(listItem.id);
-                showDetailBlade({ data: listItem });
+                showDetailBlade({ currentEntityId: listItem.id });
             };
 
             blade.toolbarCommands = [

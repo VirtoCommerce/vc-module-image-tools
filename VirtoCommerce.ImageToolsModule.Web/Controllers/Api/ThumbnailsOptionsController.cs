@@ -15,9 +15,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
     public class ThumbnailsOptionsController : ApiController
     {
         private readonly IThumbnailOptionService _thumbnailOptionService;
-
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
-
 
         /// <summary>
         /// Constructor
@@ -26,8 +24,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         /// <param name="thumbnailOptionSearchService"></param>
         public ThumbnailsOptionsController(IThumbnailOptionService thumbnailOptionService, IThumbnailOptionSearchService thumbnailOptionSearchService)
         {
-            this._thumbnailOptionService = thumbnailOptionService;
-            this._thumbnailOptionSearchService = thumbnailOptionSearchService;
+            _thumbnailOptionService = thumbnailOptionService;
+            _thumbnailOptionSearchService = thumbnailOptionSearchService;
         }
 
         /// <summary>
@@ -40,7 +38,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(ThumbnailOption))]
         public IHttpActionResult Create(ThumbnailOption option)
         {
-            this._thumbnailOptionService.SaveOrUpdate(new[] { option });
+            _thumbnailOptionService.SaveOrUpdate(new[] { option });
             return Ok(option);
         }
 
@@ -54,7 +52,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
-            this._thumbnailOptionService.RemoveByIds(ids);
+            _thumbnailOptionService.RemoveByIds(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -68,8 +66,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(ThumbnailOption))]
         public IHttpActionResult Get(string id)
         {
-            var option = this._thumbnailOptionService.GetByIds(new[] { id });
-            return Ok(option);
+            var options = _thumbnailOptionService.GetByIds(new[] { id });
+            return Ok(options.FirstOrDefault());
         }
 
         /// <summary>
@@ -78,11 +76,11 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         /// <param name="criteria">Search criteria</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
+        [Route("search")]
         [ResponseType(typeof(SearchResult<ThumbnailOption>))]
         public SearchResult<ThumbnailOption> Search(ThumbnailOptionSearchCriteria criteria)
         {
-            var result = this._thumbnailOptionSearchService.Search(criteria);
+            var result = _thumbnailOptionSearchService.Search(criteria);
 
             var searchResult = new SearchResult<ThumbnailOption>
             {
@@ -103,7 +101,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult Update(ThumbnailOption option)
         {
-            this._thumbnailOptionService.SaveOrUpdate(new[] { option });
+            _thumbnailOptionService.SaveOrUpdate(new[] { option });
             return StatusCode(HttpStatusCode.NoContent);
         }
     }

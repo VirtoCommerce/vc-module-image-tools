@@ -1,59 +1,69 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.thumbnail.api', 'platformWebApp.thumbnail.resizeMethod', function ($rootScope, $scope, dialogService, bladeNavigationService, thumbnailApi, resizeMethod) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.resizeMethod', 'virtoCommerce.imageToolsModule.optionApi', function ($rootScope, $scope, dialogService, bladeNavigationService, resizeMethod, optionApi) {
         var blade = $scope.blade;
 
         blade.resizeMethodTypes = resizeMethod.get();
 
-        function initializeBlade(data) {
-            if (blade.isNew)
-                data = { resizeMethod: 'FixedSize' };
+        blade.refresh = function (parentRefresh) {
+            blade.isLoading = true;
+            if (blade.isNew) {
+                initializeBlade({ resizeMethod: 'FixedSize' });
+            } else {
+                optionApi.get({ id: blade.currentEntityId }, function (data) {
+                    initializeBlade(data);
+                    if (parentRefresh) {
+                        blade.parentBlade.refresh(parentRefresh);
+                    }
+                });
+            }
+        }
 
-            blade.currentEntity = angular.copy(data);
+        function initializeBlade(data) {
+            blade.item = angular.copy(data);
+            blade.currentEntity = blade.item;
             blade.origEntity = data;
             blade.isLoading = false;
 
-            blade.title = blade.isNew ? 'platform.blades.thumbnail.blades.setting-detail.title' : data.name;
-            blade.subtitle = 'platform.blades.thumbnail.blades.setting-detail.subtitle';
+            blade.title = blade.isNew ? 'imageTools.blades.setting-detail.title' : data.name;
+            blade.subtitle = 'imageTools.blades.setting-detail.subtitle';
         };
-
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
-
-            if (blade.isNew) {
-                blade.isNew = false;
-                thumbnailApi.saveOption(blade.currentEntity, function (data) {
-                    blade.parentBlade.refresh(true);
-                    initializeBlade(data);
-                }, function (error) {
-                    bladeNavigationService.setError('Error: ' + error.status, blade);
-                });
-            } else {
-                thumbnailApi.updateOption(blade.currentEntity, function (data) {
-                    blade.parentBlade.refresh(true);
-                    initializeBlade(data);
-                }, function (error) {
-                    bladeNavigationService.setError('Error: ' + error.status, blade);
-                });
-            }
+            var promise = saveOrUpdate();
+            promise.catch(function (error) {
+                bladeNavigationService.setError('Error ' + error.status, blade);
+            }).finally(function () {
+                blade.isLoading = false;
+            });
         };
+
+        function saveOrUpdate() {
+            if (blade.isNew) {
+                return optionApi.save(blade.currentEntity, function (data) {
+                    blade.isNew = false;
+                    blade.currentEntityId = data.id;
+                    blade.refresh(true);
+                }).$promise;
+            } else {
+                return optionApi.update(blade.currentEntity, function () {
+                    blade.refresh(true);
+                }).$promise;
+            }
+        }
 
         function deleteEntry() {
             var dialog = {
                 id: "confirmDelete",
-                title: "core.dialogs.currency-delete.title",
-                message: "core.dialogs.currency-delete.message",
+                title: "imageTools.dialogs.setting-delete.title",
+                message: "imageTools.dialogs.setting-delete.message",
                 callback: function (remove) {
                     if (remove) {
                         blade.isLoading = true;
-
-                        thumbnailApi.removeOptions({ codes: blade.currentEntity.code }, function () {
-                            angular.copy(blade.currentEntity, blade.origEntity);
-                            $scope.bladeClose();
-                            blade.parentBlade.setSelectedId(null);
-                            blade.parentBlade.refresh(true);
-                        }, function (error) {
-                            bladeNavigationService.setError('Error ' + error.status, blade);
+                        optionApi.delete({ ids: blade.currentEntityId }, function () {
+                            bladeNavigationService.closeBlade(blade, function () {
+                                blade.parentBlade.refresh(true);
+                            });
                         });
                     }
                 }
@@ -76,7 +86,7 @@
 
 
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.currency-save.title", "core.dialogs.currency-save.message");
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "imageTools.dialogs.setting-save.title", "imageTools.dialogs.setting-save.message");
         };
 
         blade.toolbarCommands = [
@@ -96,11 +106,11 @@
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: deleteEntry,
                 canExecuteMethod: function () {
-                    return !blade.origEntity.isPrimary;
+                    return !blade.isNew;
                 }
             }
         ];
 
-        initializeBlade(blade.data);
+        blade.refresh();
 
     }]);
