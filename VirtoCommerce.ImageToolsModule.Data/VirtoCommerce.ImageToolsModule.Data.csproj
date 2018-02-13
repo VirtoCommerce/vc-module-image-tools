@@ -100,6 +100,7 @@
     <Compile Include="Services\ThumbnailTaskSearchService.cs" />
     <Compile Include="Services\ThumbnailTaskService.cs" />
     <Compile Include="ThumbnailGeneration\DefaultThumbnailGenerator.cs" />
+    <Compile Include="ThumbnailGeneration\ImageResizer.cs" />
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationProcessor.cs" />
   </ItemGroup>
   <ItemGroup>

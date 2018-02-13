@@ -1,7 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -54,6 +56,10 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
             _container.RegisterType<IThumbnailTaskService, ThumbnailTaskService>();
             _container.RegisterType<IThumbnailTaskSearchService, ThumbnailTaskSearchService>();
+
+            _container.RegisterType<IImageResizer, ImageResizer>();
+            _container.RegisterType<IThumbnailGenerator, DefaultThumbnailGenerator>();
+            _container.RegisterType<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
         }
 
         #endregion

@@ -158,6 +158,8 @@
     <Content Include="Scripts\blades\task-progress.js" />
     <Content Include="Scripts\blades\task-progress.tpl.html" />
     <Content Include="Scripts\dialogs\run-dialog.tpl.html" />
+    <Content Include="Scripts\notifications\historyThumbnailProcess.tpl.html" />
+    <Content Include="Scripts\notifications\menuThumbnailProcess.tpl.html" />
     <Content Include="Scripts\resourse\resizeMethod.js" />
     <Content Include="Scripts\resourse\thumbnailApi.js" />
     <Content Include="Scripts\thumbnail.js" />
@@ -181,6 +183,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
     <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
     <Compile Include="Models\PushNotifications\ThumbnailProcessNotification.cs" />

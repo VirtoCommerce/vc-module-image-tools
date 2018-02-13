@@ -23,16 +23,42 @@ angular.module(moduleName, ['ui.grid.infiniteScroll'])
             });
     }])
     .run(
-        ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
-        var menuItem = {
-            path: 'browse/thumbnail',
-            icon: 'fa fa-picture-o',
-            title: 'imageTools.main-menu-title',
-            priority: 30,
-            action: function () { $state.go('workspace.thumbnail'); },
-            permission: 'thumbnail:access'
-        };
-        mainMenuService.addMenuItem(menuItem);
+        ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, authService, pushNotificationTemplateResolver, bladeNavigationService) {
+            var menuItem = {
+                path: 'browse/thumbnail',
+                icon: 'fa fa-picture-o',
+                title: 'imageTools.main-menu-title',
+                priority: 30,
+                action: function () { $state.go('workspace.thumbnail'); },
+                permission: 'thumbnail:access'
+            };
+            mainMenuService.addMenuItem(menuItem);
 
-        // ToDo register notification template
-    }]);
+            var menuTemplate =
+            {
+                priority: 901,
+                satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ThumbnailProcess'; },
+                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/notifications/menuThumbnailProcess.tpl.html',
+                action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
+            };
+            pushNotificationTemplateResolver.register(menuTemplate);
+
+            var historyTemplate =
+            {
+                priority: 901,
+                satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'ThumbnailProcess'; },
+                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/notifications/historyThumbnailProcess.tpl.html',
+                action: function (notify) {
+                    var blade = {
+                        id: 'thumbnailProcessDetail',
+                        title: 'Title1',
+                        subtitle: 'Subtite1',
+                        template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-progress.tpl.html',
+                        controller: 'virtoCommerce.imageToolsModule.taskRunController',
+                        notification: notify
+                    };
+                    bladeNavigationService.showBlade(blade);
+                }
+            };
+            pushNotificationTemplateResolver.register(historyTemplate);
+        }]);

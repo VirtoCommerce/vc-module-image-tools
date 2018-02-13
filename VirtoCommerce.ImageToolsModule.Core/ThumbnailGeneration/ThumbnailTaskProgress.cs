@@ -4,6 +4,12 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public class ThumbnailTaskProgress
     {
+        public ThumbnailTaskProgress()
+        {
+            Errors = new List<string>();
+            TotalCount = ProcessedCount = default(long);
+        }
+
         public string Message { get; set; }
 
         public long? TotalCount { get; set; }

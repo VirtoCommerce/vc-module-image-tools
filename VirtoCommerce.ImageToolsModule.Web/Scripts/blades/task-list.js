@@ -76,25 +76,34 @@
             $scope.taskRun = function (itemsSelect) {
                 var dialog = {
                     id: "confirmTaskRun",
-                    callback: function (doReindex) {
-                        var options = _.map(documentTypes, function (x) {
-                            return {
-                                documentType: x.documentType,
-                                deleteExistingIndex: doReindex
-                            };
-                        });
-                        thumbnailApi.taskRun(options).then(function openProgressBlade(data) {
+                    callback: function (regenerate) {
+                        var request = {
+                            taskIds: _.pluck(itemsSelect, "id"),
+                            regenerate: regenerate
+                        };
+
+                        taskApi.taskRun(request, function (notification) {
                             var newBlade = {
                                 id: 'thumbnailProgress',
-                                notification: data,
-                                parentRefresh: blade.parentRefresh,
-                                controller: 'virtoCommerce.coreModule.indexProgressController',
-                                template: '$(Platform)/Scripts/app/thumbnail/blades/task-detail.tpl.html'
+                                notification: notification,
+                                controller: 'virtoCommerce.imageToolsModule.taskRunController',
+                                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-progress.tpl.html'
                             };
+
+                                $scope.$on("new-notification-event", function (event, notification) {
+                                    if (notification && notification.id == newBlade.notification.id) {
+                                        blade.canImport = notification.finished != null;
+                                    }
+                                });
+
                             bladeNavigationService.showBlade(newBlade, blade.parentBlade || blade);
-                        });
+                        }, function (error) {
+                                bladeNavigationService.setError('Error ' + error.status, blade);
+                            }
+                        );
                     }
                 }
+
                 dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.ImageTools)/Scripts/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
 

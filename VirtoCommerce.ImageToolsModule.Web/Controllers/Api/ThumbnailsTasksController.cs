@@ -7,6 +7,8 @@ using Hangfire;
 using Omu.ValueInjecter;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
 using VirtoCommerce.ImageToolsModule.Web.Models;
 using VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -21,15 +23,17 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         private readonly IThumbnailTaskSearchService _thumbnailTaskSearchService;
         private readonly IThumbnailTaskService _thumbnailTaskService;
 
+        private readonly IThumbnailGenerationProcessor _thumbnailProcessor;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
 
-        public ThumbnailsTasksController(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailTaskService thumbnailTaskService, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
+        public ThumbnailsTasksController(IThumbnailTaskSearchService thumbnailTaskSearchService, IThumbnailTaskService thumbnailTaskService, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, IThumbnailGenerationProcessor thumbnailProcessor)
         {
             _thumbnailTaskSearchService = thumbnailTaskSearchService;
             _thumbnailTaskService = thumbnailTaskService;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
+            _thumbnailProcessor = thumbnailProcessor;
         }
 
         /// <summary>
@@ -70,8 +74,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ResponseType(typeof(ThumbnailTask))]
         public IHttpActionResult Get(string id)
         {
-            var task = this._thumbnailTaskService.GetByIds(new[] { id });
-            return this.Ok(task.FirstOrDefault());
+            var task = _thumbnailTaskService.GetByIds(new[] { id });
+            return Ok(task.FirstOrDefault());
         }
 
         /// <summary>
@@ -125,28 +129,42 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [ApiExplorerSettings(IgnoreApi = true)]
         public ThumbnailProcessNotification Enqueue(ThumbnailsTaskRunRequest runRequest)
         {
-            var notification = new ThumbnailProcessNotification(_userNameResolver.GetCurrentUserName(), "Process images", "starting process....");
+            var notification = new ThumbnailProcessNotification(_userNameResolver.GetCurrentUserName())
+            {
+                Title = "Process images",
+                Description = "starting process...."
+            };
             _pushNotifier.Upsert(notification);
 
-            // Hangfire will set cancellation token.
-            BackgroundJob.Enqueue(() => BackgroundProcess(runRequest, notification));
+            BackgroundJob.Enqueue(() => BackgroundProcess(runRequest, notification, JobCancellationToken.Null));
 
             return notification;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
         // Only public methods can be invoked in the background. (Hangfire)
-        public void BackgroundProcess(ThumbnailsTaskRunRequest importInfo, ThumbnailProcessNotification notifyEvent)
+        // Hangfire will set the cancellation token.
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public void BackgroundProcess(ThumbnailsTaskRunRequest generateRequest, ThumbnailProcessNotification notifyEvent, IJobCancellationToken cancellationToken)
         {
             try
             {
-                Action<ThumbnailProcessNotification> progressCallback = x =>
+                Action<ThumbnailTaskProgress> progressCallback = x =>
                 {
-                    notifyEvent.InjectFrom(x);
+                    notifyEvent.Description = x.Message;
+                    notifyEvent.Errors = x.Errors;
+                    notifyEvent.ErrorCount = notifyEvent.Errors.Count;
+                    notifyEvent.TotalCount = x.TotalCount ?? 0;
+                    notifyEvent.ProcessedCount = x.ProcessedCount ?? 0;
+
                     _pushNotifier.Upsert(notifyEvent);
                 };
 
-                //do work
+                //wrap token 
+                var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+
+                var tasks = _thumbnailTaskService.GetByIds(generateRequest.TaskIds);
+
+                _thumbnailProcessor.ProcessTasksAsync(tasks, generateRequest.Regenerate, progressCallback, cancellationTokenWrapper);
             }
             catch (Exception ex)
             {

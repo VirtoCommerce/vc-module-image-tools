@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-    .controller('platformWebApp.thumbnail.taskRunController', ['$scope', 'platformWebApp.thumbnail.api', function ($scope, thumbnailApi) {
+﻿angular.module('virtoCommerce.imageToolsModule')
+    .controller('virtoCommerce.imageToolsModule.taskRunController', ['$scope', 'virtoCommerce.imageToolsModule.api', function ($scope, thumbnailApi) {
         var blade = $scope.blade;
 
         $scope.$on("new-notification-event", function (event, notification) {

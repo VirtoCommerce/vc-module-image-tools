@@ -2,7 +2,8 @@
     .factory('virtoCommerce.imageToolsModule.taskApi', ['$resource', function ($resource) {
         return $resource('api/image/thumbnails/tasks/:id', { id: '@id' }, {
             search: { method: 'POST', url: 'api/image/thumbnails/tasks/search' },
-            update: { method: 'PUT', url: 'api/image/thumbnails/tasks' }
+            update: { method: 'PUT', url: 'api/image/thumbnails/tasks' },
+            taskRun: { method: 'POST', url: 'api/image/thumbnails/tasks/run' }
         });
     }])
     .factory('virtoCommerce.imageToolsModule.optionApi', ['$resource', function ($resource) {

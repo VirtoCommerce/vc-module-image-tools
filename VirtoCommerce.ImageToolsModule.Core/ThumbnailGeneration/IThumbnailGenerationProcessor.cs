@@ -2,12 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IThumbnailGenerationProcessor
     {
-        Task ProcessTasksAsync(ThumbnailTask[] tasks, Action<ThumbnailTaskProgress> progressCallback,
-            CancellationToken token);
+        void ProcessTasksAsync(ThumbnailTask[] tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token);
     }
 }

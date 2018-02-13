@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
@@ -16,160 +14,153 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     /// </summary>
     public class DefaultThumbnailGenerator : IThumbnailGenerator
     {
-        private IBlobStorageProvider _storageProvider;
+        private readonly object _progressLock = new object();
 
-        public DefaultThumbnailGenerator(IBlobStorageProvider storageProvider)
+        private readonly IBlobStorageProvider _storageProvider;
+        private readonly IImageResizer _imageResizer;
+
+        public DefaultThumbnailGenerator(IBlobStorageProvider storageProvider, IImageResizer imageResizer)
         {
             _storageProvider = storageProvider;
+            _imageResizer = imageResizer;
         }
 
         /// <summary>
         /// Generates thumbnails asynchronously
         /// </summary>
-        /// <param name="sourcePath">Contains source pictures</param>
+        /// <param name="sourcePath">Path to source picture</param>
         /// <param name="destPath">Target folder for generated thumbnails</param>
         /// <param name="option">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(
-            string sourcePath,
-            string destPath,
-            ThumbnailOption option,
-            CancellationToken token)
+        public ThumbnailGenerationResult GenerateThumbnailsAsync(string sourcePath, string destPath, ThumbnailOption option, ICancellationToken token)
         {
-            var files = Directory.GetFiles(sourcePath);
+            token?.ThrowIfCancellationRequested();
 
-            return await Task<ThumbnailGenerationResult>.Factory.StartNew(
-                       () =>
-                           {
-                               var parallelOptions = new ParallelOptions();
-                               parallelOptions.CancellationToken = token;
-                               parallelOptions.MaxDegreeOfParallelism = Environment.ProcessorCount;
-
-                               var rezVal = new ThumbnailGenerationResult();
-
-                               try
-                               {
-                                   Parallel.ForEach(
-                                       files,
-                                       parallelOptions,
-                                       (currentFile) =>
-                                           {
-                                               parallelOptions.CancellationToken.ThrowIfCancellationRequested();
-
-                                               var image = Image.FromFile(currentFile);
-                                               Image destImage = null;
-                                               var height = option.Height ?? image.Height;
-                                               var width = option.Width ?? image.Width;
-
-                                               try
-                                               {
-                                                   switch (option.ResizeMethod)
-                                                   {
-                                                       case ResizeMethod.FixedSize:
-                                                           destImage = ScaleImage(image, width, height);
-                                                           break;
-                                                       case ResizeMethod.FixedHeight:
-                                                           destImage = ResizeImage(image, image.Width, height);
-                                                           break;
-                                                       case ResizeMethod.FixedWidth:
-                                                           destImage = ResizeImage(image, width, image.Height);
-                                                           break;
-                                                       case ResizeMethod.Crop:
-                                                           destImage = CropImage(image, width, height);
-                                                           break;
-                                                   }
-
-                                                   var newName =
-                                                       Path.GetFileNameWithoutExtension(currentFile) + '_'
-                                                                                                     + Guid.NewGuid()
-                                                                                                     + option.FileSuffix;
-                                                   var outFileName = Path.Combine(destPath, newName);
-
-                                                   destImage?.Save(outFileName, GetImageFormat(option.FileSuffix));
-
-                                                   rezVal.GeneratedThumbnails.Add(outFileName);
-                                               }
-                                               finally
-                                               {
-                                                   destImage?.Dispose();
-                                                   image.Dispose();
-                                               }
-                                           });
-                               }
-                               catch (OperationCanceledException)
-                               {
-                               }
-
-                               return rezVal;
-                           }, token);
-        }
-
-        private static Image ScaleImage(Image image, decimal width, decimal height)
-        {
-            var widthRatio = image.Width / width;
-            var heightRatio = image.Height / height;
-
-            // Resize to the greatest ratio
-            var ratio = heightRatio > widthRatio ? heightRatio : widthRatio;
-            var newWidth = Convert.ToInt32(Math.Floor(image.Width / ratio));
-            var newHeight = Convert.ToInt32(Math.Floor(image.Height / ratio));
-
-            return image.GetThumbnailImage(newWidth, newHeight, null, IntPtr.Zero);
-        }
-
-        private static Image ResizeImage(Image image, decimal width, decimal height)
-        {
-            var destImage = new Bitmap((int)width, (int)height);
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-            using (var graphics = Graphics.FromImage(destImage))
+            var originalImage = LoadImageAsync(sourcePath);
+            if (originalImage == null)
             {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                using (var attributes = new ImageAttributes())
+                return new ThumbnailGenerationResult()
                 {
-                    attributes.SetWrapMode(WrapMode.TileFlipXY);
-                    var rectangle = new Rectangle(0, 0, (int)width, (int)height);
-                    graphics.DrawImage(
-                        image,
-                        rectangle,
-                        0,
-                        0,
-                        image.Width,
-                        image.Height,
-                        GraphicsUnit.Pixel,
-                        attributes);
-                }
+                    Errors = {$"{sourcePath} is not an image"}
+                };
             }
 
-            return destImage;
+            var format = GetImageFormat(originalImage);
+
+            //one process only can use an Image object at the same time.
+            Image clone;
+            lock (_progressLock)
+            {
+                clone = (Image)originalImage.Clone();
+            }
+
+            //Generate a Thumbnail
+            var height = option.Height ?? originalImage.Height;
+            var width = option.Width ?? originalImage.Width;
+            var color = ColorTranslator.FromHtml(option.BackgroundColor);
+
+            Image thumbnail = null;
+            switch (option.ResizeMethod)
+            {
+                case ResizeMethod.FixedSize:
+                    thumbnail = _imageResizer.FixedSize(clone, width, height, color);
+                    break;
+                case ResizeMethod.FixedWidth:
+                    thumbnail = _imageResizer.FixedWidth(clone, width, color);
+                    break;
+                case ResizeMethod.FixedHeight:
+                    thumbnail = _imageResizer.FixedHeight(clone, height, color);
+                    break;
+                case ResizeMethod.Crop:
+                    thumbnail = _imageResizer.Crop(clone, width, height, option.AnchorPosition);
+                    break;
+            }
+
+            if (thumbnail != null)
+            {
+                SaveImage(destPath, thumbnail, format);
+            }
+            else
+            {
+                throw new Exception("error");
+                //string.Format(CultureInfo.InvariantCulture, "Cannot generate thumbnail for image '{0}'.", thumbnailUrl)
+            }
+
+            return new ThumbnailGenerationResult
+            {
+                GeneratedThumbnails = {destPath}
+            };
         }
 
-        private static Image CropImage(Image image, decimal width, decimal height)
+        /// <summary>
+        /// Load to Image from blob.
+        /// </summary>
+        /// <param name="imageUrl">image url.</param>
+        /// <returns>Image object.</returns>
+        protected virtual Image LoadImageAsync(string imageUrl)
         {
-            var leftMargin = (image.Width - width) / 2;
-            var topMargin = (image.Height - height) / 2;
-            var rectangle = new Rectangle((int)leftMargin, (int)topMargin, (int)width, (int)height);
-            var bitmap = new Bitmap(image);
-            return bitmap.Clone(rectangle, PixelFormat.DontCare);
+            try
+            {
+                using (var blobStream = _storageProvider.OpenRead(imageUrl))
+                using (var stream = new MemoryStream())
+                {
+                    blobStream.CopyTo(stream);
+                    var result = Image.FromStream(stream);
+                    return result;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
-        private static ImageFormat GetImageFormat(string fileSuffix)
+        /// <summary>
+        /// Get image format by Image object.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        protected virtual ImageFormat GetImageFormat(Image image)
         {
-            fileSuffix = fileSuffix.ToLower().TrimStart('.');
+            if (image.RawFormat.Equals(ImageFormat.Jpeg))
+                return ImageFormat.Jpeg;
+            if (image.RawFormat.Equals(ImageFormat.Bmp))
+                return ImageFormat.Bmp;
+            if (image.RawFormat.Equals(ImageFormat.Png))
+                return ImageFormat.Png;
+            if (image.RawFormat.Equals(ImageFormat.Emf))
+                return ImageFormat.Emf;
+            if (image.RawFormat.Equals(ImageFormat.Exif))
+                return ImageFormat.Exif;
+            if (image.RawFormat.Equals(ImageFormat.Gif))
+                return ImageFormat.Gif;
+            if (image.RawFormat.Equals(ImageFormat.Icon))
+                return ImageFormat.Icon;
+            if (image.RawFormat.Equals(ImageFormat.MemoryBmp))
+                return ImageFormat.MemoryBmp;
+            if (image.RawFormat.Equals(ImageFormat.Tiff))
+                return ImageFormat.Tiff;
+            return ImageFormat.Wmf;
+        }
 
-            if (fileSuffix == "jpg" || fileSuffix == "jpeg") return ImageFormat.Jpeg;
-            if (fileSuffix == "gif") return ImageFormat.Gif;
-            if (fileSuffix == "png") return ImageFormat.Png;
-            if (fileSuffix == "tiff") return ImageFormat.Tiff;
-            if (fileSuffix == "bmp") return ImageFormat.Bmp;
-
-            return null;
+        /// <summary>
+        /// Save given image to blob storage.
+        /// </summary>
+        /// <param name="imageUrl">Image url.</param>
+        /// <param name="image">Image object.</param>
+        /// <param name="format">Image object format.</param>
+        protected virtual void SaveImage(string imageUrl, Image image, ImageFormat format)
+        {
+            using (var blobStream = _storageProvider.OpenWrite(imageUrl))
+            using (var stream = new MemoryStream())
+            {
+                image.Save(stream, format);
+                stream.Position = 0;
+                stream.CopyTo(blobStream);
+            }
         }
     }
 }
+

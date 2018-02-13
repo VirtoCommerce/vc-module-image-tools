@@ -9,13 +9,8 @@ namespace VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications
     {
         public ThumbnailProcessNotification(string creator) : base(creator)
         {
+            NotifyType = "ThumbnailProcess";
             Errors = new List<string>();
-        }
-
-        public ThumbnailProcessNotification(string creator, string title, string description) : this(creator)
-        {
-            Title = title;
-            Description = description;
         }
 
         /// <summary>
