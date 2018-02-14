@@ -94,8 +94,8 @@
             {
                 name: "imageTools.commands.run",
                 icon: 'fa fa-exclamation',
-                executeMethod: function() {
-                    //todo: run
+                executeMethod: function () {
+                    taskRun(blade.currentEntityId);
                 },
                 canExecuteMethod: function () {
                     return !blade.isNew;
@@ -112,6 +112,40 @@
                 }
             }
         ];
+
+        function taskRun(taskId) {
+            var dialog = {
+                id: "confirmTaskRun",
+                callback: function (regenerate) {
+                    var request = {
+                        taskIds: [taskId],
+                        regenerate: regenerate
+                    };
+
+                    taskApi.taskRun(request, function (notification) {
+                            var newBlade = {
+                                id: 'thumbnailProgress',
+                                notification: notification,
+                                controller: 'virtoCommerce.imageToolsModule.taskRunController',
+                                template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-progress.tpl.html'
+                            };
+
+                            $scope.$on("new-notification-event", function (event, notification) {
+                                if (notification && notification.id == newBlade.notification.id) {
+                                    blade.canImport = notification.finished != null;
+                                }
+                            });
+
+                            bladeNavigationService.showBlade(newBlade, blade.parentBlade || blade);
+                        }, function (error) {
+                            bladeNavigationService.setError('Error ' + error.status, blade);
+                        }
+                    );
+                }
+            }
+
+            dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.ImageTools)/Scripts/dialogs/run-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+        }
 
         function folderPath(folderPath) {
             if (folderPath && folderPath.length === 1 && folderPath[0].type === 'folder') {

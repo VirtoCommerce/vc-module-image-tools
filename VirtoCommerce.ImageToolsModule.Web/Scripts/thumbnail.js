@@ -28,7 +28,7 @@ angular.module(moduleName, ['ui.grid.infiniteScroll'])
                 path: 'browse/thumbnail',
                 icon: 'fa fa-picture-o',
                 title: 'imageTools.main-menu-title',
-                priority: 30,
+                priority: 901,
                 action: function () { $state.go('workspace.thumbnail'); },
                 permission: 'thumbnail:access'
             };

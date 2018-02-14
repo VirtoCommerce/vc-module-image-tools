@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'virtoCommerce.imageToolsModule.api', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
-        function ($scope, bladeNavigationService, bladeUtils, thumbnailApi, uiGridHelper, dialogService, taskApi) {
+    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
+        function ($scope, bladeNavigationService, bladeUtils, uiGridHelper, dialogService, taskApi) {
             var blade = $scope.blade;
 
             $scope.uiGridConstants = uiGridHelper.uiGridConstants;

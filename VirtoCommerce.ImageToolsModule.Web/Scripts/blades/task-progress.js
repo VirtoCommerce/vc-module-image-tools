@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.taskRunController', ['$scope', 'virtoCommerce.imageToolsModule.api', function ($scope, thumbnailApi) {
+    .controller('virtoCommerce.imageToolsModule.taskRunController', ['$scope', 'virtoCommerce.imageToolsModule.taskApi', function ($scope, taskApi) {
         var blade = $scope.blade;
 
         $scope.$on("new-notification-event", function (event, notification) {
@@ -15,7 +15,9 @@
                 return blade.notification && !blade.notification.finished;
             },
             executeMethod: function () {
-                thumbnailApi.cancel({ tasksId: [blade.notification.id] });
+                taskApi.taskCancel({ jobId: blade.notification.jobId }, null, function(data) {
+                    
+                });
             }
         }];
 

@@ -14,6 +14,12 @@ namespace VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications
         }
 
         /// <summary>
+        /// Id of the processing job
+        /// </summary>
+        [JsonProperty("jobId")]
+        public string JobId { get; set; }
+
+        /// <summary>
         /// Gets or sets the job finish date and time.
         /// </summary>
         /// <value>

@@ -15,18 +15,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         private readonly IThumbnailGenerator _generator;
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
+        private readonly IThumbnailTaskService _thumbnailTaskService;
 
-        public ThumbnailGenerationProcessor(IThumbnailGenerator generator, IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService)
+        public ThumbnailGenerationProcessor(IThumbnailGenerator generator, IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService, IThumbnailTaskService thumbnailTaskService)
         {
             _generator = generator;
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
+            _thumbnailTaskService = thumbnailTaskService;
         }
 
-        public void ProcessTasksAsync(ThumbnailTask[] tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
+        public void ProcessTasksAsync(string[] taskIds, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
         {
             //find original files and count
-            var progressInfo = new ThumbnailTaskProgress { Message = "Reading the files..." };
+            var progressInfo = new ThumbnailTaskProgress { Message = "Reading the tasks..." };
+
+            var tasks = _thumbnailTaskService.GetByIds(taskIds);
 
             var suffixCollection = GetSuffixCollection();
 
@@ -50,6 +54,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 {
                     foreach (var option in task.ThumbnailOptions)
                     {
+                        //skip non existent images
                         var thumbnailUrl = AddAliasToImageUrl(fileInfo.Url, "_" + option.FileSuffix);
                         if (!regenerate && Exists(thumbnailUrl))
                         {
@@ -94,7 +99,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 foreach (var suffix in suffixCollection)
                 {
                     var name = blobInfo.FileName;
-                    if (name.Contains("_" + suffix + "."))
+                    if (name.Contains("_" + suffix))
                     {
                         present = true;
                         break;

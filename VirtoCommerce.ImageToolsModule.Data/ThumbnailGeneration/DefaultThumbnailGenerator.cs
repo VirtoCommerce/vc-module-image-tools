@@ -29,7 +29,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// Generates thumbnails asynchronously
         /// </summary>
         /// <param name="sourcePath">Path to source picture</param>
-        /// <param name="destPath">Target folder for generated thumbnails</param>
+        /// <param name="destPath">Target for generated thumbnail</param>
         /// <param name="option">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
@@ -42,7 +42,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 return new ThumbnailGenerationResult()
                 {
-                    Errors = {$"{sourcePath} is not an image"}
+                    Errors = {$"Cannot generate thumbnail for option {option.Name}: {sourcePath} does not have a valid image format" }
                 };
             }
 
@@ -83,7 +83,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             }
             else
             {
-                throw new Exception("error");
+                throw new Exception($"Cannot save thumbnail image {destPath}");
                 //string.Format(CultureInfo.InvariantCulture, "Cannot generate thumbnail for image '{0}'.", thumbnailUrl)
             }
 
@@ -114,7 +114,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 return null;
             }
-
         }
 
         /// <summary>
