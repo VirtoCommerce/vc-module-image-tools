@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
-        function ($scope, bladeNavigationService, bladeUtils, uiGridHelper, dialogService, taskApi) {
+    .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope','$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
+        function ($scope, $timeout, bladeNavigationService, bladeUtils, uiGridHelper, dialogService, taskApi) {
             var blade = $scope.blade;
 
             $scope.uiGridConstants = uiGridHelper.uiGridConstants;
@@ -10,16 +10,73 @@
             blade.refresh = function () {
                 blade.isLoading = true;
 
-                //todo: paging
-                taskApi.search({
-                    skip: 0
-                }, function (data) {
+                if ($scope.pageSettings.currentPage !== 1)
+                    $scope.pageSettings.currentPage = 1;
+
+                var searchCriteria = getSearchCriteria();
+
+                taskApi.search(searchCriteria,
+                    function (data) {
                     $scope.items = data.result;
                     $scope.hasMore = data.result.length === $scope.pageSettings.itemsPerPageCount;
-                }).$promise.finally(function() {
-                    blade.isLoading = false;
-                });
+
+                        $timeout(function () {
+                            // wait for grid to ingest data changes
+                            if ($scope.gridApi.selection.getSelectAllState()) {
+                                $scope.gridApi.selection.selectAllRows();
+                            }
+                        });
+                    }).$promise.finally(function () {
+                        blade.isLoading = false;
+                    });
+                //reset state grid
+                resetStateGrid();
             };
+
+            function showMore() {
+                if ($scope.hasMore) {
+                        ++$scope.pageSettings.currentPage;
+                        $scope.gridApi.infiniteScroll.saveScrollPercentage();
+                        blade.isLoading = true;
+                        var searchCriteria = getSearchCriteria();
+
+                        taskApi.search(searchCriteria,
+                            function (data) {
+                            $scope.items = $scope.items.concat(data.result);
+                            $scope.hasMore = data.listEntries.length === $scope.pageSettings.itemsPerPageCount;
+                            $scope.gridApi.infiniteScroll.dataLoaded();
+
+                            $timeout(function () {
+                                // wait for grid to ingest data changes
+                                if ($scope.gridApi.selection.getSelectAllState()) {
+                                    $scope.gridApi.selection.selectAllRows();
+                                }
+                            });
+
+                        }).$promise.finally(function () {
+                            blade.isLoading = false;
+                        });
+                    };
+                }
+
+            // Search Criteria
+            function getSearchCriteria() {
+                var searchCriteria = {
+                    skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                    take: $scope.pageSettings.itemsPerPageCount
+                };
+                return searchCriteria;
+            }
+
+            //reset state grid (header checkbox, scroll)
+            function resetStateGrid() {
+                if ($scope.gridApi) {
+                    $scope.items = [];
+                    $scope.gridApi.selection.clearSelectedRows();
+                    $scope.gridApi.infiniteScroll.resetScroll(true, true);
+                    $scope.gridApi.infiniteScroll.dataLoaded();
+                }
+            }
 
             blade.setSelectedItem = function (listItem) {
                 $scope.selectedNodeId = listItem.id;
@@ -183,7 +240,7 @@
                     $scope.gridApi = gridApi;
 
                     uiGridHelper.bindRefreshOnSortChanged($scope);
-                    //$scope.gridApi.infiniteScroll.on.needLoadMoreData($scope, showMore);
+                    $scope.gridApi.infiniteScroll.on.needLoadMoreData($scope, showMore);
                 });
 
                 blade.refresh();

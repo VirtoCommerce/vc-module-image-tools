@@ -1,14 +1,14 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.optionApi',
-        function ($scope, bladeNavigationService, optionApi) {
+    .controller('virtoCommerce.imageToolsModule.optionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'imageToolsConfig', 'virtoCommerce.imageToolsModule.optionApi',
+        function ($scope, bladeNavigationService, imageToolsConfig, optionApi) {
             var blade = $scope.blade;
 
             blade.refresh = function (parentRefresh) {
-
                 blade.isLoading = true;
-                optionApi.search({
-                    skip: 0
-                }, function (data) {
+
+                var searchCriteria = getSearchCriteria();
+
+                optionApi.search(searchCriteria, function (data) {
                     blade.isLoading = false;
                     blade.currentEntities = data.result;
                 });
@@ -18,6 +18,15 @@
                 }
 
             };
+
+            // Search Criteria
+            function getSearchCriteria() {
+                var searchCriteria = {
+                    skip: 0,
+                    take: imageToolsConfig.intMaxValue
+                };
+                return searchCriteria;
+            }
 
             blade.setSelectedId = function (selectedNodeId) {
                 $scope.selectedNodeId = selectedNodeId;

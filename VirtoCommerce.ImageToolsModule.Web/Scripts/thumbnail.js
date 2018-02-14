@@ -4,6 +4,10 @@ if (AppDependencies != undefined) {
     AppDependencies.push(moduleName);
 }
 angular.module(moduleName, ['ui.grid.infiniteScroll'])
+    .constant('imageToolsConfig',
+        {
+            intMaxValue: 2147483647
+        })
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('workspace.thumbnail', {
