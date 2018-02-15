@@ -2,6 +2,7 @@
 using System.Linq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -21,35 +22,46 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         {
             using (var repository = _thumbnailRepositoryFactory())
             {
-                var sortInfos = criteria.SortInfos;
+                var query = GetTasksQuery(repository, criteria);
 
+                var sortInfos = criteria.SortInfos;
                 if (sortInfos.IsNullOrEmpty())
                 {
                     sortInfos = new[]
                     {
                         new SortInfo
                         {
-                            SortColumn = ReflectionUtility.GetPropertyName<ThumbnailTask>(t => t.CreatedDate),
-                            SortDirection = SortDirection.Descending
+                            SortColumn = ReflectionUtility.GetPropertyName<ThumbnailTask>(t => t.CreatedDate), SortDirection = SortDirection.Descending
                         }
                     };
                 }
-
-                var query = repository.ThumbnailTasks.OrderBySortInfos(sortInfos);
-
-                var retVal = new GenericSearchResponse<ThumbnailTask> { TotalCount = query.Count() };
+                query = query.OrderBySortInfos(sortInfos);
+                var totalCount = query.Count();
 
                 var ids = query.Skip(criteria.Skip).Take(criteria.Take).Select(x => x.Id).ToArray();
-                retVal.Results = repository.GetThumbnailTasksByIds(ids)
-                    .Select(t => t.ToModel(AbstractTypeFactory<ThumbnailTask>.TryCreateInstance())).ToArray();
+                var results = repository.GetThumbnailTasksByIds(ids).Select(t => t.ToModel(AbstractTypeFactory<ThumbnailTask>.TryCreateInstance())).ToArray();
+
+                var retVal = new GenericSearchResponse<ThumbnailTask>
+                {
+                    TotalCount = totalCount,
+                    Results = results.AsQueryable().OrderBySortInfos(sortInfos).ToList()
+                };
 
                 return retVal;
             }
         }
 
-        public GenericSearchResponse<ThumbnailTask> Search(string keyword)
+        protected virtual IQueryable<ThumbnailTaskEntity> GetTasksQuery(IThumbnailRepository repository,
+            ThumbnailTaskSearchCriteria criteria)
         {
-            return this.Search(new ThumbnailTaskSearchCriteria { SearchPhrase = keyword });
+            var query = repository.ThumbnailTasks;
+
+            if (!criteria.Keyword.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.Name.Contains(criteria.Keyword));
+            }
+
+            return query;
         }
     }
 }
