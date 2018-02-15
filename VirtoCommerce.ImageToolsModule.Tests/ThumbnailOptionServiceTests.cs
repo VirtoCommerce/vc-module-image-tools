@@ -12,7 +12,7 @@ using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
 {
-    class ThumbnailOptionServiceTests
+    public class ThumbnailOptionServiceTests
     {
         [Fact]
         public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailOption()
