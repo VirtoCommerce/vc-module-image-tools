@@ -17,15 +17,16 @@
 
                 taskApi.search(searchCriteria,
                     function (data) {
-                    $scope.items = data.result;
-                    $scope.hasMore = data.result.length === $scope.pageSettings.itemsPerPageCount;
+                        $scope.items = data.result;
+                        addDescriptionItem();
+                        $scope.hasMore = data.result.length === $scope.pageSettings.itemsPerPageCount;
 
-                        $timeout(function () {
-                            // wait for grid to ingest data changes
-                            if ($scope.gridApi.selection.getSelectAllState()) {
-                                $scope.gridApi.selection.selectAllRows();
-                            }
-                        });
+                            $timeout(function () {
+                                // wait for grid to ingest data changes
+                                if ($scope.gridApi.selection.getSelectAllState()) {
+                                    $scope.gridApi.selection.selectAllRows();
+                                }
+                            });
                     }).$promise.finally(function () {
                         blade.isLoading = false;
                     });
@@ -42,22 +43,40 @@
 
                         taskApi.search(searchCriteria,
                             function (data) {
-                            $scope.items = $scope.items.concat(data.result);
-                            $scope.hasMore = data.listEntries.length === $scope.pageSettings.itemsPerPageCount;
-                            $scope.gridApi.infiniteScroll.dataLoaded();
+                                $scope.items = $scope.items.concat(data.result);
+                                addDescriptionItem();
+                                $scope.hasMore = data.listEntries.length === $scope.pageSettings.itemsPerPageCount;
+                                $scope.gridApi.infiniteScroll.dataLoaded();
 
-                            $timeout(function () {
-                                // wait for grid to ingest data changes
-                                if ($scope.gridApi.selection.getSelectAllState()) {
-                                    $scope.gridApi.selection.selectAllRows();
-                                }
-                            });
+                                $timeout(function () {
+                                    // wait for grid to ingest data changes
+                                    if ($scope.gridApi.selection.getSelectAllState()) {
+                                        $scope.gridApi.selection.selectAllRows();
+                                    }
+                                });
 
                         }).$promise.finally(function () {
                             blade.isLoading = false;
                         });
                     };
-                }
+            }
+
+            //add description for item
+            function addDescriptionItem() {
+                angular.forEach($scope.items, function (item) {
+                    if (!item.description) {
+                        var optionsString = ' (';
+                        for (var i = 0; i < item.thumbnailOptions.length; i++) {
+                            if (i > 2)
+                                break;
+                            optionsString = optionsString.concat(' ').concat(item.thumbnailOptions[i].width).concat(' x ').concat(item.thumbnailOptions[i].height).concat(';');
+                        }
+                        optionsString = optionsString.concat(') ');
+
+                        item.description = ''.concat(item.workPath).concat(optionsString);
+                    }
+                });
+            }
 
             // Search Criteria
             function getSearchCriteria() {
@@ -76,7 +95,7 @@
                     $scope.gridApi.infiniteScroll.resetScroll(true, true);
                     $scope.gridApi.infiniteScroll.dataLoaded();
                 }
-            }
+            };
 
             blade.setSelectedItem = function (listItem) {
                 $scope.selectedNodeId = listItem.id;

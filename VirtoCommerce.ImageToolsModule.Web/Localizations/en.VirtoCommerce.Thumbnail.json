@@ -88,6 +88,10 @@
                 "btn-changes": "Progress changes",
                 "btn-regenerate": "Regenerate"
             },
+            "select-folder": {
+                "title": "Thumbnails generation path to images",
+                "msg1": "You can select only the directory and only one."
+            }, 
             "task-save": {
                 "title": "Save changes",
                 "message": "The Task has been modified. Do you want to save changes?"
