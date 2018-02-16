@@ -64,10 +64,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
             _container.RegisterType<IImageResizer, ImageResizer>();
             _container.RegisterType<IThumbnailGenerator, DefaultThumbnailGenerator>();
             _container.RegisterType<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
-
-            Func<ThumbnailTask, bool, IImagesChangesProvider> factory = (task, regenerate) =>
-                new BlobImagesChangesProvider(task, regenerate, _container.Resolve<IBlobStorageProvider>(), _container.Resolve<IThumbnailOptionSearchService>(), _container.Resolve<ISettingsManager>());
-            _container.RegisterInstance(factory);
+            _container.RegisterType<IImagesChangesProvider, BlobImagesChangesProvider>();
         }
 
         #endregion

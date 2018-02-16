@@ -1,9 +1,13 @@
-﻿namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
+﻿using System;
+
+namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IImagesChangesProvider
     {
-        long GetTotalChangesCount();
+        bool GetTotalCountSupported { get; }
 
-        ImageChangeResult GetNextChangesBatch();
+        long GetTotalChangesCount(string workPath, bool regenerate, DateTime? lastRunDate);
+
+        ImageChange[] GetNextChangesBatch(string workPath, bool regenerate, DateTime? lastRunDate, long? skip, long? take);
     }
 }

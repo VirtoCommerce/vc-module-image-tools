@@ -5,37 +5,29 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Assets;
-using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class BlobImagesChangesProvider : IImagesChangesProvider
     {
-        protected long Skip { get; set; }
-        protected long Take { get; set; }
+        private Dictionary<string, ImageChange> _changeBlobs = new Dictionary<string, ImageChange>();
 
-        private ICollection<ImageChange> _changeBlobs;
+        public bool GetTotalCountSupported => true;
+
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
 
-        private readonly ThumbnailTask _task;
-        private readonly bool _regenerate;
-
-        public BlobImagesChangesProvider(ThumbnailTask task, bool regenerage, IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService, ISettingsManager settingsManager)
+        public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService)
         {
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
-            
-            _task = task;
-            _regenerate = regenerage;
-
-            Take = settingsManager.GetValue("ImageTools.Thumbnails.ProcessBacthSize", 50);
         }
 
-        protected virtual ICollection<ImageChange> GetChangeFiles()
+        protected virtual ICollection<ImageChange> GetChangeFiles(string workPath, bool regenerate, DateTime? lastRunDate)
         {
             var options = GetOptionsCollection();
-            var allBlobInfos = ReadBlobFolder(_task.WorkPath);
+            var allBlobInfos = ReadBlobFolder(workPath);
             var orignalBlobInfos = GetOriginalItems(allBlobInfos, options.Select(x => x.FileSuffix).ToList());
 
             var result = new List<ImageChange>();
@@ -45,62 +37,40 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 {
                     Name = blobInfo.FileName,
                     Url = blobInfo.Url,
-                    ModifiedDate = blobInfo.ModifiedDate
+                    ModifiedDate = blobInfo.ModifiedDate,
+                    ChangeState = regenerate ? EntryState.Modified : GetItemState(blobInfo, lastRunDate)
                 };
-
-                foreach (var option in _task.ThumbnailOptions)
-                {
-                    if (_regenerate || !Exists(blobInfo.Url.GenerateThumnnailName(option.FileSuffix)))
-                    {
-                        imageChange.ThumbnailOptions.Add(option);
-                    }
-                }
-
-                if (imageChange.ThumbnailOptions.Any())
-                {
-                    result.Add(imageChange);
-                }
+                result.Add(imageChange);
             }
-            return result;
+            return result.Where(x=>x.ChangeState != EntryState.Unchanged).ToList();
         }
 
         #region Implementation of IImagesChangesProvider
 
-        public long GetTotalChangesCount()
+        public long GetTotalChangesCount(string workPath, bool regenerate, DateTime? lastRunDate)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles();
+                _changeBlobs = GetChangeFiles(workPath, regenerate, lastRunDate).ToDictionary(x=>x.Url, x=>x);
             }
             return _changeBlobs.Count;
         }
 
-        public ImageChangeResult GetNextChangesBatch()
+        public ImageChange[] GetNextChangesBatch(string workPath, bool regenerate, DateTime? lastRunDate, long? skip, long? take)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles();
+                _changeBlobs = GetChangeFiles(workPath, regenerate, lastRunDate).ToDictionary(x => x.Url, x => x);
             }
+
             var count = _changeBlobs.Count;
 
-            if (Skip >= count)
+            if (skip >= count)
             {
-                return null;
+                return new ImageChange[] {};
             }
 
-            var page = _changeBlobs
-                .Skip((int)Skip)
-                .Take((int)Take)
-                .ToList();
-
-            Skip += page.Count;
-
-            return new ImageChangeResult()
-            {
-                ThumbnailTask = _task,
-                ImageChanges = page,
-                TotalCount = count
-            };
+            return _changeBlobs.Skip((int)skip).Take((int)take).Select(x=>x.Value).ToArray();
         }
 
         #endregion
@@ -125,11 +95,30 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// Check if image is exist in blob storage by url.
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
-        /// <returns>True if image exist.</returns>
-        protected virtual bool Exists(string imageUrl)
+        /// <param name="lastRunDate">Image url.</param>
+        /// <returns>
+        /// EntryState if image exist.
+        /// Null is image is empty
+        /// </returns>
+        protected virtual bool Exists(string imageUrl, DateTime? lastRunDate)
         {
             var blobInfo = _storageProvider.GetBlobInfo(imageUrl);
             return blobInfo != null;
+        }
+
+        protected virtual EntryState GetItemState(BlobInfo blobInfo, DateTime? lastRunDate)
+        {
+            if (!lastRunDate.HasValue)
+            {
+                return EntryState.Added;
+            }
+
+            if (blobInfo.ModifiedDate.HasValue && blobInfo.ModifiedDate >= lastRunDate)
+            {
+                return EntryState.Modified;
+            }
+
+            return EntryState.Unchanged;
         }
 
         //get all options to create a map of all potential file names
