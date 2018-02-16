@@ -32,6 +32,12 @@
     <settings>
         <group name="ImageTools|Thumbnails">
             <setting>
+                <name>ImageTools.Thumbnails.ProcessBacthSize</name>
+                <valueType>integer</valueType>
+                <defaultValue>50</defaultValue>
+                <title>Partition size</title>
+            </setting>
+            <setting>
                 <name>ImageTools.Thumbnails.Parameters</name>
                 <valueType>longtext</valueType>
                 <defaultValue></defaultValue>

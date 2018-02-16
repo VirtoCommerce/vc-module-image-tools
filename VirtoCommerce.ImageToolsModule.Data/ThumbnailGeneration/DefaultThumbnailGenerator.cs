@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -30,10 +31,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// </summary>
         /// <param name="sourcePath">Path to source picture</param>
         /// <param name="destPath">Target for generated thumbnail</param>
-        /// <param name="option">Represents generation options</param>
+        /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public ThumbnailGenerationResult GenerateThumbnailsAsync(string sourcePath, string destPath, ThumbnailOption option, ICancellationToken token)
+        public ThumbnailGenerationResult GenerateThumbnailsAsync(string sourcePath, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
@@ -42,9 +43,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 return new ThumbnailGenerationResult()
                 {
-                    Errors = {$"Cannot generate thumbnail for option {option.Name}: {sourcePath} does not have a valid image format" }
+                    Errors = {$"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
                 };
             }
+
+            var result = new ThumbnailGenerationResult();
 
             var format = GetImageFormat(originalImage);
 
@@ -55,42 +58,55 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 clone = (Image)originalImage.Clone();
             }
 
-            //Generate a Thumbnail
-            var height = option.Height ?? originalImage.Height;
-            var width = option.Width ?? originalImage.Width;
+            foreach (var option in options)
+            {
+                var thumbnail = GenerateThumbnail(clone, option);
+                var thumbnailUrl = sourcePath.GenerateThumnnailName(option.FileSuffix);
+
+                if (thumbnail != null)
+                {
+                    SaveImage(thumbnailUrl, thumbnail, format);
+                }
+                else
+                {
+                    throw new Exception($"Cannot save thumbnail image {destPath}");
+                }
+
+                result.GeneratedThumbnails.Add(thumbnailUrl);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///Generates a Thumbnail
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        private Image GenerateThumbnail(Image image, ThumbnailOption option)
+        {
+            var height = option.Height ?? image.Height;
+            var width = option.Width ?? image.Width;
             var color = ColorTranslator.FromHtml(option.BackgroundColor);
 
             Image thumbnail = null;
             switch (option.ResizeMethod)
             {
                 case ResizeMethod.FixedSize:
-                    thumbnail = _imageResizer.FixedSize(clone, width, height, color);
+                    thumbnail = _imageResizer.FixedSize(image, width, height, color);
                     break;
                 case ResizeMethod.FixedWidth:
-                    thumbnail = _imageResizer.FixedWidth(clone, width, color);
+                    thumbnail = _imageResizer.FixedWidth(image, width, color);
                     break;
                 case ResizeMethod.FixedHeight:
-                    thumbnail = _imageResizer.FixedHeight(clone, height, color);
+                    thumbnail = _imageResizer.FixedHeight(image, height, color);
                     break;
                 case ResizeMethod.Crop:
-                    thumbnail = _imageResizer.Crop(clone, width, height, option.AnchorPosition);
+                    thumbnail = _imageResizer.Crop(image, width, height, option.AnchorPosition);
                     break;
             }
-
-            if (thumbnail != null)
-            {
-                SaveImage(destPath, thumbnail, format);
-            }
-            else
-            {
-                throw new Exception($"Cannot save thumbnail image {destPath}");
-                //string.Format(CultureInfo.InvariantCulture, "Cannot generate thumbnail for image '{0}'.", thumbnailUrl)
-            }
-
-            return new ThumbnailGenerationResult
-            {
-                GeneratedThumbnails = {destPath}
-            };
+            return thumbnail;
         }
 
         /// <summary>

@@ -1,11 +1,15 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+using Microsoft.Practices.Unity;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
@@ -60,6 +64,10 @@ namespace VirtoCommerce.ImageToolsModule.Web
             _container.RegisterType<IImageResizer, ImageResizer>();
             _container.RegisterType<IThumbnailGenerator, DefaultThumbnailGenerator>();
             _container.RegisterType<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
+
+            Func<ThumbnailTask, bool, IImagesChangesProvider> factory = (task, regenerate) =>
+                new BlobImagesChangesProvider(task, regenerate, _container.Resolve<IBlobStorageProvider>(), _container.Resolve<IThumbnailOptionSearchService>(), _container.Resolve<ISettingsManager>());
+            _container.RegisterInstance(factory);
         }
 
         #endregion
