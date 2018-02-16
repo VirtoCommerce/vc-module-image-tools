@@ -16,10 +16,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public async Task ProcessTasksAsync_ValidValues_CallbackFunctionHasBeenInvoked()
         {
-            //var mock = new Mock<IThumbnailGenerator>();
+            var mock = new Mock<IThumbnailGenerator>();
 
-            //mock.Setup(g => g.GenerateThumbnailsAsync(It.IsAny<string>(), It.IsAny<string>(),
-            //        It.IsAny<ThumbnailOption>(), It.IsAny<CancellationToken>()))
+            //mock.Setup(g => g.GenerateThumbnailsAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ThumbnailOption>(), It.IsAny<ICancellationToken>()))
             //    .ReturnsAsync(() => new ThumbnailGenerationResult());
 
             //var tasks = ThumbnailTasksDataSource.ToArray();

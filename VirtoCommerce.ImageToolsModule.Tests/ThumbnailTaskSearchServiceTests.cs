@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -14,59 +15,53 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
-            var taskEntitys = ThumbnailTaskEntitysDataSource.ToArray();
-            var expectedTasks = ThumbnailTasksDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
+            var repoMock = GetTaskRepositoryMock();
+            var target = new ThumbnailTaskSearchService(() => repoMock.Object);
+            var criteria = new ThumbnailTaskSearchCriteria { Sort = "Name:desc;WorkPath:desc" };
+            var resultTasks = target.Search(criteria);
 
-            var criteria = new ThumbnailTaskSearchCriteria { Sort = "Name:asc;WorkPath:desc" };
-
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return taskEntitys.Where(t => ids.Contains(t.Id)).ToArray(); });
-
-            var sut = new ThumbnailTaskSearchService(() => mock.Object);
-
-            var resultTasks = sut.Search(criteria);
-
+            var expectedTasks = ThumbnailTaskEntitysDataSource.Select(x => x.ToModel(new ThumbnailTask())).OrderByDescending(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
             Assert.Equal(expectedTasks, resultTasks.Results);
         }
 
         [Fact]
-        public void Search_KeywordString_ReturnsKeywordMatchingGenericSearchResponseOfTasks()
+        public void Search_SearchByExistingKeyword_TasksFound()
         {
-            var keyword = "New Name";
-            var taskEntites = ThumbnailTaskEntitysDataSource.ToArray();
-            var expectedTasks = ThumbnailTasksDataSource.Where(t => t.Name == keyword).ToArray();
+            var keyword = "NameLong";
+            var repoMock = GetTaskRepositoryMock();
+            var target = new ThumbnailTaskSearchService(() => repoMock.Object);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailTasksByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return taskEntites.Where(t => ids.Contains(t.Id)).ToArray(); });
+            var resultTasks = target.Search(new ThumbnailTaskSearchCriteria { Keyword = keyword });
 
-            var sut = new ThumbnailTaskSearchService(() => mock.Object);
-
-            var resultTasks = sut.Search(keyword);
-
-            Assert.Equal(expectedTasks, resultTasks.Results);
+            var count = ThumbnailTaskEntitysDataSource.Count(x => x.Name.Contains(keyword));
+            Assert.Equal(resultTasks.Results.Count(), count);
         }
 
-        private static IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitysDataSource
+        public Mock<IThumbnailRepository> GetTaskRepositoryMock()
+        {
+            var entites = ThumbnailTaskEntitysDataSource.ToList();
+            var entitesQuerableMock = TestUtils.CreateQuerableMock(entites);
+            var repoMock = new Mock<IThumbnailRepository>();
+
+            repoMock.Setup(x => x.ThumbnailTasks).Returns(entitesQuerableMock.Object);
+
+            repoMock.Setup(x => x.GetThumbnailTasksByIds(It.IsAny<string[]>()))
+                .Returns((string[] ids) =>
+                {
+                    return entitesQuerableMock.Object.Where(t => ids.Contains(t.Id)).ToArray();
+                });
+
+            return repoMock;
+        }
+
+        public IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitysDataSource
         {
             get
             {
-                int i = 0;
-                yield return new ThumbnailTaskEntity() { Id = $"Task {++i}" };
-                yield return new ThumbnailTaskEntity() { Id = $"Task {++i}" };
-                yield return new ThumbnailTaskEntity() { Id = $"Task {++i}" };
-            }
-        }
-
-        private static IEnumerable<ThumbnailTask> ThumbnailTasksDataSource
-        {
-            get
-            {
-                int i = 0;
-                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
-                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
-                yield return new ThumbnailTask() { Id = $"Task {++i}", Name = "New Name", WorkPath = "New Path" };
+                yield return new ThumbnailTaskEntity() { Id = "Task1", Name = "Name 1", WorkPath = "Path 4" };
+                yield return new ThumbnailTaskEntity() { Id = "Task2", Name = "NameLong 2", WorkPath = "Path 3" };
+                yield return new ThumbnailTaskEntity() { Id = "Task3", Name = "Name 3", WorkPath = "Path 2" };
+                yield return new ThumbnailTaskEntity() { Id = "Task4", Name = "NameLong 4", WorkPath = "Path 1" };
             }
         }
     }
