@@ -11,12 +11,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class BlobImagesChangesProvider : IImagesChangesProvider
     {
-        private Dictionary<string, ImageChange> _changeBlobs = new Dictionary<string, ImageChange>();
-
-        public bool GetTotalCountSupported => true;
+        public bool IsTotalCountSupported => true;
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
+
+        private IList<ImageChange> _changeBlobs;
 
         public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService)
         {
@@ -24,7 +24,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
         }
 
-        protected virtual ICollection<ImageChange> GetChangeFiles(string workPath, bool regenerate, DateTime? lastRunDate)
+        protected virtual IList<ImageChange> GetChangeFiles(string workPath, DateTime? lastRunDate, bool regenerate)
         {
             var options = GetOptionsCollection();
             var allBlobInfos = ReadBlobFolder(workPath);
@@ -47,20 +47,20 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         #region Implementation of IImagesChangesProvider
 
-        public long GetTotalChangesCount(string workPath, bool regenerate, DateTime? lastRunDate)
+        public long GetTotalChangesCount(string workPath, DateTime? lastRunDate, bool regenerate)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles(workPath, regenerate, lastRunDate).ToDictionary(x=>x.Url, x=>x);
+                _changeBlobs = GetChangeFiles(workPath, lastRunDate, regenerate);
             }
             return _changeBlobs.Count;
         }
 
-        public ImageChange[] GetNextChangesBatch(string workPath, bool regenerate, DateTime? lastRunDate, long? skip, long? take)
+        public ImageChange[] GetNextChangesBatch(string workPath, DateTime? lastRunDate, bool regenerate, long? skip, long? take)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles(workPath, regenerate, lastRunDate).ToDictionary(x => x.Url, x => x);
+                _changeBlobs = GetChangeFiles(workPath, lastRunDate, regenerate);
             }
 
             var count = _changeBlobs.Count;
@@ -70,7 +70,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 return new ImageChange[] {};
             }
 
-            return _changeBlobs.Skip((int)skip).Take((int)take).Select(x=>x.Value).ToArray();
+            return _changeBlobs.Skip((int)skip).Take((int)take).ToArray();
         }
 
         #endregion

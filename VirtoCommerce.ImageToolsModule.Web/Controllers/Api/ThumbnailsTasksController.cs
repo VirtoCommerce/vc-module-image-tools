@@ -10,6 +10,7 @@ using VirtoCommerce.ImageToolsModule.Web.Models;
 using VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -134,6 +135,6 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
             notification.JobId = jobId;
 
             return notification;
-        }        
+        }
     }
 }

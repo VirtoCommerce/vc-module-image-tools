@@ -4,10 +4,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IImagesChangesProvider
     {
-        bool GetTotalCountSupported { get; }
+        bool IsTotalCountSupported { get; }
 
-        long GetTotalChangesCount(string workPath, bool regenerate, DateTime? lastRunDate);
+        long GetTotalChangesCount(string workPath, DateTime? lastRunDate, bool regenerate);
 
-        ImageChange[] GetNextChangesBatch(string workPath, bool regenerate, DateTime? lastRunDate, long? skip, long? take);
+        ImageChange[] GetNextChangesBatch(string workPath, DateTime? lastRunDate, bool regenerate, long? skip, long? take);
     }
 }

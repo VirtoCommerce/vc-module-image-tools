@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Assets;
@@ -34,11 +35,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public ThumbnailGenerationResult GenerateThumbnailsAsync(string sourcePath, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
+        public async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string sourcePath, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
-            var originalImage = LoadImageAsync(sourcePath);
+            var originalImage = await LoadImageAsync(sourcePath);
             if (originalImage == null)
             {
                 return new ThumbnailGenerationResult()
@@ -114,14 +115,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// </summary>
         /// <param name="imageUrl">image url.</param>
         /// <returns>Image object.</returns>
-        protected virtual Image LoadImageAsync(string imageUrl)
+        protected virtual async Task<Image> LoadImageAsync(string imageUrl)
         {
             try
             {
                 using (var blobStream = _storageProvider.OpenRead(imageUrl))
                 using (var stream = new MemoryStream())
                 {
-                    blobStream.CopyTo(stream);
+                    await blobStream.CopyToAsync(stream);
                     var result = Image.FromStream(stream);
                     return result;
                 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Web.Models;
 using VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications;
@@ -13,11 +15,13 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
     {
         private readonly IThumbnailGenerationProcessor _thumbnailProcessor;
         private readonly IPushNotificationManager _pushNotifier;
+        private readonly IThumbnailTaskService _taskService;
 
-        public ThumbnailProcessJob(IPushNotificationManager pushNotifier, IThumbnailGenerationProcessor thumbnailProcessor)
+        public ThumbnailProcessJob(IPushNotificationManager pushNotifier, IThumbnailGenerationProcessor thumbnailProcessor, IThumbnailTaskService taskService)
         {
             _pushNotifier = pushNotifier;
             _thumbnailProcessor = thumbnailProcessor;
+            _taskService = taskService;
         }
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         /// <param name="cancellationToken">Hangfire sets the cancellation token</param>
         /// <param name="context">Hangfire sets the process context</param>
         [DisableConcurrentExecution(60 * 60 * 24)]
-        public void Process(ThumbnailsTaskRunRequest generateRequest, ThumbnailProcessNotification notifyEvent, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task Process(ThumbnailsTaskRunRequest generateRequest, ThumbnailProcessNotification notifyEvent, IJobCancellationToken cancellationToken, PerformContext context)
         {
             try
             {
@@ -45,8 +49,18 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                 };
 
                 //wrap token 
+                var tasks = _taskService.GetByIds(generateRequest.TaskIds);
+
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-                _thumbnailProcessor.ProcessTasksAsync(generateRequest.TaskIds, generateRequest.Regenerate, progressCallback, cancellationTokenWrapper);
+                await _thumbnailProcessor.ProcessTasksAsync(tasks, generateRequest.Regenerate, progressCallback, cancellationTokenWrapper);
+
+                //update tasks in case of successful generation
+                foreach (var task in tasks)
+                {
+                    task.LastRun = DateTime.UtcNow;
+                }
+                
+                _taskService.SaveOrUpdate(tasks);
             }
             catch (JobAbortedException)
             {

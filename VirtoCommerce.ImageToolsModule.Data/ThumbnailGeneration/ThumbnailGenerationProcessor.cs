@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using VirtoCommerce.ImageToolsModule.Core.Services;
+using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
@@ -9,36 +10,30 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
-        public int Take { get; set; }
+        protected readonly IThumbnailGenerator _generator;
+        protected readonly IImagesChangesProvider _imageChangesProvider;
 
-        private readonly IThumbnailGenerator _generator;
-        private readonly IThumbnailTaskService _thumbnailTaskService;
-        private readonly IImagesChangesProvider _imageChangesProvider;
+        protected readonly int _pageSize;
 
         public ThumbnailGenerationProcessor(IThumbnailGenerator generator,
-            IThumbnailTaskService thumbnailTaskService,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider)
         {
             _generator = generator;
-            _thumbnailTaskService = thumbnailTaskService;
             _imageChangesProvider = imageChangesProvider;
 
-            Take = settingsManager.GetValue("ImageTools.Thumbnails.ProcessBacthSize", 50);
+            _pageSize = settingsManager.GetValue("ImageTools.Thumbnails.ProcessBacthSize", 50);
         }
 
-
-        public void ProcessTasksAsync(string[] taskIds, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
+        public async Task ProcessTasksAsync(ThumbnailTask[] tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
         {
             var progressInfo = new ThumbnailTaskProgress { Message = "Reading the tasks..." };
 
-            var tasks = _thumbnailTaskService.GetByIds(taskIds);
-
-            if (_imageChangesProvider.GetTotalCountSupported)
+            if (_imageChangesProvider.IsTotalCountSupported)
             {
                 foreach (var task in tasks)
                 {
-                    progressInfo.TotalCount = _imageChangesProvider.GetTotalChangesCount(task.WorkPath, regenerate, task.LastRun);
+                    progressInfo.TotalCount = _imageChangesProvider.GetTotalChangesCount(task.WorkPath, task.LastRun, regenerate);
                 }
             }
            
@@ -51,13 +46,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var skip = 0;
                 while (true)
                 {
-                    var changes = _imageChangesProvider.GetNextChangesBatch(task.WorkPath, regenerate, task.LastRun, skip, Take);
+                    var changes = _imageChangesProvider.GetNextChangesBatch(task.WorkPath, task.LastRun, regenerate, skip, _pageSize);
                     if (!changes.Any())
                         break;
 
                     foreach (var fileChange in changes)
                     {
-                        var result = _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                        var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
                         progressInfo.ProcessedCount++;
 
                         if (!result.Errors.IsNullOrEmpty())
