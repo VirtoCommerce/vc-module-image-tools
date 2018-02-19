@@ -35,9 +35,10 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\VirtoCommerce.ImageToolsModule.Web.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>612,618</WarningsNotAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <PlatformTarget>x64</PlatformTarget>
-    <NoWarn>1591,0618</NoWarn>
+    <NoWarn>1591,618,612</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
