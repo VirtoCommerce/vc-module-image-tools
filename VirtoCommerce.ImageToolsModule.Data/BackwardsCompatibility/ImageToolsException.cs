@@ -2,7 +2,9 @@
 
 namespace VirtoCommerce.ImageToolsModule.Data.Exceptions
 {
+#pragma warning disable 612, 618
     [Obsolete("Going to be moved to VirtoCommerce.ImageToolsModule.Core.Exceptions or deleted", false)]
+#pragma warning restore 612, 618
     public class ImageToolsException : Exception
     {
         public ImageToolsException()

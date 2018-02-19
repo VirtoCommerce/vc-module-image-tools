@@ -10,7 +10,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// For example, in listings, short views.
     /// The service allows to generate different thumbnails, get list of existed thumbnails.
     /// </summary>
+#pragma warning disable 612, 618
     [Obsolete("Obsolete, use IThumbnailGenerationProcessor instead", false)]
+#pragma warning restore 612, 618
     public interface IThumbnailService
     {
         /// <summary>
