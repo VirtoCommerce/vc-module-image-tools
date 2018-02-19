@@ -23,11 +23,12 @@
         };
 
         function initializeBlade(data) {
-            if (isDirty()) {
+            if (blade.isNew) {
                 var optionSearchCriteria = getOptionsSearchCriteria();
 
-                optionApi.search(optionSearchCriteria, function (data) {
-                    blade.optionList = data.result;
+                optionApi.search(optionSearchCriteria, function (options) {
+                    updateEntityOptions(options.result);
+                    blade.optionList = options.result;
                     blade.isLoading = false;
                 });
             } else {
@@ -38,6 +39,23 @@
             }
         };
 
+        //Update options 
+        function updateEntityOptions(options) {
+            if (!!blade.currentEntity && blade.currentEntity.thumbnailOptions.length > 0) {
+                blade.currentEntity.thumbnailOptions = _.map(blade.currentEntity.thumbnailOptions,
+                    function (el) {
+                        var newOption = _.find(options,
+                            function (option) {
+                                return el.id == option.id;
+                            });
+
+                        if (!!newOption)
+                            return newOption;
+                        return el;
+
+                    });
+            }
+        }
 
         // Search Criteria
         function getOptionsSearchCriteria() {
