@@ -65,8 +65,6 @@ namespace VirtoCommerce.ImageToolsModule.Web
             _container.RegisterType<IThumbnailGenerator, DefaultThumbnailGenerator>();
             _container.RegisterType<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             _container.RegisterType<IImagesChangesProvider, BlobImagesChangesProvider>();
-
-            _container.RegisterType<IThumbnailService, ThumbnailService>();
         }
 
         #endregion

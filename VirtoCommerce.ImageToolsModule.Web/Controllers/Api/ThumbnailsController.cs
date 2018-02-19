@@ -1,11 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.ImageToolsModule.Data.Services;
+using Newtonsoft.Json;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Data.BackwardsCompatibility;
 using VirtoCommerce.ImageToolsModule.Web.Models;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -19,29 +22,16 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
     [RoutePrefix("api/image/thumbnails")]
     public class ThumbnailsController : ApiController
     {
-        private readonly IThumbnailService _thumbnailsGenerator;
+        private readonly IThumbnailGenerator _thumbnailsGenerator;
+        private readonly ISettingsManager _settingsManager;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ThumbnailsController(IThumbnailService thumbnailsGenerator)
+        public ThumbnailsController(IThumbnailGenerator thumbnailsGenerator, ISettingsManager settingsManager)
         {
             _thumbnailsGenerator = thumbnailsGenerator;
-        }
-
-        /// <summary>
-        /// Get all existed thumbnails urls of given image.
-        /// </summary>
-        /// <param name="imageUrl">Image url.</param>
-        /// <param name="aliases">Thumbnails aliases (suffixes).</param>
-        /// <returns>List of existed thumbnails.</returns>
-        [HttpGet]
-        [Route("")]
-        [ResponseType(typeof(string[]))]
-        public IHttpActionResult GetThumbnails(string imageUrl, [FromUri] string[] aliases)
-        {
-            var result = _thumbnailsGenerator.GetThumbnails(imageUrl, aliases);
-            return Ok(result);
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -56,8 +46,13 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
             if (request == null)
                 throw new ArgumentNullException("request");
 
-           
-            var result = await _thumbnailsGenerator.GenerateAsync(request.ImageUrl, request.IsRegenerateAll);
+            var setting = _settingsManager.GetSettingByName("ImageTools.Thumbnails.Parameters");
+            if (setting == null)
+                return Ok(new GenerateThumbnailsResponse());
+
+            var settings = setting.ArrayValues ?? new string[] { };
+            var options = settings.Select(x => JsonConvert.DeserializeObject<ThumbnailOption>(x, new SettingJsonConverter())).ToList();
+            var result = await _thumbnailsGenerator.GenerateThumbnailsAsync(request.ImageUrl, null, options, null);
 
             return Ok(new GenerateThumbnailsResponse());
         }

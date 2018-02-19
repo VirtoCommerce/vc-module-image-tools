@@ -81,6 +81,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BackwardsCompatibility\ImageToolsException.cs" />
+    <Compile Include="BackwardsCompatibility\SettingJsonConverter.cs" />
     <Compile Include="BackwardsCompatibility\ThumbnailGenetationException.cs" />
     <Compile Include="Migrations\201802061037467_Initial.cs" />
     <Compile Include="Migrations\201802061037467_Initial.Designer.cs">
