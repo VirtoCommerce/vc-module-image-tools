@@ -80,6 +80,8 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BackwardsCompatibility\ImageToolsException.cs" />
+    <Compile Include="BackwardsCompatibility\ThumbnailGenetationException.cs" />
     <Compile Include="Migrations\201802061037467_Initial.cs" />
     <Compile Include="Migrations\201802061037467_Initial.Designer.cs">
       <DependentUpon>201802061037467_Initial.cs</DependentUpon>
@@ -95,10 +97,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IThumbnailRepository.cs" />
     <Compile Include="Repositories\ThumbnailRepositoryImpl.cs" />
-    <Compile Include="Services\IThumbnailService.cs" />
+    <Compile Include="BackwardsCompatibility\IThumbnailService.cs" />
     <Compile Include="Services\ThumbnailOptionSearchService.cs" />
     <Compile Include="Services\ThumbnailOptionService.cs" />
-    <Compile Include="Services\ThumbnailService.cs" />
+    <Compile Include="BackwardsCompatibility\ThumbnailService.cs" />
     <Compile Include="Services\ThumbnailTaskSearchService.cs" />
     <Compile Include="Services\ThumbnailTaskService.cs" />
     <Compile Include="ThumbnailGeneration\DefaultThumbnailGenerator.cs" />

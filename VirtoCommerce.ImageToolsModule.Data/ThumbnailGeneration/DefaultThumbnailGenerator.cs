@@ -70,7 +70,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 }
                 else
                 {
-                    throw new Exception($"Cannot save thumbnail image {destPath}");
+                    throw new Exception($"Cannot save thumbnail image {thumbnailUrl}");
                 }
 
                 result.GeneratedThumbnails.Add(thumbnailUrl);
@@ -85,7 +85,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="image"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        private Image GenerateThumbnail(Image image, ThumbnailOption option)
+        protected virtual Image GenerateThumbnail(Image image, ThumbnailOption option)
         {
             var height = option.Height ?? image.Height;
             var width = option.Width ?? image.Width;

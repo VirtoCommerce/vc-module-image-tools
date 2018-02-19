@@ -10,19 +10,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
-        protected readonly IThumbnailGenerator _generator;
-        protected readonly IImagesChangesProvider _imageChangesProvider;
-
-        protected readonly int _pageSize;
+        private readonly IThumbnailGenerator _generator;
+        private readonly ISettingsManager _settingsManager;
+        private readonly IImagesChangesProvider _imageChangesProvider;
 
         public ThumbnailGenerationProcessor(IThumbnailGenerator generator,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider)
         {
             _generator = generator;
+            _settingsManager = settingsManager;
             _imageChangesProvider = imageChangesProvider;
-
-            _pageSize = settingsManager.GetValue("ImageTools.Thumbnails.ProcessBacthSize", 50);
         }
 
         public async Task ProcessTasksAsync(ThumbnailTask[] tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
@@ -38,6 +36,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             }
            
             progressCallback(progressInfo);
+
+            var pageSize = _settingsManager.GetValue("ImageTools.Thumbnails.ProcessBacthSize", 50);
             foreach (var task in tasks)
             {
                 progressInfo.Message = $"Procesing task {task.Name}...";
@@ -46,7 +46,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var skip = 0;
                 while (true)
                 {
-                    var changes = _imageChangesProvider.GetNextChangesBatch(task.WorkPath, task.LastRun, regenerate, skip, _pageSize);
+                    var changes = _imageChangesProvider.GetNextChangesBatch(task.WorkPath, task.LastRun, regenerate, skip, pageSize);
                     if (!changes.Any())
                         break;
 
@@ -72,5 +72,4 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             progressCallback(progressInfo);
         }
     }
-
 }

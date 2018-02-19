@@ -37,7 +37,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <PlatformTarget>x64</PlatformTarget>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591,0618</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -185,8 +185,11 @@
     </Compile>
     <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
     <Compile Include="BackgroundJobs\ThumbnailProcessJob.cs" />
+    <Compile Include="Controllers\Api\ThumbnailsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
+    <Compile Include="Models\GenerateThumbnailsRequest.cs" />
+    <Compile Include="Models\GenerateThumbnailsResponse.cs" />
     <Compile Include="Models\PushNotifications\ThumbnailProcessNotification.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\ThumbnailsTaskRunRequest.cs" />
