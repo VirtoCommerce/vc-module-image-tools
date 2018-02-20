@@ -159,6 +159,7 @@
     <Content Include="Scripts\blades\task-progress.js" />
     <Content Include="Scripts\blades\task-progress.tpl.html" />
     <Content Include="Scripts\dialogs\run-dialog.tpl.html" />
+    <Content Include="Scripts\dialogs\select-folder-dialog.tpl.html" />
     <Content Include="Scripts\notifications\historyThumbnailProcess.tpl.html" />
     <Content Include="Scripts\notifications\menuThumbnailProcess.tpl.html" />
     <Content Include="Scripts\resourse\resizeMethod.js" />

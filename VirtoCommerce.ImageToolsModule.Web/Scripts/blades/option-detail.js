@@ -2,6 +2,8 @@
     .controller('virtoCommerce.imageToolsModule.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.resizeMethod', 'virtoCommerce.imageToolsModule.optionApi', function ($rootScope, $scope, dialogService, bladeNavigationService, resizeMethod, optionApi) {
         var blade = $scope.blade;
 
+        $scope.positiveNum = /^[0-9]+$/;
+
         blade.resizeMethodTypes = resizeMethod.get();
 
         blade.refresh = function (parentRefresh) {

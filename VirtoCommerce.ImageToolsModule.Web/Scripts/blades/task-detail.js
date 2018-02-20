@@ -1,11 +1,12 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.taskApi', 'virtoCommerce.imageToolsModule.optionApi', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, taskApi, optionApi, dialogService) {
+    .controller('virtoCommerce.imageToolsModule.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'imageToolsConfig', 'virtoCommerce.imageToolsModule.taskApi', 'virtoCommerce.imageToolsModule.optionApi', 'platformWebApp.dialogService',
+        function ($rootScope, $scope, bladeNavigationService, imageToolsConfig, taskApi, optionApi, dialogService) {
         var blade = $scope.blade;
         
         blade.refresh = function (parentRefresh) {
-            optionApi.search({
-                skip: 0
-            }, function (data) {
+            var optionSearchCriteria = getOptionsSearchCriteria();
+
+            optionApi.search(optionSearchCriteria, function (data) {
                 blade.optionList = data.result;
             });
 
@@ -22,11 +23,45 @@
         };
 
         function initializeBlade(data) {
-            blade.item = angular.copy(data);
-            blade.currentEntity = blade.item;
-            blade.origEntity = data;
-            blade.isLoading = false;
+            if (blade.isNew) {
+                var optionSearchCriteria = getOptionsSearchCriteria();
+
+                optionApi.search(optionSearchCriteria, function (options) {
+                    updateEntityOptions(options.result);
+                    blade.optionList = options.result;
+                    blade.isLoading = false;
+                });
+            } else {
+                blade.item = angular.copy(data);
+                blade.currentEntity = blade.item;
+                blade.origEntity = data;
+                blade.isLoading = false;
+            }
         };
+
+        //Update options 
+        function updateEntityOptions(options) {
+            if (blade.currentEntity && blade.currentEntity.thumbnailOptions.length > 0) {
+                blade.currentEntity.thumbnailOptions = _.map(blade.currentEntity.thumbnailOptions,
+                    function (el) {
+                        var newOption = _.find(options,
+                            function (option) {
+                                return el.id == option.id;
+                            });
+
+                        return newOption ? newOption : el;
+                    });
+            }
+        }
+
+        // Search Criteria
+        function getOptionsSearchCriteria() {
+                var searchCriteria = {
+                    skip: 0,
+                    take: imageToolsConfig.intMaxValue
+                };
+                return searchCriteria;
+        }
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
@@ -151,7 +186,14 @@
             if (folderPath && folderPath.length === 1 && folderPath[0].type === 'folder') {
                 blade.currentEntity.workPath = folderPath[0].relativeUrl;
             } else {
+                var dialog = {
+                    id: "selectFolderDialog",
+                    callback: function () {
+                        return true;
+                    }
+                }
 
+                dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.ImageTools)/Scripts/dialogs/select-folder-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
         }
 
