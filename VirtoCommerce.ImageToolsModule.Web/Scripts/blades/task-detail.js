@@ -41,7 +41,7 @@
 
         //Update options 
         function updateEntityOptions(options) {
-            if (!!blade.currentEntity && blade.currentEntity.thumbnailOptions.length > 0) {
+            if (blade.currentEntity && blade.currentEntity.thumbnailOptions.length > 0) {
                 blade.currentEntity.thumbnailOptions = _.map(blade.currentEntity.thumbnailOptions,
                     function (el) {
                         var newOption = _.find(options,
@@ -49,10 +49,7 @@
                                 return el.id == option.id;
                             });
 
-                        if (!!newOption)
-                            return newOption;
-                        return el;
-
+                        return newOption ? newOption : el;
                     });
             }
         }

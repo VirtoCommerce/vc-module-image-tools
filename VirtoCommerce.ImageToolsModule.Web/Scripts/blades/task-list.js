@@ -17,8 +17,9 @@
 
                 taskApi.search(searchCriteria,
                     function (data) {
+                        addDescriptionItem(data.result);
                         $scope.items = data.result;
-                        addDescriptionItem();
+                        
                         $scope.hasMore = data.result.length === $scope.pageSettings.itemsPerPageCount;
 
                             $timeout(function () {
@@ -43,8 +44,9 @@
 
                         taskApi.search(searchCriteria,
                             function (data) {
+                                addDescriptionItem(data.result);
                                 $scope.items = $scope.items.concat(data.result);
-                                addDescriptionItem();
+                                
                                 $scope.hasMore = data.listEntries.length === $scope.pageSettings.itemsPerPageCount;
                                 $scope.gridApi.infiniteScroll.dataLoaded();
 
@@ -62,18 +64,12 @@
             }
 
             //add description for item
-            function addDescriptionItem() {
-                angular.forEach($scope.items, function (item) {
-                    if (!item.description) {
-                        var optionsString = ' (';
-                        for (var i = 0; i < item.thumbnailOptions.length; i++) {
-                            if (i > 2)
-                                break;
-                            optionsString = optionsString.concat(' ').concat(item.thumbnailOptions[i].width).concat(' x ').concat(item.thumbnailOptions[i].height).concat(';');
-                        }
-                        optionsString = optionsString.concat(') ');
-
-                        item.description = ''.concat(item.workPath).concat(optionsString);
+            function addDescriptionItem(items) {
+                angular.forEach(items, function (item) {
+                    var firstThree = _.first(item.thumbnailOptions, 3);
+                    firstThree = _.map(firstThree, function (option) { return option.width + 'x' + option.height });
+                    if (firstThree && firstThree.length) {
+                        item.description = '(' + firstThree.join(', ') + ')';
                     }
                 });
             }
