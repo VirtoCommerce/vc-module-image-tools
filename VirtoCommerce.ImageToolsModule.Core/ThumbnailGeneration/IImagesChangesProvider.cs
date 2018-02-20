@@ -1,4 +1,6 @@
 ﻿using System;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
@@ -6,8 +8,8 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
     {
         bool IsTotalCountSupported { get; }
 
-        long GetTotalChangesCount(string workPath, DateTime? lastRunDate, bool regenerate);
+        long GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken token);
 
-        ImageChange[] GetNextChangesBatch(string workPath, DateTime? lastRunDate, bool regenerate, long? skip, long? take);
+        ImageChange[] GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip, long? take, ICancellationToken token);
     }
 }

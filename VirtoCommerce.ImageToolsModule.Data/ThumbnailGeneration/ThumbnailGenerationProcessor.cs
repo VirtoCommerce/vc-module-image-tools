@@ -31,7 +31,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 foreach (var task in tasks)
                 {
-                    progressInfo.TotalCount = _imageChangesProvider.GetTotalChangesCount(task.WorkPath, task.LastRun, regenerate);
+                    var changedSince = regenerate ? null : task.LastRun;
+                    progressInfo.TotalCount = _imageChangesProvider.GetTotalChangesCount(task, changedSince, token);
                 }
             }
            
@@ -46,7 +47,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var skip = 0;
                 while (true)
                 {
-                    var changes = _imageChangesProvider.GetNextChangesBatch(task.WorkPath, task.LastRun, regenerate, skip, pageSize);
+                    var changes = _imageChangesProvider.GetNextChangesBatch(task, regenerate ? null : task.LastRun, skip, pageSize, token);
                     if (!changes.Any())
                         break;
 

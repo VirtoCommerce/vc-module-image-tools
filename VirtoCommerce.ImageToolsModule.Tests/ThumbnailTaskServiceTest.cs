@@ -87,10 +87,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         {
             get
             {
-                var i = 0;
-                yield return new ThumbnailOption { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption { Id = $"Option {++i}", Name = "New Name" };
+                yield return new ThumbnailOption { Id = "Option 1", Name = "New Name" };
+                yield return new ThumbnailOption { Id = "Option 2", Name = "New Name" };
+                yield return new ThumbnailOption { Id = "Option 3", Name = "New Name" };
             }
         }
 
@@ -98,10 +97,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         {
             get
             {
-                var i = 0;
-                yield return new ThumbnailTaskEntity { Id = $"Task {++i}" };
-                yield return new ThumbnailTaskEntity { Id = $"Task {++i}" };
-                yield return new ThumbnailTaskEntity { Id = $"Task {++i}" };
+                yield return new ThumbnailTaskEntity { Id = "Task 1" };
+                yield return new ThumbnailTaskEntity { Id = "Task 2" };
+                yield return new ThumbnailTaskEntity { Id = "Task 3" };
             }
         }
 

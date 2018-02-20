@@ -108,29 +108,23 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             Assert.Contains(optionEntities, x => x.Id == "NewOptionId");
         }
 
-        private static ICollection<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
+        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
         {
             get
             {
-                int i = 0;
-                var result = new List<ThumbnailOptionEntity>();
-                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
-                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
-                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
-                return result;
+                yield return new ThumbnailOptionEntity() { Id = "Option 1" };
+                yield return new ThumbnailOptionEntity() { Id = "Option 2" };
+                yield return new ThumbnailOptionEntity() { Id = "Option 3" };
             }
         }
 
-        private static ICollection<ThumbnailOption> ThumbnailOptionDataSource
+        private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
         {
             get
             {
-                int i = 0;
-                var result = new List<ThumbnailOption>();
-                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
-                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
-                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
-                return result;
+                yield return new ThumbnailOption() { Id = "Option 1", Name = "New Name" };
+                yield return new ThumbnailOption() { Id = "Option 2", Name = "New Name" };
+                yield return new ThumbnailOption() { Id = "Option 3", Name = "New Name" };
             }
         }
     }

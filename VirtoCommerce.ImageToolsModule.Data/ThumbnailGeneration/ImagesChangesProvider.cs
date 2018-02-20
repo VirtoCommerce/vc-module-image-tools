@@ -24,21 +24,23 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
         }
 
-        protected virtual IList<ImageChange> GetChangeFiles(string workPath, DateTime? lastRunDate, bool regenerate)
+        protected virtual IList<ImageChange> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
         {
             var options = GetOptionsCollection();
-            var allBlobInfos = ReadBlobFolder(workPath);
+            var allBlobInfos = ReadBlobFolder(task.WorkPath, token);
             var orignalBlobInfos = GetOriginalItems(allBlobInfos, options.Select(x => x.FileSuffix).ToList());
 
             var result = new List<ImageChange>();
             foreach (var blobInfo in orignalBlobInfos)
             {
+                token?.ThrowIfCancellationRequested();
+
                 var imageChange = new ImageChange
                 {
                     Name = blobInfo.FileName,
                     Url = blobInfo.Url,
                     ModifiedDate = blobInfo.ModifiedDate,
-                    ChangeState = regenerate ? EntryState.Modified : GetItemState(blobInfo, lastRunDate)
+                    ChangeState = !changedSince.HasValue ? EntryState.Added : GetItemState(blobInfo, changedSince, task.ThumbnailOptions)
                 };
                 result.Add(imageChange);
             }
@@ -47,20 +49,20 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         #region Implementation of IImagesChangesProvider
 
-        public long GetTotalChangesCount(string workPath, DateTime? lastRunDate, bool regenerate)
+        public long GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles(workPath, lastRunDate, regenerate);
+                _changeBlobs = GetChangeFiles(task, changedSince, token);
             }
             return _changeBlobs.Count;
         }
 
-        public ImageChange[] GetNextChangesBatch(string workPath, DateTime? lastRunDate, bool regenerate, long? skip, long? take)
+        public ImageChange[] GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip, long? take, ICancellationToken token)
         {
             if (_changeBlobs == null)
             {
-                _changeBlobs = GetChangeFiles(workPath, lastRunDate, regenerate);
+                _changeBlobs = GetChangeFiles(task, changedSince, token);
             }
 
             var count = _changeBlobs.Count;
@@ -75,8 +77,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         #endregion
 
-        protected virtual ICollection<BlobInfo> ReadBlobFolder(string folderPath)
+        protected virtual ICollection<BlobInfo> ReadBlobFolder(string folderPath, ICancellationToken token)
         {
+            token?.ThrowIfCancellationRequested();
+            
             var result = new List<BlobInfo>();
 
             var searchResults = _storageProvider.Search(folderPath, null);
@@ -84,7 +88,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             result.AddRange(searchResults.Items);
             foreach (var blobFolder in searchResults.Folders)
             {
-                var folderResult = ReadBlobFolder(blobFolder.RelativeUrl);
+                var folderResult = ReadBlobFolder(blobFolder.RelativeUrl, token);
                 result.AddRange(folderResult);
             }
 
@@ -95,25 +99,32 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// Check if image is exist in blob storage by url.
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
-        /// <param name="lastRunDate">Image url.</param>
         /// <returns>
         /// EntryState if image exist.
         /// Null is image is empty
         /// </returns>
-        protected virtual bool Exists(string imageUrl, DateTime? lastRunDate)
+        protected virtual bool Exists(string imageUrl)
         {
             var blobInfo = _storageProvider.GetBlobInfo(imageUrl);
             return blobInfo != null;
         }
 
-        protected virtual EntryState GetItemState(BlobInfo blobInfo, DateTime? lastRunDate)
+        protected virtual EntryState GetItemState(BlobInfo blobInfo, DateTime? changedSince, IList<ThumbnailOption> options)
         {
-            if (!lastRunDate.HasValue)
+            if (!changedSince.HasValue)
             {
                 return EntryState.Added;
             }
 
-            if (blobInfo.ModifiedDate.HasValue && blobInfo.ModifiedDate >= lastRunDate)
+            foreach (var option in options)
+            {
+                if (!Exists(blobInfo.Url.GenerateThumnnailName(option.FileSuffix)))
+                {
+                    return EntryState.Added;
+                }
+            }
+
+            if (blobInfo.ModifiedDate.HasValue && blobInfo.ModifiedDate >= changedSince)
             {
                 return EntryState.Modified;
             }
