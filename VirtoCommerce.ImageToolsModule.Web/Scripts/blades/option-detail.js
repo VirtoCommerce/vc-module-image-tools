@@ -1,15 +1,16 @@
 ﻿angular.module('virtoCommerce.imageToolsModule')
-    .controller('virtoCommerce.imageToolsModule.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.resizeMethod', 'virtoCommerce.imageToolsModule.optionApi', function ($rootScope, $scope, dialogService, bladeNavigationService, resizeMethod, optionApi) {
+    .controller('virtoCommerce.imageToolsModule.optionDetailController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.imageToolsModule.resizeMethod', 'virtoCommerce.imageToolsModule.anchorPosition', 'virtoCommerce.imageToolsModule.optionApi', function ($rootScope, $scope, dialogService, bladeNavigationService, resizeMethod, anchorPosition, optionApi) {
         var blade = $scope.blade;
 
         $scope.positiveNum = /^[0-9]+$/;
 
         blade.resizeMethodTypes = resizeMethod.get();
+        blade.anchorPositionTypes = anchorPosition.get();
 
         blade.refresh = function (parentRefresh) {
             blade.isLoading = true;
             if (blade.isNew) {
-                initializeBlade({ resizeMethod: 'FixedSize' });
+                initializeBlade({ resizeMethod: 'FixedSize', anchorPosition: 'Center' });
             } else {
                 optionApi.get({ id: blade.currentEntityId }, function (data) {
                     initializeBlade(data);

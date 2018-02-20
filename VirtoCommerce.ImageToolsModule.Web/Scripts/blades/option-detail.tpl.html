@@ -23,7 +23,7 @@
                                         <div class="form-input">
                                             <input ng-class="{'error': detailForm.fileSuffix.$invalid && !detailForm.fileSuffix.$pristine}" required class="form-control" ng-model="blade.currentEntity.fileSuffix" name="fileSuffix" placeholder="{{ 'imageTools.blades.setting-detail.placeholders.file-suffix' | translate }}" />
                                         </div>
-                                        <div class="list-descr">{{ 'imageTools.blades.setting-detail.discription.width' | translate }}</div>
+                                        <div class="list-descr">{{ 'imageTools.blades.setting-detail.discription.file-suffix' | translate }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class="column">
                             <div class="form-group ">
@@ -91,7 +90,22 @@
                             </div>
                         </div>
                         <div class="column">
-                            <div class="form-group"></div>
+                            <div class="form-group ">
+                                <div class="column">
+                                    <div class="form-group __info list">
+                                        <label class="form-label">{{ 'imageTools.blades.setting-detail.labels.anchor-position' | translate }}</label>
+                                        <div class="form-input">
+                                            <ui-select ng-model="blade.currentEntity.anchorPosition">
+                                                <ui-select-match>{{$select.selected.value}}</ui-select-match>
+                                                <ui-select-choices repeat="x.value as x in blade.anchorPositionTypes | filter: $select.search">
+                                                    <div>{{ x.title | translate }}</div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="list-descr">{{ 'imageTools.blades.setting-detail.discription.anchor-position' | translate }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

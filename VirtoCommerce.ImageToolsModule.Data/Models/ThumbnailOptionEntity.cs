@@ -58,7 +58,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             option.Name = Name;
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.ResizeMethod.Crop);
-            option.AnchorPosition = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.AnchorPosition.Center);
+            option.AnchorPosition = EnumUtility.SafeParse(this.AnchorPosition, Core.Models.AnchorPosition.Center);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;

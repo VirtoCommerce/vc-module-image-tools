@@ -54,7 +54,8 @@
             "resize-method": "Resize method",
             "width": "Width (pixels)",
             "height": "Height (pixels)",
-            "background-color": "Background color"
+            "background-color": "Background color",
+            "anchor-position": "Anchor Position"
           },
           "placeholders": {
             "name": "Enter option name",
@@ -65,18 +66,31 @@
           },
           "discription": {
             "name": "The display setting name",
-            "file-suffix": "The suffix whitch will be added to thumbnail file name",
+            "file-suffix": "The suffix that will be added to the back of the original file name, separated by '_'",
             "resize-method": "Resize method which will be used for image transformation",
             "width": "Thumbnail width in pixels",
             "height": "Thumbnail height in pixels",
-            "background-color": "Thumbnail background color i.e. #FFFFFF"
+            "background-color": "Thumbnail background color i.e. #FFFFFF",
+            "anchor-position": "Anchor position when cropping the image"
           },
           "resize-method": {
             "fixed-size": "Fixed Size",
             "fixed-width": "Fixed Width",
             "fixed-height": "Fixed Height",
             "crop": "Crop"
-          }
+          },
+          "anchor-position": {
+            "top-left": "Top Left",
+            "top-center": "Top Center",
+            "top-right": "Top Right",
+            "center-left": "Center Left",
+            "center": "Center",
+            "center-right": "Center Right",
+            "bottom-left": "Bottom Left",
+            "bottom-center": "Bottom Center",
+            "bottom-right": "Bottom Right"
+
+          } 
         }
       },
         "dialogs": {

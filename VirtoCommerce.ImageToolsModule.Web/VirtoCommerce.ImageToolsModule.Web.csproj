@@ -162,7 +162,7 @@
     <Content Include="Scripts\dialogs\select-folder-dialog.tpl.html" />
     <Content Include="Scripts\notifications\historyThumbnailProcess.tpl.html" />
     <Content Include="Scripts\notifications\menuThumbnailProcess.tpl.html" />
-    <Content Include="Scripts\resourse\resizeMethod.js" />
+    <Content Include="Scripts\resourse\enums.js" />
     <Content Include="Scripts\resourse\thumbnailApi.js" />
     <Content Include="Scripts\thumbnail.js" />
     <None Include="packages.config" />
