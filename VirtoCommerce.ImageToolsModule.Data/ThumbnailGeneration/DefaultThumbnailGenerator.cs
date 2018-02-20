@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
@@ -18,12 +15,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         private readonly object _progressLock = new object();
 
-        private readonly IBlobStorageProvider _storageProvider;
+        private readonly IImageService _imageService;
         private readonly IImageResizer _imageResizer;
 
-        public DefaultThumbnailGenerator(IBlobStorageProvider storageProvider, IImageResizer imageResizer)
+        public DefaultThumbnailGenerator(IImageService storageProvider, IImageResizer imageResizer)
         {
-            _storageProvider = storageProvider;
+            _imageService = storageProvider;
             _imageResizer = imageResizer;
         }
 
@@ -39,10 +36,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         {
             token?.ThrowIfCancellationRequested();
 
-            var originalImage = await LoadImageAsync(sourcePath);
+            var originalImage = await _imageService.LoadImageAsync(sourcePath);
             if (originalImage == null)
             {
-                return new ThumbnailGenerationResult()
+                return new ThumbnailGenerationResult
                 {
                     Errors = {$"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
                 };
@@ -50,7 +47,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var result = new ThumbnailGenerationResult();
 
-            var format = GetImageFormat(originalImage);
+            var format = _imageService.GetImageFormat(originalImage);
 
             //one process only can use an Image object at the same time.
             Image clone;
@@ -66,7 +63,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 if (thumbnail != null)
                 {
-                    SaveImage(thumbnailUrl, thumbnail, format);
+                    await _imageService.SaveImage(thumbnailUrl, thumbnail, format);
                 }
                 else
                 {
@@ -108,74 +105,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     break;
             }
             return thumbnail;
-        }
-
-        /// <summary>
-        /// Load to Image from blob.
-        /// </summary>
-        /// <param name="imageUrl">image url.</param>
-        /// <returns>Image object.</returns>
-        protected virtual async Task<Image> LoadImageAsync(string imageUrl)
-        {
-            try
-            {
-                using (var blobStream = _storageProvider.OpenRead(imageUrl))
-                using (var stream = new MemoryStream())
-                {
-                    await blobStream.CopyToAsync(stream);
-                    var result = Image.FromStream(stream);
-                    return result;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get image format by Image object.
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        protected virtual ImageFormat GetImageFormat(Image image)
-        {
-            if (image.RawFormat.Equals(ImageFormat.Jpeg))
-                return ImageFormat.Jpeg;
-            if (image.RawFormat.Equals(ImageFormat.Bmp))
-                return ImageFormat.Bmp;
-            if (image.RawFormat.Equals(ImageFormat.Png))
-                return ImageFormat.Png;
-            if (image.RawFormat.Equals(ImageFormat.Emf))
-                return ImageFormat.Emf;
-            if (image.RawFormat.Equals(ImageFormat.Exif))
-                return ImageFormat.Exif;
-            if (image.RawFormat.Equals(ImageFormat.Gif))
-                return ImageFormat.Gif;
-            if (image.RawFormat.Equals(ImageFormat.Icon))
-                return ImageFormat.Icon;
-            if (image.RawFormat.Equals(ImageFormat.MemoryBmp))
-                return ImageFormat.MemoryBmp;
-            if (image.RawFormat.Equals(ImageFormat.Tiff))
-                return ImageFormat.Tiff;
-            return ImageFormat.Wmf;
-        }
-
-        /// <summary>
-        /// Save given image to blob storage.
-        /// </summary>
-        /// <param name="imageUrl">Image url.</param>
-        /// <param name="image">Image object.</param>
-        /// <param name="format">Image object format.</param>
-        protected virtual void SaveImage(string imageUrl, Image image, ImageFormat format)
-        {
-            using (var blobStream = _storageProvider.OpenWrite(imageUrl))
-            using (var stream = new MemoryStream())
-            {
-                image.Save(stream, format);
-                stream.Position = 0;
-                stream.CopyTo(blobStream);
-            }
         }
     }
 }

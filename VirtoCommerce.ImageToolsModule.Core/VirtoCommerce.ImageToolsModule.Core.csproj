@@ -92,6 +92,7 @@
     <Compile Include="Services\IThumbnailTaskSearchService.cs" />
     <Compile Include="Services\IThumbnailTaskService.cs" />
     <Compile Include="ThumbnailGeneration\IImagesChangesProvider.cs" />
+    <Compile Include="ThumbnailGeneration\IImageService.cs" />
     <Compile Include="ThumbnailGeneration\ImageChange.cs" />
     <Compile Include="ThumbnailGeneration\IThumbnailGenerator.cs" />
     <Compile Include="ThumbnailGeneration\IThumbnailGenerationProcessor.cs" />

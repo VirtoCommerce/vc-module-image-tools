@@ -1,34 +1,139 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
-using VirtoCommerce.Platform.Core.Assets;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
- {
-     public class DefaultThumbnailGeneratorTests
-     {
-         [Fact]
-         public async void GenerateThumbnailsAsync_ValidValues_ReturnsNotEmptyListOfThumbnails()
-         {
-             //var option = new ThumbnailOption();
-             
-             //var source = new CancellationTokenSource();
-             //var token = source.Token;
-             
-             //var inStream = new MemoryStream();
-             //var outStream = new MemoryStream();
-             
-             //var mock = new Mock<IBlobStorageProvider>();
-             //mock.Setup(r => r.OpenRead(It.IsAny<string>())).Returns(() => inStream);
-             //mock.Setup(r => r.OpenWrite(It.IsAny<string>())).Returns(() => outStream);
+{
+    public class DefaultThumbnailGeneratorTests
+    {
 
-             //var sut = new DefaultThumbnailGenerator(mock.Object);
-             //var result =  await sut.GenerateThumbnailsAsync("src", "dest", option, token);
- 
-             //Assert.NotEmpty(result.GeneratedThumbnails);
-         }
-     }
- }
+        [Fact]
+        public async void GenerateThumbnailsAsync_CancellationTokenNotNull_CancellationFired()
+        {
+            var options = new List<ThumbnailOption>();
+            CancellationToken token = new CancellationToken(true);
+            var tokenWrapper = new CancellationTokenWrapper(token);
+
+            var mockStorage = new Mock<IImageService>();
+            var mockResizer = new Mock<IImageResizer>();
+
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            await Assert.ThrowsAsync<OperationCanceledException>(async () => await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, tokenWrapper));
+        }
+
+        [Fact]
+        public async void GenerateThumbnailsAsync_FixedSize_FixedSizeCalled()
+        {
+            var options = new List<ThumbnailOption>()
+             {
+                 new ThumbnailOption()
+                 {
+                     ResizeMethod = ResizeMethod.FixedSize,
+                     FileSuffix = "test",
+                 }
+             };
+
+            var image = new Bitmap(50, 50);
+            var mockStorage = new Mock<IImageService>();
+            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
+
+            var mockResizer = new Mock<IImageResizer>();
+            mockResizer.Setup(x => x.FixedSize(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Color>())).Returns(image);
+
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
+
+            mockResizer.Verify(x => x.FixedSize(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Color>()));
+        }
+
+        [Fact]
+        public async void GenerateThumbnailsAsync_Crop_CropCalled()
+        {
+            var options = new List<ThumbnailOption>()
+            {
+                new ThumbnailOption()
+                {
+                    ResizeMethod = ResizeMethod.Crop,
+                    FileSuffix = "test",
+                }
+            };
+
+            var image = new Bitmap(50, 50);
+            var mockStorage = new Mock<IImageService>();
+            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
+
+            var mockResizer = new Mock<IImageResizer>();
+            mockResizer.Setup(x => x.Crop(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AnchorPosition>())).Returns(image);
+
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
+
+            mockResizer.Verify(x => x.Crop(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AnchorPosition>()));
+        }
+
+        [Fact]
+        public async void GenerateThumbnailsAsync_FixedWidth_FFixedWidthCalled()
+        {
+            var options = new List<ThumbnailOption>()
+            {
+                new ThumbnailOption()
+                {
+                    ResizeMethod = ResizeMethod.FixedWidth,
+                    FileSuffix = "test",
+                }
+            };
+
+            var image = new Bitmap(50, 50);
+
+            var mockStorage = new Mock<IImageService>();
+            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
+
+            var mockResizer = new Mock<IImageResizer>();
+            mockResizer.Setup(x => x.FixedWidth(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<Color>())).Returns(image);
+
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
+
+            mockResizer.Verify(x => x.FixedWidth(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<Color>()));
+        }
+
+        [Fact]
+        public async void GenerateThumbnailsAsync_FixedHeight_FixedHeightCalled()
+        {
+            var options = new List<ThumbnailOption>()
+            {
+                new ThumbnailOption()
+                {
+                    ResizeMethod = ResizeMethod.FixedHeight,
+                    FileSuffix = "test",
+                }
+            };
+
+            var image = new Bitmap(50, 50);
+
+            var mockStorage = new Mock<IImageService>();
+            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
+
+            var mockResizer = new Mock<IImageResizer>();
+            mockResizer.Setup(x => x.FixedHeight(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<Color>())).Returns(image);
+
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
+
+            mockResizer.Verify(x => x.FixedHeight(It.IsAny<Image>(), It.IsAny<int>(), It.IsAny<Color>()));
+        }
+    }
+}

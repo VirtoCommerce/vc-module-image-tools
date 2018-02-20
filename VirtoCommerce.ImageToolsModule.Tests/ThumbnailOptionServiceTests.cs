@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using Moq;
-
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
-
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -23,7 +22,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var tasks = optionEntites.Select(t => t.ToModel(new ThumbnailOption())).ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids))).Returns(optionEntites.Where(o => ids.Contains(o.Id)).ToArray());
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
+                .Returns(optionEntites.Where(o => ids.Contains(o.Id))
+                .ToArray());
 
             var sut = new ThumbnailOptionService(() => mock.Object);
             var result = sut.GetByIds(ids);
@@ -39,10 +40,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var ids = optionEntites.Select(t => t.Id).ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
+            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
             mock.Setup(r => r.RemoveThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
                 .Callback((string[] arr) =>
                 {
-                    var entities = optionEntites.Where(e => arr.Contains(e.Id));
+                    var entities = optionEntites.Where(e => arr.Contains(e.Id)).ToList();
                     foreach (var entity in entities)
                     {
                         optionEntites.Remove(entity);
@@ -62,8 +64,13 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var options = ThumbnailOptionDataSource.ToArray();
 
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
+            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsAny<string[]>()))
+                .Returns((string[] ids) =>
+                {
+                    var result = optionEntities.Where(t => ids.Contains(t.Id)).ToArray();
+                    return result;
+                });
 
             var sut = new ThumbnailOptionService(() => mock.Object);
             sut.SaveOrUpdate(options);
@@ -74,38 +81,56 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public void SaveChanges_ArrayOfThumbnailOptions_NewThumbnailOptionsSaved()
         {
-            var options = ThumbnailOptionDataSource.ToArray();
-            var optionEntities = new List<ThumbnailOptionEntity>();
+            var optionEntities = ThumbnailOptionEntitesDataSource.ToList();
 
             var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
+            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
+            mock.Setup(x => x.Add(It.IsAny<ThumbnailOptionEntity>()))
+                .Callback((ThumbnailOptionEntity entity) =>
+                {
+                    optionEntities.Add(entity);
+                });
+            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsAny<string[]>()))
+                .Returns((string[] ids) =>
+                {
+                    return optionEntities.Where(t => ids.Contains(t.Id)).ToArray();
+                });
 
             var sut = new ThumbnailOptionService(() => mock.Object);
-            sut.SaveOrUpdate(options);
+            sut.SaveOrUpdate(new[]
+            {
+                new ThumbnailOption()
+                {
+                    Id = "NewOptionId", Name = "New Option name"
+                }
+            });
 
-            Assert.NotEmpty(optionEntities);
+            Assert.Contains(optionEntities, x => x.Id == "NewOptionId");
         }
 
-        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
+        private static ICollection<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
         {
             get
             {
                 int i = 0;
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
+                var result = new List<ThumbnailOptionEntity>();
+                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
+                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
+                result.Add(new ThumbnailOptionEntity() { Id = $"Option {++i}" });
+                return result;
             }
         }
 
-        private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
+        private static ICollection<ThumbnailOption> ThumbnailOptionDataSource
         {
             get
             {
                 int i = 0;
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
+                var result = new List<ThumbnailOption>();
+                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
+                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
+                result.Add(new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" });
+                return result;
             }
         }
     }

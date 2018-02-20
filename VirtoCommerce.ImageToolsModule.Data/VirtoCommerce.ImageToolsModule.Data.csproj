@@ -107,6 +107,7 @@
     <Compile Include="ThumbnailGeneration\DefaultThumbnailGenerator.cs" />
     <Compile Include="ThumbnailGeneration\ImageResizer.cs" />
     <Compile Include="ThumbnailGeneration\ImagesChangesProvider.cs" />
+    <Compile Include="ThumbnailGeneration\ImageService.cs" />
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationProcessor.cs" />
     <Compile Include="ThumbnailGeneration\UriHelper.cs" />
   </ItemGroup>

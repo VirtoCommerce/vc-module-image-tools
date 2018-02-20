@@ -14,41 +14,40 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
-            var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
-            var expectedOptions = ThumbnailOptionDataSource.OrderBy(t => t.Name).ThenByDescending(t => t.Width).ToArray();
+            var repoMock = GetOptionsRepositoryMock();
+            var target = new ThumbnailOptionSearchService(() => repoMock.Object);
+            var criteria = new ThumbnailOptionSearchCriteria() { Sort = "Name:desc;FileSuffix:desc" };
+            var resultTasks = target.Search(criteria);
 
-            var criteria = new ThumbnailOptionSearchCriteria { Sort = "Name:asc;Width:desc" };
-
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIds(It.IsIn<string[]>()))
-                .Returns((string[] ids) => { return optionEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
-
-            var sut = new ThumbnailOptionSearchService(() => mock.Object);
-
-            var resultTasks = sut.Search(criteria);
-
-            Assert.Equal(expectedOptions, resultTasks.Results);
+            var expectedTasks = ThumbnailTaskEntitysDataSource.Select(x => x.ToModel(new ThumbnailOption())).OrderByDescending(t => t.Name).ThenByDescending(t => t.FileSuffix).ToArray();
+            Assert.Equal(expectedTasks, resultTasks.Results);
         }
 
-        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
+        public Mock<IThumbnailRepository> GetOptionsRepositoryMock()
+        {
+            var entites = ThumbnailTaskEntitysDataSource.ToList();
+            var entitesQuerableMock = TestUtils.CreateQuerableMock(entites);
+            var repoMock = new Mock<IThumbnailRepository>();
+
+            repoMock.Setup(x => x.ThumbnailOptions).Returns(entitesQuerableMock.Object);
+
+            repoMock.Setup(x => x.GetThumbnailOptionsByIds(It.IsAny<string[]>()))
+                .Returns((string[] ids) =>
+                {
+                    return entitesQuerableMock.Object.Where(t => ids.Contains(t.Id)).ToArray();
+                });
+
+            return repoMock;
+        }
+
+        public IEnumerable<ThumbnailOptionEntity> ThumbnailTaskEntitysDataSource
         {
             get
             {
-                int i = 0;
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
-                yield return new ThumbnailOptionEntity() { Id = $"Option {++i}" };
-            }
-        }
-
-        private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
-        {
-            get
-            {
-                int i = 0;
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
-                yield return new ThumbnailOption() { Id = $"Option {++i}", Name = "New Name" };
+                yield return new ThumbnailOptionEntity() { Id = "Option1", Name = "Name 1", FileSuffix = "SuffixName4" };
+                yield return new ThumbnailOptionEntity() { Id = "Option2", Name = "NameLong 2", FileSuffix = "SuffixName3" };
+                yield return new ThumbnailOptionEntity() { Id = "Option3", Name = "Name 3", FileSuffix = "SuffixName2" };
+                yield return new ThumbnailOptionEntity() { Id = "Option4", Name = "NameLong 4", FileSuffix = "SuffixName1" };
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
@@ -23,26 +22,26 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             using (var repository = this._thumbnailRepositoryFactory())
             {
                 var sortInfos = criteria.SortInfos;
-
                 if (sortInfos.IsNullOrEmpty())
                     sortInfos = new[]
                                     {
                                         new SortInfo
                                             {
-                                                SortColumn =
-                                                    ReflectionUtility.GetPropertyName<ThumbnailTask>(
-                                                        t => t.CreatedDate),
-                                                SortDirection = SortDirection.Descending
+                                                SortColumn = ReflectionUtility.GetPropertyName<ThumbnailTask>(t => t.CreatedDate), SortDirection = SortDirection.Descending
                                             }
                                     };
 
                 var query = repository.ThumbnailOptions.OrderBySortInfos(sortInfos);
-
-                var retVal = new GenericSearchResponse<ThumbnailOption> { TotalCount = query.Count() };
+                var totalCount = query.Count();
 
                 var ids = query.Skip(criteria.Skip).Take(criteria.Take).Select(x => x.Id).ToArray();
-                retVal.Results = repository.GetThumbnailOptionsByIds(ids)
-                    .Select(t => t.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
+                var results = repository.GetThumbnailOptionsByIds(ids).Select(t => t.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
+
+                var retVal = new GenericSearchResponse<ThumbnailOption>
+                {
+                    TotalCount = totalCount,
+                    Results = results.AsQueryable().OrderBySortInfos(sortInfos).ToList()
+                };
 
                 return retVal;
             }
