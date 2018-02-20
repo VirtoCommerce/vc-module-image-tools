@@ -190,6 +190,7 @@
     <Compile Include="Controllers\Api\ThumbnailsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
+    <Compile Include="ExportImport\ThumbnailsExportImport.cs" />
     <Compile Include="Models\GenerateThumbnailsRequest.cs" />
     <Compile Include="Models\GenerateThumbnailsResponse.cs" />
     <Compile Include="Models\PushNotifications\ThumbnailProcessNotification.cs" />

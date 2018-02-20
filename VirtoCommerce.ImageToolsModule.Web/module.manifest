@@ -30,6 +30,15 @@
     </scripts>
 
     <settings>
+        <group name="ImageTools|General">
+            <setting>
+                <name>ImageTools.ExportImport.Description</name>
+                <valueType>string</valueType>
+                <defaultValue>Export/Import saved tasks and options</defaultValue>
+                <title>Export/Import description</title>
+                <description>Module description in platform export/import wizard</description>
+            </setting>
+        </group>
         <group name="ImageTools|Thumbnails">
             <setting>
                 <name>ImageTools.Thumbnails.ProcessBacthSize</name>
