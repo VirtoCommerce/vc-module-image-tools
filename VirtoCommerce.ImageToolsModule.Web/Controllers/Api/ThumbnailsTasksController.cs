@@ -11,6 +11,8 @@ using VirtoCommerce.ImageToolsModule.Web.Models.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Web.Security;
+using VirtoCommerce.Platform.Core.Web.Security;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -39,6 +41,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(ThumbnailTask))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Create)]
         public IHttpActionResult Create(ThumbnailTask task)
         {
             _thumbnailTaskService.SaveOrUpdate(new[] { task });
@@ -53,6 +56,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpDelete]
         [Route("")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _thumbnailTaskService.RemoveByIds(ids);
@@ -67,6 +71,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpGet]
         [Route("{id}")]
         [ResponseType(typeof(ThumbnailTask))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public IHttpActionResult Get(string id)
         {
             var task = _thumbnailTaskService.GetByIds(new[] { id });
@@ -81,6 +86,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("search")]
         [ResponseType(typeof(SearchResult<ThumbnailTask>))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public SearchResult<ThumbnailTask> Search(ThumbnailTaskSearchCriteria criteria)
         {
             var result = _thumbnailTaskSearchService.Search(criteria);
@@ -98,6 +104,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPut]
         [Route("")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Update)]
         public IHttpActionResult Update(ThumbnailTask tasks)
         {
             _thumbnailTaskService.SaveOrUpdate(new[] { tasks });
@@ -106,6 +113,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 
         [HttpPost]
         [Route("{jobId}/cancel")]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public IHttpActionResult Cancel(string jobId)
         {
             BackgroundJob.Delete(jobId);
@@ -115,6 +123,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("run")]
         [ResponseType(typeof(ThumbnailProcessNotification))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public IHttpActionResult Run(ThumbnailsTaskRunRequest runRequest)
         {
             var notification = Enqueue(runRequest);

@@ -5,6 +5,8 @@ using System.Web.Http.Description;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Web.Models;
+using VirtoCommerce.ImageToolsModule.Web.Security;
+using VirtoCommerce.Platform.Core.Web.Security;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -36,6 +38,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(ThumbnailOption))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Create)]
         public IHttpActionResult Create(ThumbnailOption option)
         {
             _thumbnailOptionService.SaveOrUpdate(new[] { option });
@@ -50,6 +53,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpDelete]
         [Route("")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Delete)]
         public IHttpActionResult Delete([FromUri] string[] ids)
         {
             _thumbnailOptionService.RemoveByIds(ids);
@@ -64,6 +68,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpGet]
         [Route("{id}")]
         [ResponseType(typeof(ThumbnailOption))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public IHttpActionResult Get(string id)
         {
             var options = _thumbnailOptionService.GetByIds(new[] { id });
@@ -78,6 +83,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("search")]
         [ResponseType(typeof(SearchResult<ThumbnailOption>))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public SearchResult<ThumbnailOption> Search(ThumbnailOptionSearchCriteria criteria)
         {
             var result = _thumbnailOptionSearchService.Search(criteria);
@@ -99,6 +105,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPut]
         [Route("")]
         [ResponseType(typeof(void))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Update)]
         public IHttpActionResult Update(ThumbnailOption option)
         {
             _thumbnailOptionService.SaveOrUpdate(new[] { option });

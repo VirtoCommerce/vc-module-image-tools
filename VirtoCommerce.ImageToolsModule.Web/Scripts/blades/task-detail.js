@@ -185,7 +185,11 @@
 
         function folderPath(folderPath) {
             if (folderPath && folderPath.length === 1 && folderPath[0].type === 'folder') {
-                blade.currentEntity.workPath = folderPath[0].relativeUrl;
+                //for first level blobs relativeUrl can be undefinded (for azure provider) so take the name as a path instead
+                var selectedFolder = folderPath[0];
+                blade.currentEntity.workPath = selectedFolder.relativeUrl
+                    ? selectedFolder.relativeUrl
+                    : selectedFolder.name;
             } else {
                 var dialog = {
                     id: "selectFolderDialog",
