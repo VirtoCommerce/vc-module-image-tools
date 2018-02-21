@@ -59,7 +59,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             foreach (var option in options)
             {
                 var thumbnail = GenerateThumbnail(clone, option);
-                var thumbnailUrl = sourcePath.GenerateThumnnailName(option.FileSuffix);
+                var thumbnailUrl = sourcePath.GenerateThumbnailName(option.FileSuffix);
 
                 if (thumbnail != null)
                 {

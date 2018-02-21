@@ -24,7 +24,7 @@
 
                             $timeout(function () {
                                 // wait for grid to ingest data changes
-                                if ($scope.gridApi.selection.getSelectAllState()) {
+                                if ($scope.gridApi && $scope.gridApi.selection.getSelectAllState()) {
                                     $scope.gridApi.selection.selectAllRows();
                                 }
                             });
@@ -148,6 +148,7 @@
             $scope.taskRun = function (itemsSelect) {
                 var dialog = {
                     id: "confirmTaskRun",
+                    isFirstRun: _.some(itemsSelect, function (item) { return !item.lastRun }),
                     callback: function (regenerate) {
                         var request = {
                             taskIds: _.pluck(itemsSelect, "id"),

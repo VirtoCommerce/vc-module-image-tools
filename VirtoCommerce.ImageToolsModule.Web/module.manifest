@@ -38,6 +38,26 @@
                 <title>Export/Import description</title>
                 <description>Module description in platform export/import wizard</description>
             </setting>
+            <setting>
+                <name>ImageTools.Thumbnails.EnableImageProcessjob</name>
+                <valueType>boolean</valueType>
+                <defaultValue>False</defaultValue>
+                <title>Enable image processing job</title>
+                <description>Flag for activating background image processing job (requires restart)</description>
+            </setting>
+            <setting>
+                <name>ImageTools.Thumbnails.ImageProcessjobCronExpression</name>
+                <valueType>string</valueType>
+                <defaultValue>0 0 * * *</defaultValue>
+                <title>Cron expression for scheduling image processing job execution (requires restart)</title>
+                <description>
+                    <![CDATA[ 
+                    x minutes use "0/x * * * *"
+                    x hours use "0 */x * * *" you can set minutes also "15 */x * * *"
+                    x days "0 0 */x * *"   
+                    ]]>
+                </description>
+            </setting>
         </group>
         <group name="ImageTools|Thumbnails">
             <setting>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using Hangfire;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
 using VirtoCommerce.ImageToolsModule.Web.ExportImport;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -73,6 +75,25 @@ namespace VirtoCommerce.ImageToolsModule.Web
 #pragma warning restore 612, 618
         }
 
+        public override void PostInitialize()
+        {
+            base.PostInitialize();
+
+            var settingsManager = _container.Resolve<ISettingsManager>();
+
+            //Schedule periodic image processing job
+            var processJobEnabled = settingsManager.GetValue("ImageTools.Thumbnails.EnableImageProcessjob", false);
+            if (processJobEnabled)
+            {
+                var cronExpression = settingsManager.GetValue("ImageTools.Thumbnails.ImageProcessjobCronExpression", "0 0 * * *");
+                RecurringJob.AddOrUpdate<ThumbnailProcessJob>("ProcessAllImageTasksJob", x => x.ProcessAll(JobCancellationToken.Null), cronExpression);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists("ProcessAllImageTasksJob");
+            }
+
+        }
         #endregion
 
 

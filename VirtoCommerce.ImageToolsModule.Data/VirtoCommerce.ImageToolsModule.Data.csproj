@@ -109,7 +109,7 @@
     <Compile Include="ThumbnailGeneration\ImagesChangesProvider.cs" />
     <Compile Include="ThumbnailGeneration\ImageService.cs" />
     <Compile Include="ThumbnailGeneration\ThumbnailGenerationProcessor.cs" />
-    <Compile Include="ThumbnailGeneration\UriHelper.cs" />
+    <Compile Include="ThumbnailGeneration\FileNameHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

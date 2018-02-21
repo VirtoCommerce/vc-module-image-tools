@@ -118,7 +118,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (!Exists(blobInfo.Url.GenerateThumnnailName(option.FileSuffix)))
+                if (!Exists(blobInfo.Url.GenerateThumbnailName(option.FileSuffix)))
                 {
                     return EntryState.Added;
                 }

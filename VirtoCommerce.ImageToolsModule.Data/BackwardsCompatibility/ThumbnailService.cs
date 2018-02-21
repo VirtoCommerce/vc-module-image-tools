@@ -133,7 +133,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 throw new ArgumentNullException("aliases");
 
             var thumbnailUrls = aliases
-                .Select(imageUrl.GenerateThumnnailName)
+                .Select(imageUrl.GenerateThumbnailName)
                 .Where(Exists)
                 .ToArray();
 
@@ -148,7 +148,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         
         protected virtual string AddAliasToImageUrl(string originalImageUrl, string suffix)
         {
-            return originalImageUrl.GenerateThumnnailName(suffix);
+            return originalImageUrl.GenerateThumbnailName(suffix);
         }
 
         protected virtual async Task<Image> LoadImageAsync(string imageUrl)

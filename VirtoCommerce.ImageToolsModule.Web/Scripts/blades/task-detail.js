@@ -130,7 +130,7 @@
                 name: "imageTools.commands.run",
                 icon: 'fa fa-exclamation',
                 executeMethod: function () {
-                    taskRun(blade.currentEntityId);
+                    taskRun(blade.currentEntity);
                 },
                 canExecuteMethod: function () {
                     return !blade.isNew;
@@ -148,12 +148,13 @@
             }
         ];
 
-        function taskRun(taskId) {
+        function taskRun(task) {
             var dialog = {
                 id: "confirmTaskRun",
+                isFirstRun: !task.lastRun,
                 callback: function (regenerate) {
                     var request = {
-                        taskIds: [taskId],
+                        taskIds: [task.id],
                         regenerate: regenerate
                     };
 
@@ -188,12 +189,14 @@
             } else {
                 var dialog = {
                     id: "selectFolderDialog",
+                    title: 'imageTools.dialogs.select-folder.title',
+                    message: 'imageTools.dialogs.select-folder.msg1',
                     callback: function () {
                         return true;
                     }
                 }
-
-                dialogService.showDialog(dialog, 'Modules/$(VirtoCommerce.ImageTools)/Scripts/dialogs/select-folder-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+                
+                dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
         }
 

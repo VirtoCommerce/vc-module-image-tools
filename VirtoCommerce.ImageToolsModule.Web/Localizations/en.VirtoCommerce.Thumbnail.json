@@ -25,7 +25,7 @@
           },
           "descriptions": {
             "name": "The display task name",
-            "path-images": "The path in asset system which will be used for images discovery. Allimages in this folder will be processed recursively",
+            "path-images": "The path in asset system which will be used for images discovery. All images in this folder will be processed recursively",
             "thumbnail-settings": "The list of thumbnails resolutions"
           }
         },

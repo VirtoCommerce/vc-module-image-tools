@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Web.Models;
@@ -16,12 +17,14 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         private readonly IThumbnailGenerationProcessor _thumbnailProcessor;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IThumbnailTaskService _taskService;
+        private readonly IThumbnailTaskSearchService _taskSearchService;
 
-        public ThumbnailProcessJob(IPushNotificationManager pushNotifier, IThumbnailGenerationProcessor thumbnailProcessor, IThumbnailTaskService taskService)
+        public ThumbnailProcessJob(IPushNotificationManager pushNotifier, IThumbnailGenerationProcessor thumbnailProcessor, IThumbnailTaskService taskService, IThumbnailTaskSearchService taskSearchService)
         {
             _pushNotifier = pushNotifier;
             _thumbnailProcessor = thumbnailProcessor;
             _taskService = taskService;
+            _taskSearchService = taskSearchService;
         }
 
         /// <summary>
@@ -78,6 +81,30 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                 notifyEvent.Description = "Process finished" + (notifyEvent.Errors.Any() ? " with errors" : " successfully");
                 _pushNotifier.Upsert(notifyEvent);
             }
+        }
+
+        /// <summary>
+        /// Find all tasks and run them
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [DisableConcurrentExecution(60 * 60 * 24)]
+        public async Task ProcessAll(IJobCancellationToken cancellationToken)
+        {
+            var totalCount = _taskSearchService.Search(new ThumbnailTaskSearchCriteria() { Take = 0, Skip = 0 }).TotalCount;
+            var tasks = _taskSearchService.Search(new ThumbnailTaskSearchCriteria() { Take = totalCount, Skip = 0 }).Results.ToArray();
+
+            Action<ThumbnailTaskProgress> progressCallback = x => { };
+            var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+            await _thumbnailProcessor.ProcessTasksAsync(tasks, false, progressCallback, cancellationTokenWrapper);
+
+            //update tasks in case of successful generation
+            foreach (var task in tasks)
+            {
+                task.LastRun = DateTime.UtcNow;
+            }
+
+            _taskService.SaveOrUpdate(tasks);
         }
     }
 }

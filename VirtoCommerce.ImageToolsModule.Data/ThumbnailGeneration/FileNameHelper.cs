@@ -6,7 +6,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public static class FileNameHelper
     {
-        public static string GenerateThumnnailName(this string fileName, string aliasName)
+        public static string GenerateThumbnailName(this string fileName, string aliasName)
         {
             var name = Path.GetFileNameWithoutExtension(fileName);
             var extention = Path.GetExtension(fileName);
