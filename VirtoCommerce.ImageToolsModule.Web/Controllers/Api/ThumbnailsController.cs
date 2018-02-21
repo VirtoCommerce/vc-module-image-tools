@@ -8,7 +8,9 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.BackwardsCompatibility;
 using VirtoCommerce.ImageToolsModule.Web.Models;
+using VirtoCommerce.ImageToolsModule.Web.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Web.Security;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 {
@@ -41,6 +43,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(GenerateThumbnailsResponse))]
+        [CheckPermission(Permission = ThumbnailPredefinedPermissions.Read)]
         public async Task<IHttpActionResult> GenerateAsync(GenerateThumbnailsRequest request)
         {
             if (request == null)
