@@ -29,6 +29,7 @@
                 optionApi.search(optionSearchCriteria, function (options) {
                     updateEntityOptions(options.result);
                     blade.optionList = options.result;
+                    blade.currentEntity = {};
                     blade.isLoading = false;
                 });
             } else {
