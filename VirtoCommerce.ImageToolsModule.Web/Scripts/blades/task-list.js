@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.imageToolsModule')
+angular.module('virtoCommerce.imageToolsModule')
     .controller('virtoCommerce.imageToolsModule.taskListController', ['$scope','$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', 'platformWebApp.dialogService', 'virtoCommerce.imageToolsModule.taskApi',
         function ($scope, $timeout, bladeNavigationService, bladeUtils, uiGridHelper, dialogService, taskApi) {
             var blade = $scope.blade;
@@ -123,7 +123,7 @@
 
                 if (isNew) {
                     angular.extend(newBlade, {
-                        title: 'pricing.blades.pricelist-detail.title-new',
+                        title: 'imageTools.blades.task-detail.title-new',
                         isNew: true,
                         saveCallback: function (newPricelist) {
                             newBlade.isNew = false;
