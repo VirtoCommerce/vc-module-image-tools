@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -27,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <summary>
         /// Resize image vertically with keeping it aspect rate.
         /// </summary>
-        public virtual Image FixedHeight(Image image, int height, Color backgroung)
+        public virtual Image FixedHeight(Image image, int height, Color background)
         {
             var source = new ImageDimensions { Width = image.Width, Height = image.Height };
             var destination = new ImageDimensions();
@@ -37,13 +37,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             destination.Width = (int)(source.Width * nPercent);
             destination.Height = (int)(source.Height * nPercent);
 
-            return Transform(image, source, destination, destination.Size, backgroung);
+            return Transform(image, source, destination, destination.Size, background);
         }
 
         /// <summary>
         /// Resize image horizontally with keeping it aspect rate
         /// </summary>
-        public virtual Image FixedWidth(Image image, int width, Color backgroung)
+        public virtual Image FixedWidth(Image image, int width, Color background)
         {
             var source = new ImageDimensions { Width = image.Width, Height = image.Height };
             var destination = new ImageDimensions();
@@ -53,7 +53,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             destination.Width = (int)(source.Width * nPercent);
             destination.Height = (int)(source.Height * nPercent);
 
-            return Transform(image, source, destination, destination.Size, backgroung);
+            return Transform(image, source, destination, destination.Size, background);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// If the original image has an aspect ratio different from thumbnail then thumbnail will contain empty spaces (top and bottom or left and right). 
         /// The empty spaces will be filled with given color.
         /// </summary>
-        public virtual Image FixedSize(Image image, int width, int height, Color backgroung)
+        public virtual Image FixedSize(Image image, int width, int height, Color background)
         {
             var source = new ImageDimensions { Width = image.Width, Height = image.Height };
             var destination = new ImageDimensions();
@@ -88,7 +88,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             destination.Width = (int)(source.Width * nPercent);
             destination.Height = (int)(source.Height * nPercent);
 
-            return Transform(image, source, destination, new Size { Height = height, Width = width }, backgroung);
+            return Transform(image, source, destination, new Size { Height = height, Width = width }, background);
         }
 
         /// <summary>
