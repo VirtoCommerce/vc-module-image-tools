@@ -13,12 +13,12 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// <summary>
         /// Resize image vertically with keeping it aspect rate.
         /// </summary>
-        Image FixedHeight(Image image, int height, Color backgroung);
+        Image FixedHeight(Image image, int height, Color background);
 
         /// <summary>
         /// Resize image horizontally with keeping it aspect rate
         /// </summary>
-        Image FixedWidth(Image image, int width, Color backgroung);
+        Image FixedWidth(Image image, int width, Color background);
 
         /// <summary>
         /// Resize image.
@@ -27,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// If the original image has an aspect ratio different from thumbnail then thumbnail will contain empty spaces (top and bottom or left and right). 
         /// The empty spaces will be filled with given color.
         /// </summary>
-        Image FixedSize(Image image, int width, int height, Color backgroung);
+        Image FixedSize(Image image, int width, int height, Color background);
 
         /// <summary>
         /// Resize and trim excess.
