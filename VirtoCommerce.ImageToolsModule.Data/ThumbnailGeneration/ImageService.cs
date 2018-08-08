@@ -41,7 +41,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 return null;
             }
         }
-
+        private ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
         /// <summary>
         /// Save given image to blob storage.
         /// </summary>
@@ -50,10 +61,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="format">Image object format.</param>
         public virtual async Task SaveImage(string imageUrl, Image image, ImageFormat format)
         {
+            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+            // Create an Encoder object based on the GUID  
+            // for the Quality parameter category.  
+            System.Drawing.Imaging.Encoder myEncoder =
+                System.Drawing.Imaging.Encoder.Quality;
+            // Create an EncoderParameters object.  
+            // An EncoderParameters object has an array of EncoderParameter  
+            // objects. In this case, there is only one  
+            // EncoderParameter object in the array.  
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 87L);
+            myEncoderParameters.Param[0] = myEncoderParameter;
             using (var blobStream = _storageProvider.OpenWrite(imageUrl))
             using (var stream = new MemoryStream())
             {
-                image.Save(stream, format);
+                image.Save(stream, jpgEncoder, myEncoderParameters);
                 stream.Position = 0;
                 await stream.CopyToAsync(blobStream);
             }
