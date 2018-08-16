@@ -44,7 +44,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var image = new Bitmap(50, 50);
             var mockStorage = new Mock<IImageService>();
-            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.GetImageCodecInfo(It.IsAny<Image>())).Returns((new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders())).Find(x => x.MimeType == "image/bmp"));
+            mockStorage.Setup(x => x.GetEncoderParameters(It.IsAny<Image>(), It.IsAny<ThumbnailOption>())).Returns(new EncoderParameters(1) { Param = new EncoderParameter[1] { new EncoderParameter(Encoder.Quality, 92) } });
+            //mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
 
             var mockResizer = new Mock<IImageResizer>();
@@ -70,7 +72,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var image = new Bitmap(50, 50);
             var mockStorage = new Mock<IImageService>();
-            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.GetImageCodecInfo(It.IsAny<Image>())).Returns((new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders())).Find(x => x.MimeType == "image/bmp"));
+            mockStorage.Setup(x => x.GetEncoderParameters(It.IsAny<Image>(), It.IsAny<ThumbnailOption>())).Returns(new EncoderParameters(1) { Param = new EncoderParameter[1] { new EncoderParameter(Encoder.Quality, 92) } });
+            //mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
 
             var mockResizer = new Mock<IImageResizer>();
@@ -97,7 +101,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var image = new Bitmap(50, 50);
 
             var mockStorage = new Mock<IImageService>();
-            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.GetImageCodecInfo(It.IsAny<Image>())).Returns((new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders())).Find(x => x.MimeType == "image/bmp"));
+            mockStorage.Setup(x => x.GetEncoderParameters(It.IsAny<Image>(), It.IsAny<ThumbnailOption>())).Returns(new EncoderParameters(1) { Param = new EncoderParameter[1] { new EncoderParameter(Encoder.Quality, 92) } });
+            //mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
 
             var mockResizer = new Mock<IImageResizer>();
@@ -124,7 +130,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var image = new Bitmap(50, 50);
 
             var mockStorage = new Mock<IImageService>();
-            mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
+            mockStorage.Setup(x => x.GetImageCodecInfo(It.IsAny<Image>())).Returns((new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders())).Find(x => x.MimeType == "image/bmp"));
+            mockStorage.Setup(x => x.GetEncoderParameters(It.IsAny<Image>(), It.IsAny<ThumbnailOption>())).Returns(new EncoderParameters(1) { Param = new EncoderParameter[1] { new EncoderParameter(Encoder.Quality, 92) } });
+            //mockStorage.Setup(x => x.GetImageFormat(It.IsAny<Image>())).Returns(ImageFormat.Bmp);
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>())).Returns(Task.FromResult<Image>(image));
 
             var mockResizer = new Mock<IImageResizer>();
