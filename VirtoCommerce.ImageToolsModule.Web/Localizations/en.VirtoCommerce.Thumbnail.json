@@ -55,8 +55,7 @@
             "width": "Width (pixels)",
             "height": "Height (pixels)",
             "background-color": "Background color",
-            "anchor-position": "Anchor Position",
-            "jpeg-quality": "Jpeg quality"
+            "anchor-position": "Anchor Position"
           },
           "placeholders": {
             "name": "Enter option name",
@@ -72,8 +71,7 @@
             "width": "Thumbnail width in pixels",
             "height": "Thumbnail height in pixels",
             "background-color": "Thumbnail background color i.e. #FFFFFF",
-            "anchor-position": "Anchor position when cropping the image",
-            "jpeg-quality": "Jpeg output quality"
+            "anchor-position": "Anchor position when cropping the image"
           },
           "resize-method": {
             "fixed-size": "Fixed Size",
@@ -91,13 +89,8 @@
             "bottom-left": "Bottom Left",
             "bottom-center": "Bottom Center",
             "bottom-right": "Bottom Right"
-          },
-          "jpeg-quality": {
-            "low": "Low",
-            "medium": "Medium",
-            "high": "High",
-            "very-high": "Very high"
-          }
+
+          } 
         }
       },
         "dialogs": {
@@ -121,10 +114,10 @@
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete this Task?"
             },
-          "setting-save": {
-            "title": "Save changes",
-            "message": "The Setting has been modified. Do you want to save changes?"
-          },
+            "setting-save": {
+                "title": "Save changes",
+                "message": "The Setting has been modified. Do you want to save changes?"
+            },
             "setting-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete this Setting?"

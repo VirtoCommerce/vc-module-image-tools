@@ -41,13 +41,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 return new ThumbnailGenerationResult
                 {
-                    Errors = { $"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
+                    Errors = {$"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
                 };
             }
 
             var result = new ThumbnailGenerationResult();
 
-            var codecInfo = _imageService.GetImageCodecInfo(originalImage);
+            var format = _imageService.GetImageFormat(originalImage);
 
             //one process only can use an Image object at the same time.
             Image clone;
@@ -60,11 +60,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 var thumbnail = GenerateThumbnail(clone, option);
                 var thumbnailUrl = sourcePath.GenerateThumbnailName(option.FileSuffix);
-                var encoderParams = _imageService.GetEncoderParameters(originalImage, option);
 
                 if (thumbnail != null)
                 {
-                    await _imageService.SaveImage(thumbnailUrl, thumbnail, codecInfo, encoderParams);
+                    await _imageService.SaveImage(thumbnailUrl, thumbnail, format);
                 }
                 else
                 {

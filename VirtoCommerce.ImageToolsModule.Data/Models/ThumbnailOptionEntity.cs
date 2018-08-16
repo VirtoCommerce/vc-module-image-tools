@@ -28,9 +28,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
         [StringLength(64)]
         public string AnchorPosition { get; set; }
 
-        [StringLength(64)]
-        public string JpegQuality { get; set; }
-
         public virtual ThumbnailOptionEntity FromModel(ThumbnailOption option, PrimaryKeyResolvingMap pkMap)
         {
             if (option == null) throw new ArgumentNullException(nameof(option));
@@ -45,7 +42,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             Height = option.Height;
             BackgroundColor = option.BackgroundColor;
             AnchorPosition = option.AnchorPosition.ToString();
-            JpegQuality = option.JpegQuality.ToString();
             CreatedBy = option.CreatedBy;
             CreatedDate = option.CreatedDate;
             ModifiedBy = option.ModifiedBy;
@@ -63,7 +59,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(this.ResizeMethod, Core.Models.ResizeMethod.Crop);
             option.AnchorPosition = EnumUtility.SafeParse(this.AnchorPosition, Core.Models.AnchorPosition.Center);
-            option.JpegQuality = EnumUtility.SafeParse(this.JpegQuality, Core.Models.JpegQuality.High);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;
@@ -84,7 +79,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             target.Height = Height;
             target.BackgroundColor = BackgroundColor;
             target.AnchorPosition = AnchorPosition;
-            target.JpegQuality = JpegQuality;
         }
     }
 }

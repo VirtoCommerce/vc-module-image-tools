@@ -43,13 +43,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackwardsCompatibility
                 Enum.TryParse(anchorPosition.Value<string>(), out resultAnchorPosition);
             }
 
-            JpegQuality resultJpegQuality = default(JpegQuality);
-            var jpegQuality = jObject["jpegquality"];
-            if (jpegQuality != null)
-            {
-                Enum.TryParse(jpegQuality.Value<string>(), out resultJpegQuality);
-            }
-
             var result = new ThumbnailOption()
             {
                 BackgroundColor = jObject["color"]?.Value<string>(),
@@ -57,7 +50,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackwardsCompatibility
                 Width = jObject["width"]?.Value<int>(),
                 Height = jObject["height"]?.Value<int>(),
                 AnchorPosition = resultAnchorPosition,
-                JpegQuality = resultJpegQuality,
                 ResizeMethod = resultResizeMethod
             };
 

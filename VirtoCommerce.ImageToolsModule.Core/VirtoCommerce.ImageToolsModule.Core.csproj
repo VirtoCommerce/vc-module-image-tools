@@ -80,7 +80,6 @@
     <Compile Include="Models\AnchorPosition.cs" />
     <Compile Include="Models\GenericSearchResponse.cs" />
     <Compile Include="Models\ImageDimensions.cs" />
-    <Compile Include="Models\JpegQuality.cs" />
     <Compile Include="Models\ResizeMethod.cs" />
     <Compile Include="Models\ThumbnailOption.cs" />
     <Compile Include="Models\ThumbnailOptionSearchCriteria.cs" />
