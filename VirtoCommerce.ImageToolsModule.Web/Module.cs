@@ -70,9 +70,9 @@ namespace VirtoCommerce.ImageToolsModule.Web
             _container.RegisterType<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             _container.RegisterType<IImagesChangesProvider, BlobImagesChangesProvider>();
 
-#pragma warning disable 612, 618
-            _container.RegisterType<IThumbnailService, ThumbnailService>();
-#pragma warning restore 612, 618
+//#pragma warning disable 612, 618
+//            _container.RegisterType<IThumbnailService, ThumbnailService>();
+//#pragma warning restore 612, 618
         }
 
         public override void PostInitialize()

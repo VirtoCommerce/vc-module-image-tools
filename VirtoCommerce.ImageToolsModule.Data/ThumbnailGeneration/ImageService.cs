@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Assets;
 
@@ -47,44 +50,43 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
         /// <param name="image">Image object.</param>
-        /// <param name="format">Image object format.</param>
-        public virtual async Task SaveImage(string imageUrl, Image image, ImageFormat format)
+        /// <param name="imageFormat">ImageFormat object.</param>
+        /// <param name="quality">JpegQuality object.</param>
+        public virtual async Task SaveImage(string imageUrl, Image image, ImageFormat imageFormat, JpegQuality quality)
         {
             using (var blobStream = _storageProvider.OpenWrite(imageUrl))
             using (var stream = new MemoryStream())
             {
-                image.Save(stream, format);
+                if (imageFormat == ImageFormat.Jpeg)
+                {
+                    var codecInfo = ImageCodecInfo.GetImageEncoders().FirstOrDefault(c => c.FormatID == imageFormat.Guid);
+                    var encoderParams = new EncoderParameters
+                    {
+                        Param = new EncoderParameter[]
+                        {
+                           new EncoderParameter(Encoder.Quality, (int)quality)
+                        }
+                    };
+                    image.Save(stream, codecInfo, encoderParams);
+                }
+                else
+                {
+                    image.Save(stream, imageFormat);
+                }
                 stream.Position = 0;
                 await stream.CopyToAsync(blobStream);
             }
         }
 
         /// <summary>
-        /// Get image format by Image object.
+        /// Get codec info by Image object.
         /// </summary>
         /// <param name="image"></param>
-        /// <returns></returns>
-        public virtual ImageFormat GetImageFormat(Image image)
+        /// <returns>ImageCodecInfo object.</returns>
+        protected virtual ImageCodecInfo GetImageCodecInfo(ImageFormat format)
         {
-            if (image.RawFormat.Equals(ImageFormat.Jpeg))
-                return ImageFormat.Jpeg;
-            if (image.RawFormat.Equals(ImageFormat.Bmp))
-                return ImageFormat.Bmp;
-            if (image.RawFormat.Equals(ImageFormat.Png))
-                return ImageFormat.Png;
-            if (image.RawFormat.Equals(ImageFormat.Emf))
-                return ImageFormat.Emf;
-            if (image.RawFormat.Equals(ImageFormat.Exif))
-                return ImageFormat.Exif;
-            if (image.RawFormat.Equals(ImageFormat.Gif))
-                return ImageFormat.Gif;
-            if (image.RawFormat.Equals(ImageFormat.Icon))
-                return ImageFormat.Icon;
-            if (image.RawFormat.Equals(ImageFormat.MemoryBmp))
-                return ImageFormat.MemoryBmp;
-            if (image.RawFormat.Equals(ImageFormat.Tiff))
-                return ImageFormat.Tiff;
-            return ImageFormat.Wmf;
+            var codec = new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders()).FirstOrDefault(c => c.FormatID == format.Guid);
+            return codec;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
@@ -21,14 +22,8 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
         /// <param name="image">Image object.</param>
-        /// <param name="format">Image object format.</param>
-        Task SaveImage(string imageUrl, Image image, ImageFormat format);
-
-        /// <summary>
-        /// Get image format by Image object.
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        ImageFormat GetImageFormat(Image image);
+        /// <param name="imageFormat">ImageFormat object.</param>
+        /// <param name="jpegQuality">JpegQuality object.</param>
+        Task SaveImage(string imageUrl, Image image, ImageFormat imageFormat, JpegQuality jpegQuality);
     }
 }
