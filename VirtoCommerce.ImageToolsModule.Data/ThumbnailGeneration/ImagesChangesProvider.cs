@@ -18,8 +18,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         private IList<ImageChange> _changeBlobs;
 
-        private readonly string[] _imageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".tiff", ".tif" };
-
         public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService)
         {
             _storageProvider = storageProvider;
@@ -157,15 +155,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var blobInfo in source)
             {
-                var name = blobInfo.FileName;
-                if (name.IndexOf(".") == -1 || !_imageExtensions.Contains(name.Substring(name.LastIndexOf("."))))
-                {
-                    continue;
-                }
-
                 var present = false;
                 foreach (var suffix in suffixCollection)
                 {
+                    var name = blobInfo.FileName;
                     if (name.Contains("_" + suffix))
                     {
                         present = true;
