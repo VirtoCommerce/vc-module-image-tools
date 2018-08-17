@@ -13,6 +13,7 @@
         "task-detail": {
           "title": "Thumbnails generation task detail",
           "subtitle": "Manage the task settings and detail",
+          "title-new": "New thumbnails generation task",
           "labels": {
             "name": "Name",
             "path-images": "Path to images",
@@ -99,7 +100,7 @@
                 "msg1": "Choose how to generate the thumbnails. Options:",
                 "msg2": "Process changes: generate thumbnails only for new or changed images",
                 "msg3": "Regenerate: force to generation process for all images",
-                "btn-changes": "Procsess changes",
+                "btn-changes": "Process changes",
                 "btn-regenerate": "Regenerate"
             },
             "select-folder": {
@@ -118,10 +119,10 @@
                 "title": "Save changes",
                 "message": "The Setting has been modified. Do you want to save changes?"
             },
-            "setting-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete this Setting?"
-            }
+          "setting-delete": {
+            "title": "Delete confirmation",
+            "message": "Are you sure you want to delete this Setting?"
+          }
         },
         "commands": {
             "run": "Run" 
