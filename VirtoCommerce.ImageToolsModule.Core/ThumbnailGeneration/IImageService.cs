@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
@@ -21,14 +22,30 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
         /// <param name="image">Image object.</param>
-        /// <param name="format">Image object format.</param>
-        Task SaveImage(string imageUrl, Image image, ImageFormat format);
+        /// <param name="codecInfo">Image codec info.</param>
+        /// <param name="encoderParams">Image encoder parameters.</param>
+        Task SaveImage(string imageUrl, Image image, ImageCodecInfo codecInfo, EncoderParameters encoderParams = null);
 
         /// <summary>
-        /// Get image format by Image object.
+        /// Get codec info by Image object.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        ImageFormat GetImageFormat(Image image);
+        ImageCodecInfo GetImageCodecInfo(Image image);
+
+        /// <summary>
+        /// Get encoder parameters by Image object.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        EncoderParameters GetEncoderParameters(Image image, ThumbnailOption option);
+
+        /// <summary>
+        /// Get Jpeg quality parameter by JpegQuality object.
+        /// </summary>
+        /// <param name="quality"></param>
+        /// <returns></returns>
+        long GetJpegQualityParameter(JpegQuality quality);
     }
 }
