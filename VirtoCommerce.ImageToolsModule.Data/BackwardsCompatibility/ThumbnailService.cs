@@ -40,6 +40,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             public string Alias { get; set; }
             [JsonConverter(typeof(StringEnumConverter))]
             public AnchorPosition AnchorPosition { get; set; }
+            public JpegQuality JpegQuality { get; set; }
         }
 
         private const string _settingsName = "ImageTools.Thumbnails.Parameters";
@@ -69,7 +70,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 return false;
 
             var originalImage = await LoadImageAsync(imageUrl);
-            var format = GetImageFormat(originalImage);
+            var codecInfo = GetImageCodecInfo(originalImage);
             foreach (var parameters in thumbnailsParameters)
             {
                 var thumbnailUrl = AddAliasToImageUrl(imageUrl, parameters.Alias);
@@ -81,6 +82,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                     {
                         clone = (Image)originalImage.Clone();
                     }
+
+                    // Get encoder parameters.
+                    var encoderParams = GetEncoderParameters(originalImage, parameters);
 
                     //Generate a Thumbnail
                     Image thumbnail = null;
@@ -103,7 +107,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                     //Save
                     if (thumbnail != null)
                     {
-                        SaveImage(thumbnailUrl, thumbnail, format);
+                        await SaveImage(thumbnailUrl, thumbnail, codecInfo, encoderParams);
                     }
                     else
                     {
@@ -145,7 +149,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             var blobInfo = BlobStorageProvider.GetBlobInfo(imageUrl);
             return blobInfo != null;
         }
-        
+
         protected virtual string AddAliasToImageUrl(string originalImageUrl, string suffix)
         {
             return originalImageUrl.GenerateThumbnailName(suffix);
@@ -162,38 +166,50 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             }
         }
 
-        protected virtual void SaveImage(string imageUrl, Image image, ImageFormat format)
+        protected virtual async Task SaveImage(string imageUrl, Image image, ImageCodecInfo codecInfo, EncoderParameters encoderParams = null)
         {
             using (var blobStream = BlobStorageProvider.OpenWrite(imageUrl))
             using (var stream = new MemoryStream())
             {
-                image.Save(stream, format);
+                image.Save(stream, codecInfo, encoderParams);
                 stream.Position = 0;
-                stream.CopyTo(blobStream);
+                await stream.CopyToAsync(blobStream);
             }
         }
 
-        protected virtual ImageFormat GetImageFormat(Image image)
+        protected virtual ImageCodecInfo GetImageCodecInfo(Image image)
         {
-            if (image.RawFormat.Equals(ImageFormat.Jpeg))
-                return ImageFormat.Jpeg;
-            if (image.RawFormat.Equals(ImageFormat.Bmp))
-                return ImageFormat.Bmp;
-            if (image.RawFormat.Equals(ImageFormat.Png))
-                return ImageFormat.Png;
-            if (image.RawFormat.Equals(ImageFormat.Emf))
-                return ImageFormat.Emf;
-            if (image.RawFormat.Equals(ImageFormat.Exif))
-                return ImageFormat.Exif;
-            if (image.RawFormat.Equals(ImageFormat.Gif))
-                return ImageFormat.Gif;
-            if (image.RawFormat.Equals(ImageFormat.Icon))
-                return ImageFormat.Icon;
-            if (image.RawFormat.Equals(ImageFormat.MemoryBmp))
-                return ImageFormat.MemoryBmp;
-            if (image.RawFormat.Equals(ImageFormat.Tiff))
-                return ImageFormat.Tiff;
-            return ImageFormat.Wmf;
+            var format = image.RawFormat;
+            var codec = new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders()).FirstOrDefault(c => c.FormatID == format.Guid);
+            return codec;
+        }
+
+        protected virtual EncoderParameters GetEncoderParameters(Image image, ThumbnailParameters parameters)
+        {
+            EncoderParameters encoderParams = null;
+            if (image.RawFormat == ImageFormat.Jpeg)
+            {
+                var myEncoder = Encoder.Quality;
+                encoderParams = new EncoderParameters(1);
+                var myEncoderParameter = new EncoderParameter(myEncoder, GetJpegQualityParameter(parameters.JpegQuality));
+                encoderParams.Param[0] = myEncoderParameter;
+            }
+
+            return encoderParams;
+        }
+
+        private long GetJpegQualityParameter(JpegQuality quality)
+        {
+            if (quality == JpegQuality.Low)
+                return 50;
+            if (quality == JpegQuality.Medium)
+                return 72;
+            if (quality == JpegQuality.High)
+                return 85;
+            if (quality == JpegQuality.VeryHigh)
+                return 92;
+
+            return -1;
         }
     }
 }
