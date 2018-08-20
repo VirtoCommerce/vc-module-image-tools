@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
@@ -86,6 +87,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var result = new List<BlobInfo>();
 
             var searchResults = _storageProvider.Search(folderPath, null);
+            searchResults.Items = searchResults.Items.Where(item => _imageExtensions.Contains(Path.GetExtension(item.FileName))).ToList();
 
             result.AddRange(searchResults.Items);
             foreach (var blobFolder in searchResults.Folders)
@@ -158,10 +160,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             foreach (var blobInfo in source)
             {
                 var name = blobInfo.FileName;
-                if (name.IndexOf(".") == -1 || !_imageExtensions.Contains(name.Substring(name.LastIndexOf("."))))
-                {
-                    continue;
-                }
 
                 var present = false;
                 foreach (var suffix in suffixCollection)
