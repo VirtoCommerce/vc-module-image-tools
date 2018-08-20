@@ -57,7 +57,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             using (var blobStream = _storageProvider.OpenWrite(imageUrl))
             using (var stream = new MemoryStream())
             {
-                if (imageFormat == ImageFormat.Jpeg)
+                if (imageFormat.Guid == ImageFormat.Jpeg.Guid)
                 {
                     var codecInfo = ImageCodecInfo.GetImageEncoders().FirstOrDefault(c => c.FormatID == imageFormat.Guid);
                     var encoderParams = new EncoderParameters
