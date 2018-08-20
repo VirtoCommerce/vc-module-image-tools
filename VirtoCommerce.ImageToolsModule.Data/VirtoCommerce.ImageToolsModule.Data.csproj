@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201802070844489_AddAnchor.Designer.cs">
       <DependentUpon>201802070844489_AddAnchor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808161001049_AddJpegQuality.cs" />
+    <Compile Include="Migrations\201808161001049_AddJpegQuality.Designer.cs">
+      <DependentUpon>201808161001049_AddJpegQuality.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ThumbnailOptionEntity.cs" />
     <Compile Include="Models\ThumbnailTaskEntity.cs" />
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802070844489_AddAnchor.resx">
       <DependentUpon>201802070844489_AddAnchor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808161001049_AddJpegQuality.resx">
+      <DependentUpon>201808161001049_AddJpegQuality.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

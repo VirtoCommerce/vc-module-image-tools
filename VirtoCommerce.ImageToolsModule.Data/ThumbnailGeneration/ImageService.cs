@@ -78,17 +78,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             }
         }
 
-        /// <summary>
-        /// Get codec info by Image object.
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns>ImageCodecInfo object.</returns>
-        protected virtual ImageCodecInfo GetImageCodecInfo(ImageFormat format)
-        {
-            var codec = new List<ImageCodecInfo>(ImageCodecInfo.GetImageEncoders()).FirstOrDefault(c => c.FormatID == format.Guid);
-            return codec;
-        }
-
         #endregion
     }
 }

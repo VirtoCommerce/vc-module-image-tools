@@ -24,6 +24,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// <param name="image">Image object.</param>
         /// <param name="imageFormat">ImageFormat object.</param>
         /// <param name="jpegQuality">JpegQuality object.</param>
-        Task SaveImage(string imageUrl, Image image, ImageFormat imageFormat, JpegQuality jpegQuality);
+        Task SaveImage(string imageUrl, Image image, ImageFormat imageFormat, JpegQuality quality);
     }
 }
