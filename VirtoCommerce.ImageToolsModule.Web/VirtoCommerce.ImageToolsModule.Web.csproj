@@ -185,7 +185,6 @@
     </Compile>
     <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
     <Compile Include="BackgroundJobs\ThumbnailProcessJob.cs" />
-    <Compile Include="Controllers\Api\ThumbnailsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsOptionsController.cs" />
     <Compile Include="Controllers\Api\ThumbnailsTasksController.cs" />
     <Compile Include="ExportImport\ThumbnailsExportImport.cs" />

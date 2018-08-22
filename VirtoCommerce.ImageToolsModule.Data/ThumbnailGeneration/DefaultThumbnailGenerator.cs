@@ -41,13 +41,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 return new ThumbnailGenerationResult
                 {
-                    Errors = {$"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
+                    Errors = { $"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
                 };
             }
 
             var result = new ThumbnailGenerationResult();
-
-            var format = _imageService.GetImageFormat(originalImage);
 
             //one process only can use an Image object at the same time.
             Image clone;
@@ -63,7 +61,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 if (thumbnail != null)
                 {
-                    await _imageService.SaveImage(thumbnailUrl, thumbnail, format);
+                    await _imageService.SaveImage(thumbnailUrl, thumbnail, clone.RawFormat, option.JpegQuality);
                 }
                 else
                 {
@@ -104,6 +102,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     thumbnail = _imageResizer.Crop(image, width, height, option.AnchorPosition);
                     break;
             }
+
             return thumbnail;
         }
     }
