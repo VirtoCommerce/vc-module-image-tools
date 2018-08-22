@@ -163,6 +163,7 @@
     <Content Include="Scripts\resourse\enums.js" />
     <Content Include="Scripts\resourse\thumbnailApi.js" />
     <Content Include="Scripts\thumbnail.js" />
+    <Content Include="Localizations\ru.VirtoCommerce.Thumbnail.json" />
     <None Include="packages.config" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
