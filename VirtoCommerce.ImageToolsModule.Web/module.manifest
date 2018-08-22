@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.ImageTools</id>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <platformVersion>2.12.0</platformVersion>
 
   <title>Image tools module</title>
@@ -65,18 +65,6 @@
                 <valueType>integer</valueType>
                 <defaultValue>50</defaultValue>
                 <title>Partition size</title>
-            </setting>
-        </group>
-        <group name="ImageTools|(Deprecated)Thumbnails">
-            <setting>
-                <name>ImageTools.Thumbnails.Parameters</name>
-                <valueType>longtext</valueType>
-                <defaultValue></defaultValue>
-                <title>(Deprecated)Parameters of thumbnail generation (JSON)</title>
-                <description>Example {width: 200, height: 150, alias: "small", color: "#FFFFFF"}</description>
-                <isArray>true</isArray>
-                <arrayValues>
-                </arrayValues>
             </setting>
         </group>
     </settings>
