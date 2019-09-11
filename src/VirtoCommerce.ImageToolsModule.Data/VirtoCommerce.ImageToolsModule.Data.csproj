@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -13,12 +13,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
         <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.0.0-beta0001" />
