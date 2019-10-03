@@ -7,6 +7,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IThumbnailGenerator
     {
-        Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string sourse, string destination, IList<ThumbnailOption> options, ICancellationToken token);
+        Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token);
     }
 }

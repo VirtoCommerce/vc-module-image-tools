@@ -19,7 +19,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _storageProvider = storageProvider;
         }
 
-
         #region Implementation of IImageService
 
         /// <summary>

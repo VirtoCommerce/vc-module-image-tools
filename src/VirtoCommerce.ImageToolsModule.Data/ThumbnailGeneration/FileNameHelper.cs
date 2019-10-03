@@ -9,8 +9,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         public static string GenerateThumbnailName(this string fileName, string aliasName)
         {
             var name = Path.GetFileNameWithoutExtension(fileName);
-            var extention = Path.GetExtension(fileName);
-            var newName = string.Concat(name, "_" + aliasName, extention);
+            var extension = Path.GetExtension(fileName);
+            var newName = string.Concat(name, "_" + aliasName, extension);
 
             var uri = new Uri(fileName);
             var uriWithoutLastSegment = uri.AbsoluteUri.Remove(uri.AbsoluteUri.Length - uri.Segments.Last().Length);

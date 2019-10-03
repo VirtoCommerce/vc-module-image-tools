@@ -33,7 +33,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <summary>
         /// Resize image vertically with keeping it aspect rate.
         /// </summary>
-        public virtual Image<Rgba32> FixedHeight(Image<Rgba32> image, int height, Rgba32 backgroung)
+        public virtual Image<Rgba32> FixedHeight(Image<Rgba32> image, int height, Rgba32 background)
         {
             var options = new ResizeOptions
             {
@@ -44,7 +44,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var result = image.Clone(ctx =>
             {
                 ctx.Resize(options);
-                ctx.BackgroundColor(backgroung);
+                ctx.BackgroundColor(background);
             });
 
             return result;
@@ -53,7 +53,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <summary>
         /// Resize image horizontally with keeping it aspect rate
         /// </summary>
-        public virtual Image<Rgba32> FixedWidth(Image<Rgba32> image, int width, Rgba32 backgroung)
+        public virtual Image<Rgba32> FixedWidth(Image<Rgba32> image, int width, Rgba32 background)
         {
             var options = new ResizeOptions
             {
@@ -64,7 +64,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var result = image.Clone(ctx =>
             {
                 ctx.Resize(options);
-                ctx.BackgroundColor(backgroung);
+                ctx.BackgroundColor(background);
             });
 
             return result;
@@ -77,7 +77,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// If the original image has an aspect ratio different from thumbnail then thumbnail will contain empty spaces (top and bottom or left and right). 
         /// The empty spaces will be filled with given color.
         /// </summary>
-        public virtual Image<Rgba32> FixedSize(Image<Rgba32> image, int width, int height, Rgba32 backgroung)
+        public virtual Image<Rgba32> FixedSize(Image<Rgba32> image, int width, int height, Rgba32 background)
         {
             var options = new ResizeOptions
             {
@@ -88,7 +88,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var result = image.Clone(ctx =>
             {
                 ctx.Resize(options);
-                ctx.BackgroundColor(backgroung);
+                ctx.BackgroundColor(background);
             });
 
             return result;

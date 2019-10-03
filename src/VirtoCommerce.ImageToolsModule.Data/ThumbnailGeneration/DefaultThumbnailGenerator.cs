@@ -26,21 +26,21 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <summary>
         /// Generates thumbnails asynchronously
         /// </summary>
-        /// <param name="sourcePath">Path to source picture</param>
+        /// <param name="source">Path to source picture</param>
         /// <param name="destPath">Target for generated thumbnail</param>
         /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string sourcePath, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
+        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
-            var originalImage = await _imageService.LoadImageAsync(sourcePath, out var format);
+            var originalImage = await _imageService.LoadImageAsync(source, out var format);
             if (originalImage == null)
             {
                 return new ThumbnailGenerationResult
                 {
-                    Errors = { $"Cannot generate thumbnail: {sourcePath} does not have a valid image format" }
+                    Errors = { $"Cannot generate thumbnail: {source} does not have a valid image format" }
                 };
             }
 
@@ -49,7 +49,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             foreach (var option in options)
             {
                 var thumbnail = GenerateThumbnail(originalImage, option);
-                var thumbnailUrl = sourcePath.GenerateThumbnailName(option.FileSuffix);
+                var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
 
                 if (thumbnail != null)
                 {

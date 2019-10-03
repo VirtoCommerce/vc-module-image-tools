@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace VirtoCommerce.ImageToolsModule.Core.Models
+namespace VirtoCommerce.ImageToolsModule.Web.Model
 {
     /// <summary>
     /// ThumbnailsTaskRunRequest

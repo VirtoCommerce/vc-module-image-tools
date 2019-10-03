@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -9,6 +7,7 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Web.Model;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs

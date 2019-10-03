@@ -15,7 +15,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     Update = "thumbnail:update",
                     Read = "thumbnail:read";
 
-                public static string[] AllPermissions = new[] { Access, Create, Delete, Update, Read };
+                public static string[] AllPermissions = { Access, Create, Delete, Update, Read };
             }
         }
 
