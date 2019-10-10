@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -14,16 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsModule.Web", "src\VirtoCommerce.ImageToolsModule.Web\VirtoCommerce.ImageToolsModule.Web.csproj", "{5B994549-519B-4B80-A3F7-7B04B81E7B2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{6F617E73-60B1-4F75-9996-617B2A28BA31}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6F617E73-60B1-4F75-9996-617B2A28BA31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F617E73-60B1-4F75-9996-617B2A28BA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E4532B4-A304-45BD-981C-BB872E2D5C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E4532B4-A304-45BD-981C-BB872E2D5C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E4532B4-A304-45BD-981C-BB872E2D5C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
