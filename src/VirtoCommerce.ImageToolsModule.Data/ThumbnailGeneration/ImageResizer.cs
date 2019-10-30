@@ -123,8 +123,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             }
 
             var result = new Image<Rgba32>(new Configuration(), canvasSize.Width, canvasSize.Height, backgroundColor.Value);
-            result.MetaData.HorizontalResolution = original.MetaData.HorizontalResolution;
-            result.MetaData.VerticalResolution = original.MetaData.VerticalResolution;
+            result.Metadata.HorizontalResolution = original.Metadata.HorizontalResolution;
+            result.Metadata.VerticalResolution = original.Metadata.VerticalResolution;
 
             var imgToDraw = original.Clone(ctx =>
             {
