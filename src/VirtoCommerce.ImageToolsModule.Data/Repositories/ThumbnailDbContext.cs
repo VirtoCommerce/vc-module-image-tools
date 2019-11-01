@@ -21,7 +21,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             #region ThumbnailTask
 
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask").HasKey(t => t.Id);
-            modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.Id).HasMaxLength(128);
+            modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
@@ -30,7 +30,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             #region ThumbnailOption
 
             modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption").HasKey(t => t.Id);
-            modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.Id).HasMaxLength(128);
+            modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
@@ -39,7 +39,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             #region ThumbnailTaskOption
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
-            modelBuilder.Entity<ThumbnailTaskOptionEntity>().Property(x => x.Id).HasMaxLength(128);
+            modelBuilder.Entity<ThumbnailTaskOptionEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>()
                 .HasOne(x => x.ThumbnailTask)

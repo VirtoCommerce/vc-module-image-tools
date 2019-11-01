@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <IsPackable>False</IsPackable>
-        <!--This line is necessary to copy all dependencies in the bin folder-->
-        <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
-        <!--<RuntimeIdentifier>win10-x64</RuntimeIdentifier>-->
         <noWarn>1591</noWarn>
     </PropertyGroup>
 
@@ -30,7 +27,7 @@
         <PackageReference Include="Hangfire.AspNetCore" Version="1.7.7" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc1-update0001" />
+        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-v3-feature-vp-7-0001" />
     </ItemGroup>
 
     <ItemGroup>

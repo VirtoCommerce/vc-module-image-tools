@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <noWarn>1591</noWarn>
+        <IsPackable>True</IsPackable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,7 +23,7 @@
         </PackageReference>
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
-        <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.0.0-rc1-update0001" />
+        <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.0.0-v3-feature-vp-7-0001" />
     </ItemGroup>
 
     <ItemGroup>
