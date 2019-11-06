@@ -23,20 +23,20 @@ The system will generate all thumbnails in the folder according to your options.
 
 The thumbnail url is obtained by adding a suffix to the original image url separated by "_" symbol.
 
-To create a task open the Thumbnails menu and click the 'Add' button on the Tasks blade:
+In order to create a task open the Thumbnails menu and click the 'Add' button on the Tasks blade:
 
 ![image](https://user-images.githubusercontent.com/20122385/36429401-481d02e2-165b-11e8-8061-c0d9a6c88b31.png)
 
-* Name: displays the task name
-* Path to images: assets path to the folder with images. Clicking the folder button will result in opening the asset search blade where you can select a folder you want to run the task . Each task can refer only to one folder.
-* Settings: you can select a number of options for this task
+* **Name**: displays the task name
+* **Path to images**: assets path to the folder with images. Clicking the folder button will result in opening the asset search blade where you can select a folder you want to run the task . Each task can refer only to one folder.
+* **Settings**: you can select a number of options for this task
 
-To create an option click on the 'Edit' button next to Thumbnail settings:
+In order to create an option you should click on the 'Edit' button located next to the Thumbnail settings:
 
 ![image](https://user-images.githubusercontent.com/20122385/36429547-a431bbfe-165b-11e8-9607-291cc511878f.png)
 
-* Name: display setting name
-* Thumbnail file name suffix: The suffix that will be added to the back of the original file name, separated by '_', for example for 'large' and the original file
+* **Name**: display setting name
+* **Thumbnail file name suffix**: The suffix that will be added to the back of the original file name, separated by '_', for example for 'large' and the original file
 
 ```
   https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg will be
@@ -46,27 +46,27 @@ Thumbnail name is going to be
   https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723_large.jpg
 ```
 
-* Width: Thumbnail width in pixels
-* Height: Thumbnail height in pixels
-* Resize method.
+* **Width**: Thumbnail width in pixels
+* **Height**: Thumbnail height in pixels
+* **Resize method**.
 
 # Resize method options
 
 **1. "FixedSize" method.**
 
-Resizes the original image to the desired size while maintaining the aspect ratio without cropping. If the aspect ratio of the original image and the thumbnail doesn't match, the white space will be highlighted with color of background.
+This method resizes the original image to the desired size while maintaining the aspect ratio without cropping. If the aspect ratio of the original image and the thumbnail don't match, the white space will be colored with the color of the background.
 
 **2. "FixedHeight" method.**
 
-Resizes the image to the desired size while maintaining the aspect ratio without cropping. Width of thumbnail will be calculated according to the aspect ratio.
+Resizes the image to the desired size while maintaining the aspect ratio without cropping. The width of thumbnail will be calculated according to the aspect ratio.
 
 **3. "FixedWidth" method.**
 
-Resizes the image to the desired width while maintaining the aspect ratio.  If aspect ratio of original image and the thumbnail doesn't match then white space will be filled with color of background.
+Resizes the image to the desired width while maintaining the aspect ratio.  If the aspect ratio of the original image and the thumbnail don't match , then the white space will be colored with the background color.
 
 **4. "Crop" method.**
 
-Resize the image until one of the sides will match to the given dimensions while maintaining the aspect ratio. Part of the image will be cut off. The thumbnail will be resized and cropped the anchor position. You can specify an anchor position in the o'sption Anchor Position: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.
+This method resizes the image until one of the sides matches the given dimensions while maintaining the aspect ratio. A part of the image will be cut off. The thumbnail will be resized and cropped according to the anchor position. You can specify an anchor position in the o'sption Anchor Position: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.
 
 Now you can use the two thumbnails wherever you want to display a smaller version of the original image.
 You can do it, just add a needed suffix (grande or medium) to product image url.
@@ -79,8 +79,8 @@ You can select multiple task and run them in the task list or run just one task 
 
 Available modes:
 
-* Regenerate - thumbnails will be generated for all images. 
-* Process changes - tries to find changed or added images and generates thumbnails only for them. Also will detect added options. Already generated thumbnails for removed options will not be deleted. 
+* **Regenerate** - thumbnails will be generated for all images.
+* **Process changes** - tries to find changed or added images and generates thumbnails only for them. Also will detect added options. Thumbnails generated for removed options will not be deleted.
 
 # Installation
 
