@@ -2,41 +2,44 @@
 
 
 # VirtoCommerce.ImageTools
-VirtoCommerce.ImageTools module represents functionality for working with images.
-Key features:
-* Make image thumbnails in different ways and use they, instead original images. For example, in listing or for previews.
-* Group image resize options into tasks and run them against an asset catalog in the background 
-* All image formats supported
+VirtoCommerce.ImageTools module represents a functionality that helps working with images.
+
+## Key features:
+1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example,this functionality can be used in listing or for previews;
+1. Possibility to resize Group images into tasks and run them against an asset catalog in the background;
+1. Supports all image formats.
 
 ![image](https://user-images.githubusercontent.com/20122385/36428926-e483c5e6-1659-11e8-88aa-e4dc2b95b50b.png)
 
-# Documentation
+## Generating Thumbnails
 
 In order to generate Thumbnails you need to:
 
-1. Specify want kind of thumbnails you need by creating a Tasks. Each task should have a name, a path to folder with images and a number of options.
-2. Put an image to the platform blob storage.
-3. Run selected Task. Tasks are executed in a background job with hangfire.
+1. Specify what kind of thumbnails you need by creating a Task. Each task should have a name, a path to folder with images and a number of options;
+2. Put an image into the platform blob storage;
+3. Run the selected Task. Tasks are executed in the background job with hangfire.
 
-It will generates all thumbnails in the folder according to your options.
+The system will generate all thumbnails in the folder according to your options.
+
 The thumbnail url is obtained by adding a suffix to the original image url separated by "_" symbol.
 
-To create a task open Thumbnails menu and click Add button on the Tasks blade:
+To create a task open the Thumbnails menu and click the 'Add' button on the Tasks blade:
 
 ![image](https://user-images.githubusercontent.com/20122385/36429401-481d02e2-165b-11e8-8061-c0d9a6c88b31.png)
 
-* Name: display task name
-* Path to images: assets path to the folder with images. Clicking the folder button will open the asset search blade where you can select a folder you want to run the task in. Each task can reference only one folder.
+* Name: displays the task name
+* Path to images: assets path to the folder with images. Clicking the folder button will result in opening the asset search blade where you can select a folder you want to run the task . Each task can refer only to one folder.
 * Settings: you can select a number of options for this task
 
-To create an option click on edit button next to Thumbnail settings:
+To create an option click on the 'Edit' button next to Thumbnail settings:
 
 ![image](https://user-images.githubusercontent.com/20122385/36429547-a431bbfe-165b-11e8-9607-291cc511878f.png)
 
 * Name: display setting name
-* Thumbnail file name suffix: The suffix that will be added to the back of the original file name, separated by '_', for example for 'large' and the original file 
+* Thumbnail file name suffix: The suffix that will be added to the back of the original file name, separated by '_', for example for 'large' and the original file
+
 ```
-  https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg will be 
+  https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg will be
 ```
 Thumbnail name is going to be
 ```
@@ -51,11 +54,11 @@ Thumbnail name is going to be
 
 **1. "FixedSize" method.**
 
-Resizes the origingal image to the desired size while maintaining the aspect ratio without cropping. If aspect ratio of original image and the thumbnail doesn't match then white space will be filled with color of background.
+Resizes the original image to the desired size while maintaining the aspect ratio without cropping. If the aspect ratio of the original image and the thumbnail doesn't match, the white space will be highlighted with color of background.
 
 **2. "FixedHeight" method.**
 
-Resizes the image to the desired size while maintaining the aspect ratio without cropping. Width of thumbnail will be calculated according aspect ratio. 
+Resizes the image to the desired size while maintaining the aspect ratio without cropping. Width of thumbnail will be calculated according to the aspect ratio.
 
 **3. "FixedWidth" method.**
 
@@ -68,7 +71,7 @@ Resize the image until one of the sides will match to the given dimensions while
 Now you can use the two thumbnails wherever you want to display a smaller version of the original image.
 You can do it, just add a needed suffix (grande or medium) to product image url.
 
-# Running the task
+## Running the task
 
 You can select multiple task and run them in the task list or run just one task from the task blade.
 
@@ -80,6 +83,7 @@ Available modes:
 * Process changes - tries to find changed or added images and generates thumbnails only for them. Also will detect added options. Already generated thumbnails for removed options will not be deleted. 
 
 # Installation
+
 Installing the module:
 * Automatically: in VC Manager go to Configuration -> Modules -> Image tools module -> Install
 * Manually: download module zip package from https://github.com/VirtoCommerce/vc-module-image-tools. In VC Manager go to Configuration -> Modules -> Advanced -> upload module package -> Install.
