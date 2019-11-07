@@ -1,10 +1,10 @@
 
-
-
 # VirtoCommerce.ImageTools
+
 VirtoCommerce.ImageTools module represents a functionality that helps working with images.
 
-## Key features:
+## Key features
+
 1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example,this functionality can be used in listing or for previews;
 1. Possibility to resize Group images into tasks and run them against an asset catalog in the background;
 1. Supports all image formats.
@@ -31,15 +31,15 @@ In order to create a task open the Thumbnails menu and click the 'Add' button on
 * **Path to images**: assets path to the folder with images. Clicking the folder button will result in opening the asset search blade where you can select a folder you want to run the task . Each task can refer only to one folder.
 * **Settings**: you can select a number of options for this task
 
-In order to create an option you should click on the 'Edit' button located next to the Thumbnail settings:
+In order to edit or manage the thumbnails settings, select an option from the list and click on it. The system will display the option on a new blade in editable format:
 
 ![image](https://user-images.githubusercontent.com/20122385/36429547-a431bbfe-165b-11e8-9607-291cc511878f.png)
 
 * **Name**: display setting name
-* **Thumbnail file name suffix**: The suffix that will be added to the back of the original file name, separated by '_', for example for 'large' and the original file
+* **Thumbnail file name suffix**: The suffix that will be added to the end of the original file name, separated by '_', for example for 'large' and the original file
 
 ```
-  https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg will be
+  https://virtocommercedemo1.blob.core.windows.net/catalog/1428965138000_1133723.jpg 
 ```
 Thumbnail name is going to be
 ```
@@ -50,7 +50,7 @@ Thumbnail name is going to be
 * **Height**: Thumbnail height in pixels
 * **Resize method**.
 
-# Resize method options
+### Resize method options
 
 **1. "FixedSize" method.**
 
@@ -71,7 +71,7 @@ This method resizes the image until one of the sides matches the given dimension
 Now you can use the two thumbnails wherever you want to display a smaller version of the original image.
 You can do it, just add a needed suffix (grande or medium) to product image url.
 
-## Running the task
+## Running Multiple tasks
 
 You can select multiple task and run them in the task list or run just one task from the task blade.
 
@@ -82,13 +82,15 @@ Available modes:
 * **Regenerate** - thumbnails will be generated for all images.
 * **Process changes** - tries to find changed or added images and generates thumbnails only for them. Also will detect added options. Thumbnails generated for removed options will not be deleted.
 
-# Installation
+## Installation
 
 Installing the module:
+
 * Automatically: in VC Manager go to Configuration -> Modules -> Image tools module -> Install
 * Manually: download module zip package from https://github.com/VirtoCommerce/vc-module-image-tools. In VC Manager go to Configuration -> Modules -> Advanced -> upload module package -> Install.
 
-# [Deprecated] JSON Settings
+## [Deprecated] JSON Settings
+
 * **ImageTools.Thumbnails.Parameters** -  manually defined rules to resize images
 Use settings to define each thumbnail (width, height, method for generating, etc.)
 
@@ -103,7 +105,7 @@ Here are description of the settings:
 
 To resize the image to the desired size while maintaining the aspect ratio without cropping.
 ```
-  {method: "FixedSize", alias: "grande", width: 800, height:600, background: "#B20000"} 
+  {method: "FixedSize", alias: "grande", width: 800, height:600, background: "#B20000"}
 ```
 In this case will generate thumbnail with width = 100, height = 75. Image will not be cropped. If aspect ratio of original image and the thumbnail doesn't match then white space will be filled with color of background. Url of thumbnail will receive the suffix by alias value, here is "red".
 
@@ -133,11 +135,12 @@ In this case will generate thumbnail with width = 160 and height = 160. The thum
 
 You can specify an anchor to change cropping area: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
 
+## Available resources
 
-# Available resources
-* API client documentation http://demo.virtocommerce.com/admin/docs/ui/index#!/Image_tools_module
+* API client documentation  https://admin-demo.virtocommerce.com/docs/ui/index#/Image%2520tools%2520module
 
-# License
+## License
+
 Copyright (c) Virto Solutions LTD.  All rights reserved.
 
 Licensed under the Virto Commerce Open Software License (the "License"); you
