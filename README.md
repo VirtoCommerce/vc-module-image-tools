@@ -73,7 +73,7 @@ You can do it, just add a needed suffix (grande or medium) to product image url.
 
 ## Running Multiple tasks
 
-You can select multiple task and run them in the task list or run just one task from the task blade.
+You can select multiple tasks and run them in the task list or run just one task from the task blade.
 
 ![image](https://user-images.githubusercontent.com/20122385/36430796-b68279c6-165e-11e8-8e02-ae75e7a11f66.png)
 
@@ -86,7 +86,7 @@ Available modes:
 
 Installing the module:
 
-* Automatically: in VC Manager go to Configuration -> Modules -> Image tools module -> Install
+* Automatically: in VC Manager go to More -> Modules -> Available (n)-> Image tools module -> Install
 * Manually: download module zip package from https://github.com/VirtoCommerce/vc-module-image-tools. In VC Manager go to Configuration -> Modules -> Advanced -> upload module package -> Install.
 
 ## [Deprecated] JSON Settings
