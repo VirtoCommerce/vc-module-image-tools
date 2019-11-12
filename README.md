@@ -5,7 +5,7 @@ VirtoCommerce.ImageTools module represents a functionality that helps working wi
 
 ## Key features
 
-1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example,this functionality can be used in listing or for previews;
+1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example, this functionality can be used in listing or for previews;
 1. Possibility to resize Group images into tasks and run them against an asset catalog in the background;
 1. Supports all image formats.
 
