@@ -33,7 +33,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 using (var blobStream = _storageProvider.OpenRead(imageUrl))
                 {
-                    var result = Image.Load(blobStream, out format);
+                    var result = Image.Load<Rgba32>(blobStream, out format);
                     return Task.FromResult(result);
                 }
             }
