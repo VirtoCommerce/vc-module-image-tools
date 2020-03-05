@@ -23,7 +23,7 @@
         </PackageReference>
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
-        <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.0.0-rc2-0138" />
+        <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.0.0-rc4" />
     </ItemGroup>
 
     <ItemGroup>
