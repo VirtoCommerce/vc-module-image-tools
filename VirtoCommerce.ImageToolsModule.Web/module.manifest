@@ -3,6 +3,9 @@
   <id>VirtoCommerce.ImageTools</id>
   <version>1.2.1</version>
   <platformVersion>2.13.24</platformVersion>
+	<dependencies>
+		<dependency id="VirtoCommerce.Core" version="2.24.24" />
+	</dependencies>
 
   <title>Image tools module</title>
   <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
