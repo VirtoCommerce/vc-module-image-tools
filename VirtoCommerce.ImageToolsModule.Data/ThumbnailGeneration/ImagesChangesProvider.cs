@@ -21,7 +21,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		private readonly ICacheManager<object> _cacheManager;
 
 		private readonly string[] _imageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".tiff", ".tif" };
-		private ICollection<ThumbnailOption> _availableOptions;
 
 		public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService, ICacheManager<object> cacheManager)
 		{
