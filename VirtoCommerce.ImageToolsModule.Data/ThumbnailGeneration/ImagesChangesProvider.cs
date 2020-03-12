@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CacheManager.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
@@ -16,15 +18,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
 		private readonly IBlobStorageProvider _storageProvider;
 		private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
-
-		private readonly Dictionary<string, IList<ImageChange>> _blobChangesCache = new Dictionary<string, IList<ImageChange>>(StringComparer.InvariantCultureIgnoreCase);
+		private readonly ICacheManager<object> _cacheManager;
 
 		private readonly string[] _imageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".tiff", ".tif" };
+		private ICollection<ThumbnailOption> _availableOptions;
 
-		public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService)
+		public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService, ICacheManager<object> cacheManager)
 		{
 			_storageProvider = storageProvider;
 			_thumbnailOptionSearchService = thumbnailOptionSearchService;
+			_cacheManager = cacheManager;
 		}
 
 		protected virtual IList<ImageChange> ScanBlobForChanges(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
@@ -134,12 +137,15 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		//get all options to create a map of all potential file names
 		protected virtual ICollection<ThumbnailOption> GetOptionsCollection()
 		{
-			var options = _thumbnailOptionSearchService.Search(new ThumbnailOptionSearchCriteria()
+			return _cacheManager.Get("GetOptionsCollection", nameof(ThumbnailOption), () =>
 			{
-				Take = Int32.MaxValue
-			});
+				var options = _thumbnailOptionSearchService.Search(new ThumbnailOptionSearchCriteria()
+				{
+					Take = int.MaxValue
+				});
 
-			return options.Results.ToList();
+				return options.Results.ToList();
+			});
 		}
 
 		/// <summary>
@@ -176,7 +182,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		}
 
 		/// <summary>
-		/// Gets changed blobs. Caches changes based on location path.
+		/// Gets changed blobs. Caches changes based on location path and task suffixes.
 		/// </summary>
 		/// <param name="task"></param>
 		/// <param name="changedSince"></param>
@@ -184,12 +190,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		/// <returns></returns>
 		protected virtual IList<ImageChange> GetChangedBlobs(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
 		{
-			if (!_blobChangesCache.ContainsKey(task.WorkPath))
-			{
-				_blobChangesCache.Add(task.WorkPath, ScanBlobForChanges(task, changedSince, token));
-			}
+			var cacheKey = $"GetChangedBlobs:{task.WorkPath}:{string.Join(":", task.ThumbnailOptions.Select(x => x.FileSuffix))}";
+			var result = _cacheManager.Get(cacheKey, nameof(ImageChange), () => ScanBlobForChanges(task, changedSince, token));
 
-			return _blobChangesCache[task.WorkPath];
+			return result;
 		}
 	}
 }
