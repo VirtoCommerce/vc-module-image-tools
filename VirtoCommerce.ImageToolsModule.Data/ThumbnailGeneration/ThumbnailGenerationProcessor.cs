@@ -87,6 +87,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		private void ResetCache()
 		{
 			_cacheManager.ClearRegion(nameof(ImageChange));
+			_cacheManager.ClearRegion(nameof(ThumbnailOption));
 		}
 	}
 }

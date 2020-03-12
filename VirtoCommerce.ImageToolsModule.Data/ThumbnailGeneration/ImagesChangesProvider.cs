@@ -137,17 +137,15 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 		//get all options to create a map of all potential file names
 		protected virtual ICollection<ThumbnailOption> GetOptionsCollection()
 		{
-			if (_availableOptions == null)
+			return _cacheManager.Get("GetOptionsCollection", nameof(ThumbnailOption), () =>
 			{
 				var options = _thumbnailOptionSearchService.Search(new ThumbnailOptionSearchCriteria()
 				{
-					Take = Int32.MaxValue
+					Take = int.MaxValue
 				});
 
-				_availableOptions = options.Results.ToList();
-			}
-
-			return _availableOptions;
+				return options.Results.ToList();
+			});
 		}
 
 		/// <summary>
