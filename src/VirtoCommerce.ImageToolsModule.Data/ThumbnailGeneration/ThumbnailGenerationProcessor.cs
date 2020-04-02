@@ -34,7 +34,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 foreach (var task in tasks)
                 {
                     var changedSince = regenerate ? null : task.LastRun;
-                    progressInfo.TotalCount = await _imageChangesProvider.GetTotalChangesCount(task, changedSince, token);
+                    progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changedSince, token);
                 }
             }
 
