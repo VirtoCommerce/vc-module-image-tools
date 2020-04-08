@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -66,6 +68,21 @@ namespace VirtoCommerce.ImageToolsModule.Web
             //Register module permissions
             var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
             permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x => new Permission() { GroupName = "Thumbnail", Name = x }).ToArray());
+
+
+
+            //Schedule periodic image processing job
+            //var processJobEnabled = settingsManager.GetValue("ImageTools.Thumbnails.EnableImageProcessjob", false);
+            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+            if (settingsManager.GetValue(ModuleConstants.Settings.General.EnableImageProcessJob.Name, false))
+            {
+                var cronExpression = settingsManager.GetValue(ModuleConstants.Settings.General.ImageProcessJobCronExpression.Name, "0 0 * * *");
+                RecurringJob.AddOrUpdate<ThumbnailProcessJob>("ProcessAllImageTasksJob", x => x.ProcessAll(JobCancellationToken.Null), cronExpression);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists("ProcessAllImageTasksJob");
+            }
 
             //Force migrations
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
