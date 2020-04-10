@@ -17,7 +17,7 @@ angular.module('virtoCommerce.imageToolsModule')
 
                 taskApi.search(searchCriteria,
                     function (data) {
-                        addDescriptionItem(data.result);
+                        addDescriptionItem(data.results);
                         $scope.items = data.results;
 
                         $scope.hasMore = data.totalCount === $scope.pageSettings.itemsPerPageCount;
@@ -44,8 +44,8 @@ angular.module('virtoCommerce.imageToolsModule')
 
                         taskApi.search(searchCriteria,
                             function (data) {
-                                addDescriptionItem(data.result);
-                                $scope.items = $scope.items.concat(data.result);
+                                addDescriptionItem(data.results);
+                                $scope.items = $scope.items.concat(data.results);
                                 $scope.hasMore = data.listEntries.length === $scope.pageSettings.itemsPerPageCount;
                                 $scope.gridApi.infiniteScroll.dataLoaded();
 
