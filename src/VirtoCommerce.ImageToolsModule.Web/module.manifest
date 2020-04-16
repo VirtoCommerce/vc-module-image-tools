@@ -1,30 +1,27 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <module>
-    <id>VirtoCommerce.ImageTools</id>
-    <version>3.0.0</version>
-    <version-tag>rc.4</version-tag>
-    <platformVersion>3.0.0</platformVersion>
-
-    <title>Image tools module</title>
-    <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
-    <authors>
-        <author>Konstantin Savosteev</author>
-        <author>Nikolay Prohorov</author>
-        <author>Eugeney Tatarincev</author>
-    </authors>
-    <owners>
-        <owner>Virto Commerce</owner>
-    </owners>
-	<groups>
-        <group>commerce</group>
-    </groups>
-    <projectUrl>https://virtocommerce.com/apps/extensions/image-tools-module</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/VirtoCommerce/vc-module-image-tools/release/3.0.0/src/VirtoCommerce.ImageToolsModule.Web/Content/logo.png</iconUrl>
-    <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright © 2011-2020 Virto Commerce. All rights reserved</copyright>
-    <tags>images</tags>
-
-    <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
-    <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
-
+  <id>VirtoCommerce.ImageTools</id>
+  <version>3.0.0</version>
+  <version-tag>rc.5$</version-tag>
+  <platformVersion>3.0.0</platformVersion>
+  <title>Image tools module</title>
+  <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
+  <authors>
+    <author>Konstantin Savosteev</author>
+    <author>Nikolay Prohorov</author>
+    <author>Eugeney Tatarincev</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+  <groups>
+    <group>commerce</group>
+  </groups>
+  <projectUrl>https://virtocommerce.com/apps/extensions/image-tools-module</projectUrl>
+  <iconUrl>https://raw.githubusercontent.com/VirtoCommerce/vc-module-image-tools/release/3.0.0/src/VirtoCommerce.ImageToolsModule.Web/Content/logo.png</iconUrl>
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright В© 2011-2020 Virto Commerce. All rights reserved</copyright>
+  <tags>images</tags>
+  <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
 </module>
