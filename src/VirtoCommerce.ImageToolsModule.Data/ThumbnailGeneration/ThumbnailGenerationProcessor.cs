@@ -58,7 +58,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
                         progressInfo.ProcessedCount++;
 
-                        if (!result.Errors.IsNullOrEmpty())
+                        if (result != null && !result.Errors.IsNullOrEmpty())
                         {
                             progressInfo.Errors.AddRange(result.Errors);
                         }

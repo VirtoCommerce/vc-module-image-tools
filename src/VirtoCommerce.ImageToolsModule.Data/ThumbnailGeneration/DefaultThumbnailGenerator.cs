@@ -38,10 +38,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var originalImage = await _imageService.LoadImageAsync(source, out var format);
             if (originalImage == null)
             {
-                return new ThumbnailGenerationResult
-                {
-                    Errors = { $"Cannot generate thumbnail: {source} does not have a valid image format" }
-                };
+                return null;
             }
 
             var result = new ThumbnailGenerationResult();
