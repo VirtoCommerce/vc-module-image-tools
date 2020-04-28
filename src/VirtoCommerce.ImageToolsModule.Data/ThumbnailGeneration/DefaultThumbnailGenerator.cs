@@ -27,21 +27,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// Generates thumbnails asynchronously
         /// </summary>
         /// <param name="source">Path to source picture</param>
-        /// <param name="destPath">Target for generated thumbnail</param>
+        /// <param name="destination">Target for generated thumbnail</param>
         /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destPath, IList<ThumbnailOption> options, ICancellationToken token)
+        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
             var originalImage = await _imageService.LoadImageAsync(source, out var format);
             if (originalImage == null)
             {
-                return new ThumbnailGenerationResult
-                {
-                    Errors = { $"Cannot generate thumbnail: {source} does not have a valid image format" }
-                };
+                return null;
             }
 
             var result = new ThumbnailGenerationResult();
