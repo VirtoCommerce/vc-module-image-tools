@@ -99,9 +99,13 @@ angular.module('virtoCommerce.imageToolsModule')
 
             $scope.selectItem = function (e, listItem) {
                 blade.setSelectedItem(listItem);
+                $scope.taskEdit(listItem);
+            };
+
+            $scope.taskEdit = function (selectedItem) {
                 var newBlade = {
                     id: "listTaskDetail",
-                    currentEntityId: listItem.id,
+                    currentEntityId: selectedItem.id,
                     title: 'imageTools.blades.task-detail.title',
                     subtitle: 'imageTools.blades.task-detail.subtitle',
                     controller: 'virtoCommerce.imageToolsModule.taskDetailController',
@@ -109,7 +113,6 @@ angular.module('virtoCommerce.imageToolsModule')
                 };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
-
 
             $scope.selectNode = function (node, isNew) {
                 $scope.selectedNodeId = node.id;
@@ -225,7 +228,7 @@ angular.module('virtoCommerce.imageToolsModule')
                 }
             ];
 
-            function deleteList(selection) {
+             function deleteList(selection) {
                 var dialog = {
                     id: "confirmDelete",
                     title: "imageTools.dialogs.task-delete.title",
@@ -239,6 +242,24 @@ angular.module('virtoCommerce.imageToolsModule')
                                     blade.refresh();
                                 })};
                         }
+                }
+                dialogService.showConfirmationDialog(dialog);
+            }
+
+            $scope.taskDelete = function (itemsSelect) {
+                var dialog = {
+                    id: "confirmDelete",
+                    title: "imageTools.dialogs.task-delete.title",
+                    message: "imageTools.dialogs.task-delete.message",
+                    callback: function (remove) {
+                        if (remove) {
+                            blade.isLoading = true;
+                            taskApi.delete({ ids: itemsSelect.id }, function () {
+                                    bladeNavigationService.closeChildrenBlades(blade);
+                                    blade.refresh();
+                                });
+                        };
+                    }
                 }
                 dialogService.showConfirmationDialog(dialog);
             }
