@@ -100,15 +100,38 @@ angular.module('virtoCommerce.imageToolsModule')
 
             $scope.selectItem = function (e, listItem) {
                 blade.setSelectedItem(listItem);
+                
+                $scope.taskEdit(listItem);
+            };
+
+            $scope.taskEdit = function (selectedItem) {
                 var newBlade = {
                     id: "listTaskDetail",
-                    currentEntityId: listItem.id,
+                    currentEntityId: selectedItem.id,
                     title: 'imageTools.blades.task-detail.title',
                     subtitle: 'imageTools.blades.task-detail.subtitle',
                     controller: 'virtoCommerce.imageToolsModule.taskDetailController',
                     template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-detail.tpl.html'
                 };
                 bladeNavigationService.showBlade(newBlade, blade);
+             };
+
+            $scope.taskDelete = function (itemsSelect) {
+                var dialog = {
+                    id: "confirmDelete",
+                    title: "imageTools.dialogs.task-delete.title",
+                    message: "imageTools.dialogs.task-delete.message",
+                    callback: function (remove) {
+                        if (remove) {
+                            blade.isLoading = true;
+                            taskApi.delete({ ids: itemsSelect.id }, function () {
+                                bladeNavigationService.closeChildrenBlades(blade);
+                                blade.refresh();
+                            });
+                        };
+                    }
+                }
+                dialogService.showConfirmationDialog(dialog);
             };
 
 
