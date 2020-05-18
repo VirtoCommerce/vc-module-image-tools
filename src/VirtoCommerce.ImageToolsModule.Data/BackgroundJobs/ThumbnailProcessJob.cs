@@ -7,10 +7,10 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.Model;
+using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
+namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 {
     public class ThumbnailProcessJob
     {

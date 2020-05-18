@@ -1,7 +1,7 @@
 using Hangfire;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
+namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 {
     /// <summary>
     /// Wrapper for Hangfire's IJobCancellationToken
