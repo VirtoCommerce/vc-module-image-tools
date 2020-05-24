@@ -33,11 +33,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         protected virtual async Task<IList<ImageChange>> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
         {
             var options = await GetOptionsCollection();
-            var cacheKey = CacheKey.With(GetType(), "GetChangeFiles", task.WorkPath, string.Join(":", options.Select(x => x.FileSuffix)));
+            var cacheKey = CacheKey.With(GetType(), "GetChangeFiles", task.WorkPath, changedSince?.ToString(), string.Join(":", options.Select(x => x.FileSuffix)));
             return await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                cacheEntry.AddExpirationToken(ThumbnailCacheRegion.CreateChangeToken());
-                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+                cacheEntry.AddExpirationToken(BlobChangesCacheRegion.CreateChangeToken(task, changedSince));
 
                 var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, token);
                 var orignalBlobInfos = GetOriginalItems(allBlobInfos, options.Select(x => x.FileSuffix).ToList());
