@@ -27,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         public async Task ProcessTasksAsync(ICollection<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
         {
-            var progressInfo = new ThumbnailTaskProgress { Message = "Reading the tasks..." };
+            var progressInfo = new ThumbnailTaskProgress { Message = "Getting changes count…" };
 
             if (_imageChangesProvider.IsTotalCountSupported)
             {
@@ -70,9 +70,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     token?.ThrowIfCancellationRequested();
                 }
             }
-
-            progressInfo.Message = "Finished generating thumbnails!";
-            progressCallback(progressInfo);
         }
     }
 }
