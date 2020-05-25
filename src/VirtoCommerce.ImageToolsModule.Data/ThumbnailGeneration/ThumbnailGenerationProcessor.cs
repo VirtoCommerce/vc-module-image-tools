@@ -32,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         {
             try
             {
-                var progressInfo = new ThumbnailTaskProgress { Message = "Reading the tasks..." };
+                var progressInfo = new ThumbnailTaskProgress { Message = "Getting changes count…" };
 
                 if (_imageChangesProvider.IsTotalCountSupported)
                 {
@@ -81,10 +81,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                     ClearCache(task, regenerate);
                 }
-
-                progressInfo.Message = "Finished generating thumbnails!";
-                progressCallback(progressInfo);
-
             }
             finally
             {
