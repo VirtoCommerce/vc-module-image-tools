@@ -63,12 +63,14 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                 var tasks = await _taskService.GetByIdsAsync(generateRequest.TaskIds);
 
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+                var runTime = DateTime.UtcNow;
+
                 await _thumbnailProcessor.ProcessTasksAsync(tasks, generateRequest.Regenerate, progressCallback, cancellationTokenWrapper);
 
                 //update tasks in case of successful generation
                 foreach (var task in tasks)
                 {
-                    task.LastRun = DateTime.UtcNow;
+                    task.LastRun = runTime;
                 }
 
                 await _taskService.SaveChangesAsync(tasks);
@@ -112,12 +114,14 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 
             Action<ThumbnailTaskProgress> progressCallback = x => { };
             var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+            var runTime = DateTime.UtcNow;
+
             await _thumbnailProcessor.ProcessTasksAsync(tasks.Results, false, progressCallback, cancellationTokenWrapper);
 
             //update tasks in case of successful generation
             foreach (var task in tasks.Results)
             {
-                task.LastRun = DateTime.UtcNow;
+                task.LastRun = runTime;
             }
 
             await _taskService.SaveChangesAsync(tasks.Results);
