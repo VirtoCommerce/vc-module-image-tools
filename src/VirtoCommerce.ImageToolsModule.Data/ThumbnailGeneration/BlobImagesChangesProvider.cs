@@ -79,10 +79,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             if (skip >= count)
             {
-                return new ImageChange[] { };
+                return Array.Empty<ImageChange>();
             }
 
-            return changedFiles.Skip((int)skip).Take((int)take).ToArray();
+            return changedFiles.Skip((int)(skip ?? 0)).Take((int)(take ?? 0)).ToArray();
         }
 
         #endregion
