@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,17 +10,20 @@ using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
 using VirtoCommerce.ImageToolsModule.Data.ExportImport;
+using VirtoCommerce.ImageToolsModule.Data.Handlers;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.Extensions;
 
 namespace VirtoCommerce.ImageToolsModule.Web
@@ -52,6 +54,9 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();
             serviceCollection.AddTransient<ThumbnailsExportImport>();
+
+            serviceCollection.AddTransient<ObjectSettingEntryChangedEventHandler>();
+            serviceCollection.AddTransient<BackgroundJobsRunner>();
         }
 
         public void PostInitialize(IApplicationBuilder appBuilder)
@@ -69,20 +74,13 @@ namespace VirtoCommerce.ImageToolsModule.Web
             var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
             permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x => new Permission() { GroupName = "Thumbnail", Name = x }).ToArray());
 
-
+            //Subscribe for image processing job configuration changes
+            var inProcessBus = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
+            inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<ObjectSettingEntryChangedEventHandler>().Handle(message));
 
             //Schedule periodic image processing job
-            //var processJobEnabled = settingsManager.GetValue("ImageTools.Thumbnails.EnableImageProcessjob", false);
-            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
-            if (settingsManager.GetValue(ModuleConstants.Settings.General.EnableImageProcessJob.Name, false))
-            {
-                var cronExpression = settingsManager.GetValue(ModuleConstants.Settings.General.ImageProcessJobCronExpression.Name, "0 0 * * *");
-                RecurringJob.AddOrUpdate<ThumbnailProcessJob>("ProcessAllImageTasksJob", x => x.ProcessAll(JobCancellationToken.Null), cronExpression);
-            }
-            else
-            {
-                RecurringJob.RemoveIfExists("ProcessAllImageTasksJob");
-            }
+            var jobsRunner = appBuilder.ApplicationServices.GetService<BackgroundJobsRunner>();
+            jobsRunner.StartStopOrdersSynchronizationJob().GetAwaiter().GetResult();
 
             //Force migrations
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
@@ -96,6 +94,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
         public void Uninstall()
         {
+            // Method intentionally left empty.
         }
 
         public async Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)

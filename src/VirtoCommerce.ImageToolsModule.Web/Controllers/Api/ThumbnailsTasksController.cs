@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
-using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
-using VirtoCommerce.ImageToolsModule.Web.Model;
+using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
+using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 
