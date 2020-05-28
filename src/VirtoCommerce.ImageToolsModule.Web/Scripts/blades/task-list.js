@@ -154,7 +154,7 @@ angular.module('virtoCommerce.imageToolsModule')
                     isFirstRun: _.some(itemsSelect, function (item) { return !item.lastRun }),
                     callback: function (regenerate) {
                         var request = {
-                            taskIds: _.pluck(itemsSelect, "id"),
+                            taskIds: angular.isArray(itemsSelect) ? _.pluck(itemsSelect, "id") : [itemsSelect.id],
                             regenerate: regenerate
                         };
 
