@@ -58,12 +58,12 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, GetPlatformMemotyCache());
+            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, GetPlatformMemoryCache());
 
             return result;
         }
 
-        private IPlatformMemoryCache GetPlatformMemotyCache()
+        private IPlatformMemoryCache GetPlatformMemoryCache()
         {
             var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
             return new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
