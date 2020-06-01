@@ -17,8 +17,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         private readonly ISettingsManager _settingsManager;
         private readonly IImagesChangesProvider _imageChangesProvider;
 
-        private readonly HashSet<string> tasksToExpireChangesCache = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
         public ThumbnailGenerationProcessor(IThumbnailGenerator generator,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider)
@@ -38,8 +36,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 {
                     foreach (var task in tasks)
                     {
-                        tasksToExpireChangesCache.Add(task.Id);
-
                         var changesSince = GetChangesSinceDate(task, regenerate);
                         progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changesSince, token);
                     }
@@ -52,8 +48,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 {
                     progressInfo.Message = $"Procesing task {task.Name}...";
                     progressCallback(progressInfo);
-
-                    tasksToExpireChangesCache.Add(task.Id);
 
                     var skip = 0;
                     while (true)
@@ -98,11 +92,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         private void ClearCache(ThumbnailTask task, bool regenerate)
         {
-            if (tasksToExpireChangesCache.Contains(task.Id))
-            {
-                tasksToExpireChangesCache.Remove(task.Id);
-                BlobChangesCacheRegion.ExpireTaskRun(task, GetChangesSinceDate(task, regenerate));
-            }
+            BlobChangesCacheRegion.ExpireTaskRun(task, GetChangesSinceDate(task, regenerate));
         }
 
         private static DateTime? GetChangesSinceDate(ThumbnailTask task, bool regenerate)

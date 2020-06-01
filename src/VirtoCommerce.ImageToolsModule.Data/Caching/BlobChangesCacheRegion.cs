@@ -26,6 +26,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.Caching
 
         public static void ExpireTaskRun(ThumbnailTask task, DateTime? changesSince)
         {
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
             var regionTokenKey = GetRegionTokenKey(task, changesSince);
 
             if (_regionTokenLookup.TryRemove(regionTokenKey, out var token))
