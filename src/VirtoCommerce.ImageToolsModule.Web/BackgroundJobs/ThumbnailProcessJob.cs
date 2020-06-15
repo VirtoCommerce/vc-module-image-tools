@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
@@ -62,16 +63,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                 //wrap token 
                 var tasks = await _taskService.GetByIdsAsync(generateRequest.TaskIds);
 
-                var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-                await _thumbnailProcessor.ProcessTasksAsync(tasks, generateRequest.Regenerate, progressCallback, cancellationTokenWrapper);
-
-                //update tasks in case of successful generation
-                foreach (var task in tasks)
-                {
-                    task.LastRun = DateTime.UtcNow;
-                }
-
-                await _taskService.SaveChangesAsync(tasks);
+                await PerformGeneration(tasks, generateRequest.Regenerate, progressCallback, cancellationToken);
             }
             catch (JobAbortedException)
             {
@@ -111,16 +103,30 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             var tasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria() { Take = thumbnailTasks.TotalCount, Skip = 0 });
 
             Action<ThumbnailTaskProgress> progressCallback = x => { };
-            var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-            await _thumbnailProcessor.ProcessTasksAsync(tasks.Results, false, progressCallback, cancellationTokenWrapper);
 
-            //update tasks in case of successful generation
-            foreach (var task in tasks.Results)
+            await PerformGeneration(tasks.Results, false, progressCallback, cancellationToken);
+        }
+
+        private async Task PerformGeneration(IEnumerable<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, IJobCancellationToken cancellationToken)
+        {
+            var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+
+            foreach (var task in tasks)
             {
-                task.LastRun = DateTime.UtcNow;
+                // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
+                var oneTaskArray = new[] { task };
+                //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
+                var runTime = DateTime.UtcNow;
+
+                await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
+
+                task.LastRun = runTime;
+
+                await _taskService.SaveChangesAsync(oneTaskArray);
             }
 
-            await _taskService.SaveChangesAsync(tasks.Results);
+            var progressInfo = new ThumbnailTaskProgress { Message = "Finished generating thumbnails!" };
+            progressCallback(progressInfo);
         }
     }
 }

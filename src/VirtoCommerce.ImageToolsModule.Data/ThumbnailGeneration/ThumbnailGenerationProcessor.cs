@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Data.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -27,52 +28,76 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         public async Task ProcessTasksAsync(ICollection<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
         {
-            var progressInfo = new ThumbnailTaskProgress { Message = "Reading the tasks..." };
-
-            if (_imageChangesProvider.IsTotalCountSupported)
+            try
             {
-                foreach (var task in tasks)
+                var progressInfo = new ThumbnailTaskProgress { Message = "Getting changes count…" };
+
+                if (_imageChangesProvider.IsTotalCountSupported)
                 {
-                    var changedSince = regenerate ? null : task.LastRun;
-                    progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changedSince, token);
+                    foreach (var task in tasks)
+                    {
+                        var changesSince = GetChangesSinceDate(task, regenerate);
+                        progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changesSince, token);
+                    }
                 }
-            }
 
-            progressCallback(progressInfo);
-
-            var pageSize = _settingsManager.GetValue(ModuleConstants.Settings.General.ProcessBatchSize.Name, 50);
-            foreach (var task in tasks)
-            {
-                progressInfo.Message = $"Procesing task {task.Name}...";
                 progressCallback(progressInfo);
 
-                var skip = 0;
-                while (true)
+                var pageSize = _settingsManager.GetValue(ModuleConstants.Settings.General.ProcessBatchSize.Name, 50);
+                foreach (var task in tasks)
                 {
-                    var changes = await _imageChangesProvider.GetNextChangesBatch(task, regenerate ? null : task.LastRun, skip, pageSize, token);
-                    if (!changes.Any())
-                        break;
+                    progressInfo.Message = $"Procesing task {task.Name}...";
+                    progressCallback(progressInfo);
 
-                    foreach (var fileChange in changes)
+                    var skip = 0;
+                    while (true)
                     {
-                        var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
-                        progressInfo.ProcessedCount++;
+                        var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), skip, pageSize, token);
+                        if (!changes.Any())
+                            break;
 
-                        if (result != null && !result.Errors.IsNullOrEmpty())
+                        foreach (var fileChange in changes)
                         {
-                            progressInfo.Errors.AddRange(result.Errors);
+                            var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                            progressInfo.ProcessedCount++;
+
+                            if (result != null && !result.Errors.IsNullOrEmpty())
+                            {
+                                progressInfo.Errors.AddRange(result.Errors);
+                            }
                         }
+
+                        skip += changes.Length;
+
+                        progressCallback(progressInfo);
+                        token?.ThrowIfCancellationRequested();
                     }
 
-                    skip += changes.Length;
-
-                    progressCallback(progressInfo);
-                    token?.ThrowIfCancellationRequested();
+                    ClearCache(task, regenerate);
                 }
             }
+            finally
+            {
+                ClearCache(tasks, regenerate);
+            }
+        }
 
-            progressInfo.Message = "Finished generating thumbnails!";
-            progressCallback(progressInfo);
+        private void ClearCache(ICollection<ThumbnailTask> tasks, bool regenerate)
+        {
+            foreach (var task in tasks)
+            {
+                ClearCache(task, regenerate);
+            }
+        }
+
+        private void ClearCache(ThumbnailTask task, bool regenerate)
+        {
+            BlobChangesCacheRegion.ExpireTaskRun(task, GetChangesSinceDate(task, regenerate));
+        }
+
+        private static DateTime? GetChangesSinceDate(ThumbnailTask task, bool regenerate)
+        {
+            return regenerate ? null : task.LastRun;
         }
     }
 }
