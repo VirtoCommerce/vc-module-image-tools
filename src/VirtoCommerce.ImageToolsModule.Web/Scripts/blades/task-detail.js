@@ -2,6 +2,7 @@ angular.module('virtoCommerce.imageToolsModule')
     .controller('virtoCommerce.imageToolsModule.taskDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'imageToolsConfig', 'virtoCommerce.imageToolsModule.taskApi', 'virtoCommerce.imageToolsModule.optionApi', 'platformWebApp.dialogService',
         function ($rootScope, $scope, bladeNavigationService, imageToolsConfig, taskApi, optionApi, dialogService) {
         var blade = $scope.blade;
+        blade.updatePermission = 'thumbnail:update';
         
         blade.refresh = function (parentRefresh) {
             var optionSearchCriteria = getOptionsSearchCriteria();
@@ -114,7 +115,8 @@ angular.module('virtoCommerce.imageToolsModule')
                 },
                 canExecuteMethod: function () {
                     return canSave();
-                }
+                },
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -125,7 +127,8 @@ angular.module('virtoCommerce.imageToolsModule')
                 },
                 canExecuteMethod: function () {
                     return isDirty();
-                }
+                },
+                permission: blade.updatePermission
             },
             {
                 name: "imageTools.commands.run",
