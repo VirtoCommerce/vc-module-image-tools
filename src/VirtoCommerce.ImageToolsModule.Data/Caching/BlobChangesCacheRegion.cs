@@ -18,7 +18,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Caching
 
             var regionTokenKey = GetRegionTokenKey(task, changedSince);
 
-            return new CompositeChangeToken(new[] { CreateChangeToken(), CreateChangeTokenForKey(regionTokenKey) });
+            return CreateChangeTokenForKey(regionTokenKey);
         }
 
         public static void ExpireTaskRun(ThumbnailTask task, DateTime? changedSince)
