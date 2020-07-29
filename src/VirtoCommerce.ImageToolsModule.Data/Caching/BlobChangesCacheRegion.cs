@@ -9,8 +9,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Caching
 {
     public class BlobChangesCacheRegion : CancellableCacheRegion<BlobChangesCacheRegion>
     {
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _regionTokenLookup = new ConcurrentDictionary<string, CancellationTokenSource>();
-
         public static IChangeToken CreateChangeToken(ThumbnailTask task, DateTime? changedSince)
         {
             if (task == null)
@@ -19,24 +17,20 @@ namespace VirtoCommerce.ImageToolsModule.Data.Caching
             }
 
             var regionTokenKey = GetRegionTokenKey(task, changedSince);
-            var cancellationTokenSource = _regionTokenLookup.GetOrAdd(regionTokenKey, new CancellationTokenSource());
 
-            return new CompositeChangeToken(new[] { CreateChangeToken(), new CancellationChangeToken(cancellationTokenSource.Token) });
+            return new CompositeChangeToken(new[] { CreateChangeToken(), CreateChangeTokenForKey(regionTokenKey) });
         }
 
-        public static void ExpireTaskRun(ThumbnailTask task, DateTime? changesSince)
+        public static void ExpireTaskRun(ThumbnailTask task, DateTime? changedSince)
         {
             if (task == null)
             {
                 throw new ArgumentNullException(nameof(task));
             }
 
-            var regionTokenKey = GetRegionTokenKey(task, changesSince);
+            var regionTokenKey = GetRegionTokenKey(task, changedSince);
 
-            if (_regionTokenLookup.TryRemove(regionTokenKey, out var token))
-            {
-                token.Cancel();
-            }
+            ExpireTokenForKey(regionTokenKey);
         }
 
         private static string GetRegionTokenKey(ThumbnailTask task, DateTime? changedSince)
