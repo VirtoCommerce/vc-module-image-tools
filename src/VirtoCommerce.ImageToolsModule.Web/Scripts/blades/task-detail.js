@@ -137,7 +137,7 @@ angular.module('virtoCommerce.imageToolsModule')
                     taskRun(blade.currentEntity);
                 },
                 canExecuteMethod: function () {
-                    return !blade.isNew;
+                    return !blade.isNew && !isDirty();
                 }
             },
             {
