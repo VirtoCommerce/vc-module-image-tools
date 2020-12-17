@@ -1,4 +1,4 @@
-﻿var moduleName = "virtoCommerce.imageToolsModule";
+var moduleName = "virtoCommerce.imageToolsModule";
 
 if (AppDependencies != undefined) {
     AppDependencies.push(moduleName);
@@ -56,7 +56,6 @@ angular.module(moduleName, ['ui.grid.infiniteScroll'])
                     var blade = {
                         id: 'thumbnailProcessDetail',
                         title: 'Title1',
-                        subtitle: 'Subtite1',
                         template: 'Modules/$(VirtoCommerce.ImageTools)/Scripts/blades/task-progress.tpl.html',
                         controller: 'virtoCommerce.imageToolsModule.taskRunController',
                         notification: notify
