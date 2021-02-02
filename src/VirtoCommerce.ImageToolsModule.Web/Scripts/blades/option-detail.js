@@ -97,7 +97,7 @@ angular.module('virtoCommerce.imageToolsModule')
 
         blade.toolbarCommands = [
             {
-                name: "platform.commands.save", icon: 'fa fa-save',
+                name: "platform.commands.save", icon: 'fas fa-save',
                 executeMethod: $scope.saveChanges,
                 canExecuteMethod: canSave
             },
@@ -109,7 +109,7 @@ angular.module('virtoCommerce.imageToolsModule')
                 canExecuteMethod: isDirty
             },
             {
-                name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fas fa-trash-alt',
                 executeMethod: deleteEntry,
                 canExecuteMethod: function () {
                     return !blade.isNew;

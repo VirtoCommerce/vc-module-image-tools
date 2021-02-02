@@ -109,7 +109,7 @@ angular.module('virtoCommerce.imageToolsModule')
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
-                icon: 'fa fa-save',
+                icon: 'fas fa-save',
                 executeMethod: function () {
                     saveChanges();
                 },
@@ -142,7 +142,7 @@ angular.module('virtoCommerce.imageToolsModule')
             },
             {
                 name: "platform.commands.delete",
-                icon: 'fa fa-trash-o',
+                icon: 'fas fa-trash-alt',
                 executeMethod: function () {
                     deleteTask();
                 },
