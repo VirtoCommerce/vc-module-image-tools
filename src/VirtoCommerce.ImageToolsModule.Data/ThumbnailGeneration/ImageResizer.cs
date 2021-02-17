@@ -2,7 +2,6 @@ using System;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
@@ -119,7 +118,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         {
             if (!backgroundColor.HasValue)
             {
-                backgroundColor = Rgba32.Transparent;
+                backgroundColor = Color.Transparent;
             }
 
             var result = new Image<Rgba32>(new Configuration(), canvasSize.Width, canvasSize.Height, backgroundColor.Value);
@@ -135,7 +134,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             result.Mutate(ctx =>
             {
-                ctx.DrawImage(imgToDraw, destination.Location, new GraphicsOptions(true));
+                ctx.DrawImage(imgToDraw, destination.Location, new GraphicsOptions() { Antialias = true });
             });
 
             return result;

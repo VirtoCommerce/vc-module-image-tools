@@ -8,7 +8,7 @@
     <NoWarn>1701;1702;1705</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
     <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.5.0" />
   </ItemGroup>
 </Project>
