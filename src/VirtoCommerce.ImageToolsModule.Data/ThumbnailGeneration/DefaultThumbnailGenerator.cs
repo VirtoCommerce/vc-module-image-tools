@@ -74,10 +74,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var height = option.Height ?? image.Height;
             var width = option.Width ?? image.Width;
 
-            var color = Rgba32.Transparent;
+            var color = Color.Transparent;
             if (!string.IsNullOrWhiteSpace(option.BackgroundColor))
             {
-                color = Rgba32.FromHex(option.BackgroundColor);
+                color = Rgba32.ParseHex(option.BackgroundColor);
             }
 
             Image<Rgba32> result;

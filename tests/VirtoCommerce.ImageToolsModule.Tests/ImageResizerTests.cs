@@ -1,6 +1,5 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.Primitives;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using Xunit;
 
@@ -30,7 +29,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         {
             var resizer = new ImageResizerTestClass();
             var image = new Image<Rgba32>(10, 100);
-            var color = Rgba32.Green;
+            var color = Color.Green;
             var result = resizer.FixedHeight(image, 20, color);
             Assert.True(result.Width == 2 && result.Height == 20);
         }
@@ -40,7 +39,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         {
             var resizer = new ImageResizerTestClass();
             var image = new Image<Rgba32>(100, 10);
-            var color = Rgba32.Green;
+            var color = Color.Green;
             var result = resizer.FixedWidth(image, 20, color);
             Assert.True(result.Width == 20 && result.Height == 2);
         }
@@ -50,7 +49,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         {
             var resizer = new ImageResizerTestClass();
             var image = new Image<Rgba32>(100, 100);
-            var color = Rgba32.Green;
+            var color = Color.Green;
             var result = resizer.FixedSize(image, 20, 10, color);
             Assert.True(result.Width == 20 && result.Height == 10);
         }
