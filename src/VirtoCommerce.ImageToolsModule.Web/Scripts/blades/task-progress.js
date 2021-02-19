@@ -1,4 +1,4 @@
-﻿angular.module('virtoCommerce.imageToolsModule')
+angular.module('virtoCommerce.imageToolsModule')
     .controller('virtoCommerce.imageToolsModule.taskRunController', ['$scope', 'virtoCommerce.imageToolsModule.taskApi', function ($scope, taskApi) {
         var blade = $scope.blade;
 
@@ -22,6 +22,6 @@
         }];
 
         blade.title = blade.notification.title;
-        blade.headIcon = 'fa-search';
+        blade.headIcon = 'fa fa-search';
         blade.isLoading = false;
     }]);
