@@ -14,6 +14,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
-        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.5.0" />
+        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.57.0" />
     </ItemGroup>
 </Project>
