@@ -18,7 +18,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     {
 
         [Fact]
-        public async void GenerateThumbnailsAsync_CancellationTokenNotNull_CancellationFired()
+        public async Task GenerateThumbnailsAsync_CancellationTokenNotNull_CancellationFired()
         {
             var options = new List<ThumbnailOption>();
             var token = new CancellationToken(true);
@@ -32,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         }
 
         [Fact]
-        public async void GenerateThumbnailsAsync_FixedSize_FixedSizeCalled()
+        public async Task GenerateThumbnailsAsync_FixedSize_FixedSizeCalled()
         {
             var options = new List<ThumbnailOption>
             {
@@ -61,7 +61,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         }
 
         [Fact]
-        public async void GenerateThumbnailsAsync_Crop_CropCalled()
+        public async Task GenerateThumbnailsAsync_Crop_CropCalled()
         {
             var options = new List<ThumbnailOption>
             {
@@ -90,7 +90,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         }
 
         [Fact]
-        public async void GenerateThumbnailsAsync_FixedWidth_FFixedWidthCalled()
+        public async Task GenerateThumbnailsAsync_FixedWidth_FFixedWidthCalled()
         {
             var options = new List<ThumbnailOption>
             {
@@ -117,7 +117,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         }
 
         [Fact]
-        public async void GenerateThumbnailsAsync_FixedHeight_FixedHeightCalled()
+        public async Task GenerateThumbnailsAsync_FixedHeight_FixedHeightCalled()
         {
             var options = new List<ThumbnailOption>
             {
