@@ -144,7 +144,7 @@
     "settings": {
         "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
             "description": "",
-            "title": "Cron expression for scheduling image processing job execution (requires restart)"
+            "title": "Cron expression for scheduling image processing job execution"
         },
         "ImageTools.Thumbnails.ProcessBatchSize": {
             "title": "Partition size",
@@ -152,7 +152,7 @@
         },
         "ImageTools.Thumbnails.EnableImageProcessJob": {
             "title": "Enable image processing job",
-            "description": "Flag for activating background image processing job (requires restart)"
+            "description": "Flag for activating background image processing job"
         }
     },
     "module": {
