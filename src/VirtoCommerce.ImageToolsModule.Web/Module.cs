@@ -23,6 +23,8 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
@@ -72,17 +74,16 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
 
             //Schedule periodic image processing job
-            //var processJobEnabled = settingsManager.GetValue("ImageTools.Thumbnails.EnableImageProcessjob", false);
+            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
             var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
-            if (settingsManager.GetValue(ModuleConstants.Settings.General.EnableImageProcessJob.Name, false))
-            {
-                var cronExpression = settingsManager.GetValue(ModuleConstants.Settings.General.ImageProcessJobCronExpression.Name, "0 0 * * *");
-                RecurringJob.AddOrUpdate<ThumbnailProcessJob>("ProcessAllImageTasksJob", x => x.ProcessAll(JobCancellationToken.Null), cronExpression);
-            }
-            else
-            {
-                RecurringJob.RemoveIfExists("ProcessAllImageTasksJob");
-            }
+
+            recurringJobManager.WatchJobSetting(
+                settingsManager,
+                new SettingCronJobBuilder()
+                    .SetEnablerSetting(ModuleConstants.Settings.General.EnableImageProcessJob)
+                    .SetCronSetting(ModuleConstants.Settings.General.ImageProcessJobCronExpression)
+                    .ToJob<ThumbnailProcessJob>(x => x.ProcessAll(JobCancellationToken.Null))
+                    .Build());
 
             //Force migrations
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())

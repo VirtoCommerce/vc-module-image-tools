@@ -143,7 +143,7 @@
     },
     "settings": {
         "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
-            "title": "Выражение CRON для запуска задачи обработки изображений (необходим перезапуск)",
+            "title": "Выражение CRON для запуска задачи обработки изображений",
             "description": ""
         },
         "ImageTools.Thumbnails.ProcessBatchSize": {
@@ -152,7 +152,7 @@
         },
         "ImageTools.Thumbnails.EnableImageProcessJob": {
             "title": "Использовать фоновую задачу для обработки изображений",
-            "description": "Указывает, требуется ли обрабатывать изображения в рамках фоновой задачи (необходим перезапуск)."
+            "description": "Указывает, требуется ли обрабатывать изображения в рамках фоновой задачи"
         }
     }
 }
