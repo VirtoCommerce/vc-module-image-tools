@@ -23,7 +23,7 @@
   <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
     <dependencies>
-      <dependency id="VirtoCommerce.Assets" version="3.0.0" />
+      <dependency id="VirtoCommerce.Assets" version="1.0.0" />
     </dependencies>
   <groups>
     <group>commerce</group>
