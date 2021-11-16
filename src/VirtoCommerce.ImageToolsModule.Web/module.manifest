@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <id>VirtoCommerce.ImageTools</id>
-  <version>3.13.0</version>
+  <version>3.14.0</version>
   <version-tag />
-  <platformVersion>3.57.0</platformVersion>
+  <platformVersion>3.81.0</platformVersion>
   <title>Image tools module</title>
   <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
   <authors>
@@ -22,6 +22,9 @@
   <tags>images</tags>
   <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
+    <dependencies>
+      <dependency id="VirtoCommerce.Assets" version="1.0.0" />
+    </dependencies>
   <groups>
     <group>commerce</group>
   </groups>

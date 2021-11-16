@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
 

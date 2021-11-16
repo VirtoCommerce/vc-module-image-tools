@@ -7,7 +7,7 @@ using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
-using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
