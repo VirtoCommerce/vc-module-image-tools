@@ -232,7 +232,7 @@ angular.module('virtoCommerce.imageToolsModule')
                 title: 'imageTools.blades.setting-managment.title',
                 subtitle: 'imageTools.blades.setting-managment.subtitle',
                 onSelect: folderPath,
-                controller: 'platformWebApp.assets.assetSelectController'
+                controller: 'virtoCommerce.assetsModule.assetSelectController'
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };
