@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <noWarn>1591</noWarn>
         <IsPackable>True</IsPackable>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -14,6 +14,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
-        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.81.0" />
+        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.200.0" />
     </ItemGroup>
 </Project>
