@@ -62,7 +62,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Cannot save thumbnail image {thumbnailUrl}, error {ex}");
+                    _logger.LogError(@"Cannot save thumbnail image {0}, error {1}", thumbnailUrl, ex);
                     result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
                 }
             }
