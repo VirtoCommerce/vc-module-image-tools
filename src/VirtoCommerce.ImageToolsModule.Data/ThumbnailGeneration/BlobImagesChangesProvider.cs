@@ -42,10 +42,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, token);
                 var orignalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
 
-                var result = new List<ImageChange>();
-                Parallel.ForEach(orignalBlobInfos, blobInfo =>
+                var result = new ConcurrentBag<ImageChange>();
+                await Parallel.ForEachAsync(orignalBlobInfos, (blobInfo, token) =>
                 {
-                    token?.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
 
                     var imageChange = new ImageChange
                     {
@@ -55,6 +55,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         ChangeState = !changedSince.HasValue ? EntryState.Added : GetItemState(blobInfo, changedSince, task.ThumbnailOptions, allBlobInfos)
                     };
                     result.Add(imageChange);
+
+                    return ValueTask.CompletedTask;
                 });
 
                 return result.Where(x => x.ChangeState != EntryState.Unchanged).ToList();
@@ -102,7 +104,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             Parallel.ForEach(searchResults.Results.Where(x => x.Type == "folder"), blobFolder =>
             {
                 var folderResult = ReadBlobFolderAsync(blobFolder.RelativeUrl, token).GetAwaiter().GetResult();
-
+                
                 result.AddRange(folderResult);
             });
 

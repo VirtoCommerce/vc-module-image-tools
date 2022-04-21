@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
@@ -16,11 +18,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         private readonly IImageService _imageService;
         private readonly IImageResizer _imageResizer;
+        private readonly ILogger<DefaultThumbnailGenerator> _logger;
 
-        public DefaultThumbnailGenerator(IImageService imageService, IImageResizer imageResizer)
+        public DefaultThumbnailGenerator(IImageService imageService, IImageResizer imageResizer, ILogger<DefaultThumbnailGenerator> logger)
         {
             _imageService = imageService;
             _imageResizer = imageResizer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -50,20 +54,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 try
                 {
-                    if (thumbnail != null)
-                    {
-                        await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
-                    }
-                    else
-                    {
-                        throw new Exception($"Cannot save thumbnail image {thumbnailUrl}");
-                    }
+                    _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
+
+                    await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
 
                     result.GeneratedThumbnails.Add(thumbnailUrl);
                 }
                 catch (Exception ex)
                 {
-                    result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}, error: {ex}");
+                    _logger.LogError($"Cannot save thumbnail image {thumbnailUrl}, error {ex}");
+                    result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
                 }
             }
 
