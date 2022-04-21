@@ -40,7 +40,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 cacheEntry.AddExpirationToken(BlobChangesCacheRegion.CreateChangeToken(task, changedSince));
 
                 var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, token);
-                var sss = string.Join(Environment.NewLine, allBlobInfos.Keys.OrderBy(x => x));
                 var orignalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
 
                 var result = new List<ImageChange>();
