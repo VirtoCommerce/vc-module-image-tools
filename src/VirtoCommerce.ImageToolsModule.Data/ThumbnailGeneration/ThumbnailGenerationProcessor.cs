@@ -49,29 +49,32 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     progressInfo.Message = $"Processing task {task.Name}...";
                     progressCallback(progressInfo);
 
-                    var skip = 0;
-                    while (true)
-                    {
-                        var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), skip, pageSize, token);
-                        if (!changes.Any())
-                            break;
+                    var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), 0, int.MaxValue /*skip paging because no difference inside*/, token);
 
-                        foreach (var fileChange in changes)
+                    if (!changes.Any())
+                        break;
+
+                    Parallel.ForEach(changes, fileChange =>
+                    {
+                        var result = _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token).GetAwaiter().GetResult();
+
+                        lock (progressInfo)
                         {
-                            var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
                             progressInfo.ProcessedCount++;
 
                             if (result != null && !result.Errors.IsNullOrEmpty())
                             {
                                 progressInfo.Errors.AddRange(result.Errors);
                             }
+
+                            if (progressInfo.ProcessedCount % pageSize == 0 || progressInfo.ProcessedCount == progressInfo.TotalCount)
+                            {
+                                progressCallback(progressInfo);                                
+                            }
+
+                            token?.ThrowIfCancellationRequested();
                         }
-
-                        skip += changes.Length;
-
-                        progressCallback(progressInfo);
-                        token?.ThrowIfCancellationRequested();
-                    }
+                    });
 
                     ClearCache(task, regenerate);
                 }

@@ -48,16 +48,23 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var thumbnail = GenerateThumbnail(originalImage, option);
                 var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
 
-                if (thumbnail != null)
+                try
                 {
-                    await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
-                }
-                else
-                {
-                    throw new Exception($"Cannot save thumbnail image {thumbnailUrl}");
-                }
+                    if (thumbnail != null)
+                    {
+                        await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
+                    }
+                    else
+                    {
+                        throw new Exception($"Cannot save thumbnail image {thumbnailUrl}");
+                    }
 
-                result.GeneratedThumbnails.Add(thumbnailUrl);
+                    result.GeneratedThumbnails.Add(thumbnailUrl);
+                }
+                catch (Exception ex)
+                {
+                    result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}, error: {ex}");
+                }
             }
 
             return result;

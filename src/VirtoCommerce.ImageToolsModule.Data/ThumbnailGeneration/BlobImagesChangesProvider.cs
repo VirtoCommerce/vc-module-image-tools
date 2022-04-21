@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.Caching;
-using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -39,10 +40,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 cacheEntry.AddExpirationToken(BlobChangesCacheRegion.CreateChangeToken(task, changedSince));
 
                 var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, token);
-                var orignalBlobInfos = GetOriginalItems(allBlobInfos, options.Select(x => x.FileSuffix).ToList());
+                var sss = string.Join(Environment.NewLine, allBlobInfos.Keys.OrderBy(x => x));
+                var orignalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
 
                 var result = new List<ImageChange>();
-                foreach (var blobInfo in orignalBlobInfos)
+                Parallel.ForEach(orignalBlobInfos, blobInfo =>
                 {
                     token?.ThrowIfCancellationRequested();
 
@@ -51,10 +53,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         Name = blobInfo.Name,
                         Url = blobInfo.Url,
                         ModifiedDate = blobInfo.ModifiedDate,
-                        ChangeState = !changedSince.HasValue ? EntryState.Added : GetItemState(blobInfo, changedSince, task.ThumbnailOptions)
+                        ChangeState = !changedSince.HasValue ? EntryState.Added : GetItemState(blobInfo, changedSince, task.ThumbnailOptions, allBlobInfos)
                     };
                     result.Add(imageChange);
-                }
+                });
+
                 return result.Where(x => x.ChangeState != EntryState.Unchanged).ToList();
             });
         }
@@ -87,20 +90,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         #endregion
 
-        protected virtual async Task<ICollection<BlobEntry>> ReadBlobFolderAsync(string folderPath, ICancellationToken token)
+        protected virtual async Task<ConcurrentDictionary<string, BlobEntry>> ReadBlobFolderAsync(string folderPath, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
-            var result = new List<BlobEntry>();
+            var result = new ConcurrentDictionary<string, BlobEntry>();
 
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
-            result.AddRange(searchResults.Results.Where(item => SupportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())));
-            foreach (var blobFolder in searchResults.Results.Where(x => x.Type == "folder"))
+            result.AddRange(searchResults.Results.Where(item => SupportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
+
+            Parallel.ForEach(searchResults.Results.Where(x => x.Type == "folder"), blobFolder =>
             {
-                var folderResult = await ReadBlobFolderAsync(blobFolder.RelativeUrl, token);
+                var folderResult = ReadBlobFolderAsync(blobFolder.RelativeUrl, token).GetAwaiter().GetResult();
+
                 result.AddRange(folderResult);
-            }
+            });
 
             return result;
         }
@@ -113,13 +118,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// EntryState if image exist.
         /// Null is image is empty
         /// </returns>
-        protected virtual async Task<bool> ExistsAsync(string imageUrl)
+        protected virtual async Task<bool> ExistsAsync(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
-            var blobInfo = await _storageProvider.GetBlobInfoAsync(imageUrl);
-            return blobInfo != null;
+            bool result;
+            if (earlyReadBlobInfos == null)
+            {
+                result = null != await _storageProvider.GetBlobInfoAsync(imageUrl);
+            }
+            else
+            {
+                result = earlyReadBlobInfos.ContainsKey(imageUrl);
+            }
+
+            return result;
         }
 
-        protected virtual EntryState GetItemState(BlobEntry blobInfo, DateTime? changedSince, IList<ThumbnailOption> options)
+        protected virtual EntryState GetItemState(BlobEntry blobInfo, DateTime? changedSince, IList<ThumbnailOption> options, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             if (!changedSince.HasValue)
             {
@@ -128,7 +142,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (!ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix)).GetAwaiter().GetResult())
+                if (!ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos).GetAwaiter().GetResult())
                 {
                     return EntryState.Added;
                 }
