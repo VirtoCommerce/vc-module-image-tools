@@ -11,6 +11,7 @@ using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
+using Microsoft.Extensions.Logging;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
 {
@@ -41,7 +42,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 },
             };
             var imageChangesProvider = GetBlobImagesChangesProvider(blobContents);
-            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _settingsManager.Object, imageChangesProvider);
+            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
 
             var thumbnailOption = new ThumbnailOption() { FileSuffix = OptionSuffix };
             var workPath = "testPath";
@@ -76,7 +77,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 },
             };
             var imageChangesProvider = GetBlobImagesChangesProvider(blobContents);
-            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _settingsManager.Object, imageChangesProvider);
+            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
 
             var thumbnailOption = new ThumbnailOption() { FileSuffix = OptionSuffix };
             var workPath = "testPath";

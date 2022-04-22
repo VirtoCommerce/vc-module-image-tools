@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
@@ -16,14 +17,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         private readonly IThumbnailGenerator _generator;
         private readonly ISettingsManager _settingsManager;
         private readonly IImagesChangesProvider _imageChangesProvider;
+        private readonly ILogger<ThumbnailGenerationProcessor> _logger;
 
         public ThumbnailGenerationProcessor(IThumbnailGenerator generator,
             ISettingsManager settingsManager,
-            IImagesChangesProvider imageChangesProvider)
+            IImagesChangesProvider imageChangesProvider,
+            ILogger<ThumbnailGenerationProcessor> logger)
         {
             _generator = generator;
             _settingsManager = settingsManager;
             _imageChangesProvider = imageChangesProvider;
+            _logger = logger;
         }
 
         public async Task ProcessTasksAsync(ICollection<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
@@ -32,6 +36,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 var progressInfo = new ThumbnailTaskProgress { Message = "Getting changes count…" };
 
+                /*
                 if (_imageChangesProvider.IsTotalCountSupported)
                 {
                     foreach (var task in tasks)
@@ -40,16 +45,19 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changesSince, token);
                     }
                 }
+                */
 
                 progressCallback(progressInfo);
 
                 var pageSize = _settingsManager.GetValue(ModuleConstants.Settings.General.ProcessBatchSize.Name, 50);
                 foreach (var task in tasks)
-                {
+                {                    
                     progressInfo.Message = $"Processing task {task.Name}...";
                     progressCallback(progressInfo);
 
                     var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), 0, int.MaxValue /*skip paging because no difference inside*/, token);
+
+                    progressInfo.TotalCount = changes.Count();
 
                     if (!changes.Any())
                         break;
@@ -69,7 +77,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                             if (progressInfo.ProcessedCount % pageSize == 0 || progressInfo.ProcessedCount == progressInfo.TotalCount)
                             {
-                                progressCallback(progressInfo);                                
+                                progressCallback(progressInfo);
+                                _logger.LogTrace(@"SixLabors...TotalUndisposedAllocationCount {count}", SixLabors.ImageSharp.Diagnostics.MemoryDiagnostics.TotalUndisposedAllocationCount);
                             }
 
                             token?.ThrowIfCancellationRequested();
@@ -77,6 +86,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     });
 
                     ClearCache(task, regenerate);
+                    GC.Collect();
                 }
             }
             finally

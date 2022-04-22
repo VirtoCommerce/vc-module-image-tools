@@ -47,23 +47,28 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var result = new ThumbnailGenerationResult();
 
-            foreach (var option in options)
+            using (originalImage)
             {
-                var thumbnail = GenerateThumbnail(originalImage, option);
-                var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
-
-                try
+                foreach (var option in options)
                 {
-                    _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
+                    var thumbnail = GenerateThumbnail(originalImage, option);
+                    var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
+                    using (thumbnail)
+                    {
+                        try
+                        {
+                            _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
 
-                    await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
+                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
 
-                    result.GeneratedThumbnails.Add(thumbnailUrl);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(@"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
-                    result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
+                            result.GeneratedThumbnails.Add(thumbnailUrl);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(@"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
+                            result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
+                        }
+                    }
                 }
             }
 
@@ -87,24 +92,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 color = Rgba32.ParseHex(option.BackgroundColor);
             }
 
-            Image<Rgba32> result;
-            switch (option.ResizeMethod)
+            var result = option.ResizeMethod switch
             {
-                case ResizeMethod.FixedSize:
-                    result = _imageResizer.FixedSize(image, width, height, color);
-                    break;
-                case ResizeMethod.FixedWidth:
-                    result = _imageResizer.FixedWidth(image, width, color);
-                    break;
-                case ResizeMethod.FixedHeight:
-                    result = _imageResizer.FixedHeight(image, height, color);
-                    break;
-                case ResizeMethod.Crop:
-                    result = _imageResizer.Crop(image, width, height, option.AnchorPosition);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"ResizeMethod {option.ResizeMethod.ToString()} not supported.");
-            }
+                ResizeMethod.FixedSize => _imageResizer.FixedSize(image, width, height, color),
+                ResizeMethod.FixedWidth => _imageResizer.FixedWidth(image, width, color),
+                ResizeMethod.FixedHeight => _imageResizer.FixedHeight(image, height, color),
+                ResizeMethod.Crop => _imageResizer.Crop(image, width, height, option.AnchorPosition),
+                _ => throw new ArgumentOutOfRangeException($"ResizeMethod {option.ResizeMethod} not supported."),
+            };
 
             return result;
         }
