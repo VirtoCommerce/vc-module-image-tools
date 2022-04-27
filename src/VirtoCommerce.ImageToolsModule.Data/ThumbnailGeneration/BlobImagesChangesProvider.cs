@@ -128,7 +128,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        protected virtual async Task<EntryState> GetItemStateAsync(BlobEntry blobInfo, DateTime? changedSince, IList<ThumbnailOption> options, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
+        protected virtual async Task<EntryState> GetItemStateAsync(
+            BlobEntry blobInfo,
+            DateTime? changedSince,
+            IList<ThumbnailOption> options,
+            ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             if (!changedSince.HasValue)
             {
