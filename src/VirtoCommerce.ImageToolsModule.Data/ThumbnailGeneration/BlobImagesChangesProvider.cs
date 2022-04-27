@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.AssetsModule.Core.Assets;
@@ -105,13 +104,25 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             await Parallel.ForEachAsync(searchResults.Results.Where(x => x.Type == "folder"), async (blobFolder, token) =>
             {
                 var folderResult = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
-                
+
                 result.AddRange(folderResult);
             });
 
             return result;
         }
 
+        /// <summary>
+        /// Check if image is exist in blob storage by url.
+        /// </summary>
+        /// <param name="imageUrl">Image url.</param>
+        /// <returns>
+        /// EntryState if image exist.
+        /// Null is image is empty
+        /// </returns>
+        protected bool Exists(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
+        {
+            return ExistsAsync(imageUrl, earlyReadBlobInfos).GetAwaiter().GetResult();
+        }
         /// <summary>
         /// Check if image is exist in blob storage by url.
         /// </summary>
@@ -144,7 +155,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (! ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos).GetAwaiter().GetResult())
+                if (!Exists(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos))
                 {
                     return EntryState.Added;
                 }
