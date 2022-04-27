@@ -43,7 +43,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 var orignalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
 
                 var result = new ConcurrentBag<ImageChange>();
-                await Parallel.ForEachAsync(orignalBlobInfos, (blobInfo, token) =>
+                await Parallel.ForEachAsync(orignalBlobInfos, async (blobInfo, token) =>
                 {
                     token.ThrowIfCancellationRequested();
 
@@ -52,11 +52,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         Name = blobInfo.Name,
                         Url = blobInfo.Url,
                         ModifiedDate = blobInfo.ModifiedDate,
-                        ChangeState = !changedSince.HasValue ? EntryState.Added : GetItemState(blobInfo, changedSince, task.ThumbnailOptions, allBlobInfos)
+                        ChangeState = !changedSince.HasValue ? EntryState.Added : await GetItemStateAsync(blobInfo, changedSince, task.ThumbnailOptions, allBlobInfos)
                     };
                     result.Add(imageChange);
-
-                    return ValueTask.CompletedTask;
                 });
 
                 return result.Where(x => x.ChangeState != EntryState.Unchanged).ToList();
@@ -115,15 +113,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// Check if an image exist in the blob storage by url.
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
-        protected bool Exists(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
-        {
-            return ExistsAsync(imageUrl, earlyReadBlobInfos).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Check if an image exist in the blob storage by url.
-        /// </summary>
-        /// <param name="imageUrl">Image url.</param>
         protected virtual async Task<bool> ExistsAsync(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             bool result;
@@ -139,7 +128,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        protected virtual EntryState GetItemState(BlobEntry blobInfo, DateTime? changedSince, IList<ThumbnailOption> options, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
+        protected virtual async Task<EntryState> GetItemStateAsync(BlobEntry blobInfo, DateTime? changedSince, IList<ThumbnailOption> options, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             if (!changedSince.HasValue)
             {
@@ -148,7 +137,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (!Exists(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos))
+                if (! await ExistsAsync (blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos))
                 {
                     return EntryState.Added;
                 }
