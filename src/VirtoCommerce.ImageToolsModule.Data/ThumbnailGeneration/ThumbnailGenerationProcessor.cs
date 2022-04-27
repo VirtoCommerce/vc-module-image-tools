@@ -62,7 +62,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     if (!changes.Any())
                         break;
 
-                    _ = Parallel.ForEach(changes, fileChange =>
+                    //_ = Parallel.ForEach(changes, fileChange =>
+                    foreach (var fileChange in changes)
                     {
                         var result = _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token).GetAwaiter().GetResult();
 
@@ -97,7 +98,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                             token?.ThrowIfCancellationRequested();
                         }
-                    });
+                    }//);
 
                     ClearCache(task, regenerate);
                 }
