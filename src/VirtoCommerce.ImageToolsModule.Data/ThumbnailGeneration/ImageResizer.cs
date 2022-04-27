@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -140,21 +141,25 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        private static AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
+        private AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
         {
-            return anchorPosition switch
+            var ancorPositionMap = new Dictionary<AnchorPosition, AnchorPositionMode>
             {
-                AnchorPosition.TopLeft => AnchorPositionMode.TopLeft,
-                AnchorPosition.TopCenter => AnchorPositionMode.Top,
-                AnchorPosition.TopRight => AnchorPositionMode.TopRight,
-                AnchorPosition.CenterLeft => AnchorPositionMode.Left,
-                AnchorPosition.Center => AnchorPositionMode.Center,
-                AnchorPosition.CenterRight => AnchorPositionMode.Right,
-                AnchorPosition.BottomLeft => AnchorPositionMode.BottomLeft,
-                AnchorPosition.BottomCenter => AnchorPositionMode.Bottom,
-                AnchorPosition.BottomRight => AnchorPositionMode.BottomRight,
-                _ => throw new ArgumentOutOfRangeException($"AnchorPosition {anchorPosition} not supported."),
+                { AnchorPosition.TopLeft, AnchorPositionMode.TopLeft },
+                { AnchorPosition.TopCenter, AnchorPositionMode.Top},
+                { AnchorPosition.TopRight, AnchorPositionMode.TopRight},
+                { AnchorPosition.CenterLeft, AnchorPositionMode.Left},
+                { AnchorPosition.Center, AnchorPositionMode.Center},
+                { AnchorPosition.CenterRight,AnchorPositionMode.Right},
+                { AnchorPosition.BottomLeft, AnchorPositionMode.BottomLeft},
+                { AnchorPosition.BottomCenter,AnchorPositionMode.Bottom },
+                { AnchorPosition.BottomRight, AnchorPositionMode.BottomRight}
             };
+            if (!ancorPositionMap.ContainsKey(anchorPosition))
+            {
+                throw new ArgumentOutOfRangeException($"AnchorPosition {anchorPosition} not supported.");
+            }
+            return ancorPositionMap[anchorPosition];
         }
     }
 }
