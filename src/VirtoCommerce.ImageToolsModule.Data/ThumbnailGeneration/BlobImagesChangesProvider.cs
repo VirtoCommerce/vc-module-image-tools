@@ -112,25 +112,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         }
 
         /// <summary>
-        /// Check if image is exist in blob storage by url.
+        /// Check if an image exist in the blob storage by url.
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
-        /// <returns>
-        /// EntryState if image exist.
-        /// Null is image is empty
-        /// </returns>
         protected bool Exists(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             return ExistsAsync(imageUrl, earlyReadBlobInfos).GetAwaiter().GetResult();
         }
+
         /// <summary>
-        /// Check if image is exist in blob storage by url.
+        /// Check if an image exist in the blob storage by url.
         /// </summary>
         /// <param name="imageUrl">Image url.</param>
-        /// <returns>
-        /// EntryState if image exist.
-        /// Null is image is empty
-        /// </returns>
         protected virtual async Task<bool> ExistsAsync(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
         {
             bool result;
