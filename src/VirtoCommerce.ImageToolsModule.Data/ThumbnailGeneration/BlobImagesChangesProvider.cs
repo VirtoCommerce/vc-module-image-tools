@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.AssetsModule.Core.Assets;
@@ -101,9 +102,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             result.AddRange(searchResults.Results.Where(item => SupportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
 
-            Parallel.ForEach(searchResults.Results.Where(x => x.Type == "folder"), blobFolder =>
+            await Parallel.ForEachAsync(searchResults.Results.Where(x => x.Type == "folder"), async (blobFolder, token) =>
             {
-                var folderResult = ReadBlobFolderAsync(blobFolder.RelativeUrl, token).GetAwaiter().GetResult();
+                var folderResult = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
                 
                 result.AddRange(folderResult);
             });
@@ -143,7 +144,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (!ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos).GetAwaiter().GetResult())
+                if (! ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos).GetAwaiter().GetResult())
                 {
                     return EntryState.Added;
                 }

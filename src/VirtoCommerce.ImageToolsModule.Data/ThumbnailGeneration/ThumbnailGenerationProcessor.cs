@@ -46,7 +46,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                     var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), 0, int.MaxValue /*skip paging because no difference inside*/, token);
 
-                    progressInfo.TotalCount = changes.Count();
+                    progressInfo.TotalCount = changes.Length;
 
                     if (!changes.Any())
                         break;
@@ -57,7 +57,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
                     foreach (var fileChange in changes)
                     {
-                        var result = _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token).GetAwaiter().GetResult();
+                        var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
 
                         lock (progressInfo)
                         {
