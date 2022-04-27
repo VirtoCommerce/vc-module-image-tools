@@ -87,6 +87,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 // Trace unmanaged resources, captured by SixLabours
                 _logger.LogTrace(@"SixLabors...TotalUndisposedAllocationCount {count}", SixLabors.ImageSharp.Diagnostics.MemoryDiagnostics.TotalUndisposedAllocationCount);
 
+                /*
                 // Trigger a few Gen2 GCs to make sure the ArrayPools (used inside of BlobClient and SixLabours) has appropriately time stamped buffers.
                 // Then force a GC to get some buffers returned
                 // Otherwise ArrayPools will consume too much memory and drain it.
@@ -99,6 +100,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 #pragma warning restore S1215 // "GC.Collect" should not be called
                     GC.WaitForPendingFinalizers();
                 }
+                */
+                
             }
         }
 
