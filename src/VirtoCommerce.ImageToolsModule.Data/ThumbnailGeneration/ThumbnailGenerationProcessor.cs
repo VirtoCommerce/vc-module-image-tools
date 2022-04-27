@@ -36,17 +36,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 var progressInfo = new ThumbnailTaskProgress { Message = "Getting changes count…" };
 
-                /*
-                if (_imageChangesProvider.IsTotalCountSupported)
-                {
-                    foreach (var task in tasks)
-                    {
-                        var changesSince = GetChangesSinceDate(task, regenerate);
-                        progressInfo.TotalCount += await _imageChangesProvider.GetTotalChangesCount(task, changesSince, token);
-                    }
-                }
-                */
-
                 progressCallback(progressInfo);
 
                 var pageSize = _settingsManager.GetValue(ModuleConstants.Settings.General.ProcessBatchSize.Name, 50);
@@ -62,7 +51,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     if (!changes.Any())
                         break;
 
-                    //_ = Parallel.ForEach(changes, fileChange =>
+                    // ! Note: It was spend a lot of time considering replacement the next foreach to a Parallel.ForEach.
+                    // Reasons it wasn't done:
+                    // 1. High memory consumption and potential memory buggy leaks in ArrayPools (used inside of BlobClient and SixLabours) with multithreading.
+                    // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
                     foreach (var fileChange in changes)
                     {
                         var result = _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token).GetAwaiter().GetResult();
@@ -82,7 +74,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                                 // Trace unmanaged resources, captured by SixLabours
                                 _logger.LogTrace(@"SixLabors...TotalUndisposedAllocationCount {count}", SixLabors.ImageSharp.Diagnostics.MemoryDiagnostics.TotalUndisposedAllocationCount);
 
-                                // Trigger a few Gen2 GCs to make sure the ArrayPools (used in BlobClient and SixLabours Libs) has appropriately time stamped buffers.
+                                // Trigger a few Gen2 GCs to make sure the ArrayPools (used inside of BlobClient and SixLabours) has appropriately time stamped buffers.
                                 // Then force a GC to get some buffers returned
                                 // Otherwise ArrayPools will consume too much memory and drain it.
                                 // Look here problems with ArrayPools: https://github.com/dotnet/runtime/issues/52098, https://github.com/dotnet/runtime/pull/56316.
@@ -98,7 +90,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                             token?.ThrowIfCancellationRequested();
                         }
-                    }//);
+                    }
 
                     ClearCache(task, regenerate);
                 }
