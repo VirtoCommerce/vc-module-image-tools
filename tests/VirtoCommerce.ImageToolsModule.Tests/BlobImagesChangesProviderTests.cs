@@ -103,40 +103,5 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             Assert.Collection(changes1, x => Assert.Equal("Blob1.png", x.Name));
             Assert.Collection(changes2, x => Assert.Equal("Blob2.png", x.Name));
         }
-
-        [Fact]
-        public async Task GetNextChangesBatch_TasksWithOneWorkPathAndOptions_CacheIsWorkingWithGetTotalChangesCount()
-        {
-            // Arrange
-            var blobContents = new List<BlobEntry>()
-            {
-                new BlobInfo()
-                {
-                    Name = "Blob1.png",
-                    Url = "testPath/Blob1.png",
-                },
-            };
-            var changesProvider = GetBlobImagesChangesProvider(blobContents);
-            var thumbnailOption = new ThumbnailOption() { FileSuffix = OptionSuffix };
-            var workPath = "testPath";
-            var task = new ThumbnailTask()
-            {
-                Id = Guid.NewGuid().ToString(),
-                LastRun = null,
-                WorkPath = workPath,
-                ThumbnailOptions = new List<ThumbnailOption>() { thumbnailOption },
-            };
-            var cancellationToken = new CancellationTokenWrapper(new CancellationToken());
-
-            // Act
-            var changes = await changesProvider.GetNextChangesBatch(task, null, 0, 10, cancellationToken);
-            var count = await changesProvider.GetTotalChangesCount(task, null, cancellationToken);
-
-            //Assert
-            StorageProviderMock.Verify(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-
-            Assert.Collection(changes, x => Assert.Equal("Blob1.png", x.Name));
-            Assert.Equal(1, count);
-        }
     }
 }

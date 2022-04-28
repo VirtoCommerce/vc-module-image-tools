@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
@@ -16,11 +18,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         private readonly IImageService _imageService;
         private readonly IImageResizer _imageResizer;
+        private readonly ILogger<DefaultThumbnailGenerator> _logger;
 
-        public DefaultThumbnailGenerator(IImageService imageService, IImageResizer imageResizer)
+        public DefaultThumbnailGenerator(IImageService imageService, IImageResizer imageResizer, ILogger<DefaultThumbnailGenerator> logger)
         {
             _imageService = imageService;
             _imageResizer = imageResizer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -43,21 +47,29 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var result = new ThumbnailGenerationResult();
 
-            foreach (var option in options)
+            using (originalImage)
             {
-                var thumbnail = GenerateThumbnail(originalImage, option);
-                var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
-
-                if (thumbnail != null)
+                foreach (var option in options)
                 {
-                    await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
-                }
-                else
-                {
-                    throw new Exception($"Cannot save thumbnail image {thumbnailUrl}");
-                }
+                    var thumbnail = GenerateThumbnail(originalImage, option);
+                    var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
+                    using (thumbnail)
+                    {
+                        try
+                        {
+                            _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
 
-                result.GeneratedThumbnails.Add(thumbnailUrl);
+                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
+
+                            result.GeneratedThumbnails.Add(thumbnailUrl);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(@"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
+                            result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
+                        }
+                    }
+                }
             }
 
             return result;
@@ -80,24 +92,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 color = Rgba32.ParseHex(option.BackgroundColor);
             }
 
-            Image<Rgba32> result;
-            switch (option.ResizeMethod)
+            var result = option.ResizeMethod switch
             {
-                case ResizeMethod.FixedSize:
-                    result = _imageResizer.FixedSize(image, width, height, color);
-                    break;
-                case ResizeMethod.FixedWidth:
-                    result = _imageResizer.FixedWidth(image, width, color);
-                    break;
-                case ResizeMethod.FixedHeight:
-                    result = _imageResizer.FixedHeight(image, height, color);
-                    break;
-                case ResizeMethod.Crop:
-                    result = _imageResizer.Crop(image, width, height, option.AnchorPosition);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"ResizeMethod {option.ResizeMethod.ToString()} not supported.");
-            }
+                ResizeMethod.FixedSize => _imageResizer.FixedSize(image, width, height, color),
+                ResizeMethod.FixedWidth => _imageResizer.FixedWidth(image, width, color),
+                ResizeMethod.FixedHeight => _imageResizer.FixedHeight(image, height, color),
+                ResizeMethod.Crop => _imageResizer.Crop(image, width, height, option.AnchorPosition),
+                _ => throw new ArgumentOutOfRangeException($"ResizeMethod {option.ResizeMethod} not supported."),
+            };
 
             return result;
         }

@@ -5,9 +5,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
+using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.AssetsModule.Core.Assets;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
