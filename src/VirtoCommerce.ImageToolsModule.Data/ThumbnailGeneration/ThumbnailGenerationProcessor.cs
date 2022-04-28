@@ -79,29 +79,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         private void AfterPageProgress(Action<ThumbnailTaskProgress> progressCallback, ThumbnailTaskProgress progressInfo, int pageSize)
         {
-            const int gen2 = 3;
-
             if (progressInfo.ProcessedCount % pageSize == 0 || progressInfo.ProcessedCount == progressInfo.TotalCount)
             {
                 progressCallback(progressInfo);
                 // Trace unmanaged resources, captured by SixLabours
                 _logger.LogTrace(@"SixLabors...TotalUndisposedAllocationCount {count}", SixLabors.ImageSharp.Diagnostics.MemoryDiagnostics.TotalUndisposedAllocationCount);
-
-                /*
-                // Trigger a few Gen2 GCs to make sure the ArrayPools (used inside of BlobClient and SixLabours) has appropriately time stamped buffers.
-                // Then force a GC to get some buffers returned
-                // Otherwise ArrayPools will consume too much memory and drain it.
-                // Look here problems with ArrayPools: https://github.com/dotnet/runtime/issues/52098, https://github.com/dotnet/runtime/pull/56316.
-                // It's not a wonderful solution to call GC directly, but have no idea what else we can do.
-                for (var i = 0; i < gen2; i++)
-                {
-#pragma warning disable S1215 // "GC.Collect" should not be called
-                    GC.Collect();
-#pragma warning restore S1215 // "GC.Collect" should not be called
-                    GC.WaitForPendingFinalizers();
-                }
-                */
-                
             }
         }
 
