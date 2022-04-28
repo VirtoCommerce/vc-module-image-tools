@@ -204,7 +204,7 @@ angular.module('virtoCommerce.imageToolsModule')
                     }
                 }
                 
-                dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+                dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
             }
         }
 
