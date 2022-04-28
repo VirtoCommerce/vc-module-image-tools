@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -25,9 +26,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var tokenWrapper = new CancellationTokenWrapper(token);
 
             var mockStorage = new Mock<IImageService>();
-            var mockResizer = new Mock<IImageResizer>();
+            var mockResizer = new Mock<IImageResizer>();            
 
-            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
             await Assert.ThrowsAsync<OperationCanceledException>(async () => await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, tokenWrapper));
         }
 
@@ -54,7 +55,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.FixedSize(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Rgba32>())).Returns(image);
 
-            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
             var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
 
             mockResizer.Verify(x => x.FixedSize(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Rgba32>()));
@@ -83,7 +84,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.Crop(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AnchorPosition>())).Returns(image);
 
-            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
             var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
 
             mockResizer.Verify(x => x.Crop(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AnchorPosition>()));
@@ -110,7 +111,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.FixedWidth(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>())).Returns(image);
 
-            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
             var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
 
             mockResizer.Verify(x => x.FixedWidth(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>()));
@@ -137,7 +138,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.FixedHeight(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>())).Returns(image);
 
-            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object);
+            var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
             var result = await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, null);
 
             mockResizer.Verify(x => x.FixedHeight(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>()));
