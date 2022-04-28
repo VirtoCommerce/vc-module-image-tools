@@ -202,9 +202,8 @@ angular.module('virtoCommerce.imageToolsModule')
                     callback: function () {
                         return true;
                     }
-                }
-                
-                dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+                }                
+                dialogService.showErrorDialog(dialog);
             }
         }
 
@@ -221,7 +220,7 @@ angular.module('virtoCommerce.imageToolsModule')
                                 blade.parentBlade.refresh();
                             });
                         });
-                    };
+                    }
                 }
             }
             dialogService.showConfirmationDialog(dialog);
