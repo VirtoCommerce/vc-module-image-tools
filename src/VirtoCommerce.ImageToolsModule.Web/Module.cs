@@ -34,10 +34,11 @@ namespace VirtoCommerce.ImageToolsModule.Web
         private IApplicationBuilder _appBuilder;
         public void Initialize(IServiceCollection serviceCollection)
         {
-            var snapshot = serviceCollection.BuildServiceProvider();
-            var configuration = snapshot.GetService<IConfiguration>();
-
-            serviceCollection.AddDbContext<ThumbnailDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
+            serviceCollection.AddDbContext<ThumbnailDbContext>((provider, options) =>
+            {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                options.UseSqlServer(configuration.GetConnectionString(ModuleInfo.Id) ?? configuration.GetConnectionString("VirtoCommerce"));
+            });
 
             serviceCollection.AddTransient<IThumbnailRepository, ThumbnailRepository>();
             serviceCollection.AddTransient<Func<IThumbnailRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IThumbnailRepository>());
