@@ -137,7 +137,7 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
             return result;
         }
 
-        private AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
+        private static AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
         {
             var ancorPositionMap = new Dictionary<AnchorPosition, AnchorPositionMode>
             {

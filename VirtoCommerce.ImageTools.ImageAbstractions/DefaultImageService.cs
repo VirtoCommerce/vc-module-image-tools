@@ -34,8 +34,8 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
             }
             catch (Exception)
             {
-                format = null;
-                return Task.FromResult<Image<Rgba32>>(null);
+                format = null!;
+                return Task.FromResult<Image<Rgba32>>(null!);
             }
         }
 
