@@ -1,4 +1,5 @@
 using System;
+using VirtoCommerce.ImageTools.ImageAbstractions;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Models

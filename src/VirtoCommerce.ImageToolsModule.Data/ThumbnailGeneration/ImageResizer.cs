@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageTools.ImageAbstractions;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {

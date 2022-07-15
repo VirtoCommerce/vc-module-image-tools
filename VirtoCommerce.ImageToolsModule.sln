@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C742D8DA-3EDD-4191-BBCF-2BD2AA640320}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsModule.Data", "src\VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj", "{5F4E2885-A052-4883-8AFC-C3CA6AC96DF6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsModule.Web", "src\VirtoCommerce.ImageToolsModule.Web\VirtoCommerce.ImageToolsModule.Web.csproj", "{5B994549-519B-4B80-A3F7-7B04B81E7B2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageTools.ImageAbstractions", "VirtoCommerce.ImageTools.ImageAbstractions\VirtoCommerce.ImageTools.ImageAbstractions.csproj", "{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{5B994549-519B-4B80-A3F7-7B04B81E7B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B994549-519B-4B80-A3F7-7B04B81E7B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B994549-519B-4B80-A3F7-7B04B81E7B2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{096113CE-B106-48F3-A9BD-F5EECDE8C7A4} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 		{5F4E2885-A052-4883-8AFC-C3CA6AC96DF6} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 		{5B994549-519B-4B80-A3F7-7B04B81E7B2A} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
+		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F759764-AF55-423C-9E17-6BF99422F7AC}

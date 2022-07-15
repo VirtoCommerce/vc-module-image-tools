@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
-using VirtoCommerce.ImageToolsModule.Core.Models;
 
-namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
     /// <summary>
     /// Work with image
