@@ -1,13 +1,13 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
+using VirtoCommerce.ImageTools.ImageAbstractions;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ImageResizerTests
     {
-        private class ImageResizerTestClass : ImageResizer
+        private class ImageResizerTestClass : DefaultImageResizer
         {
             public Image<Rgba32> TransformTest(Image<Rgba32> original, Rectangle source, Rectangle destination, Size canvasSize, Rgba32? backgroundColor)
             {

@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using VirtoCommerce.ImageTools.ImageAbstractions;
 
-namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
     /// <summary>
     /// Image resize library
     /// </summary>
-    public class ImageResizer : IImageResizer
+    public class DefaultImageResizer : IImageResizer
     {
         /// <summary>
         /// Scale image by given percent

@@ -50,8 +50,8 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailTaskSearchService, ThumbnailTaskSearchService>();
             serviceCollection.AddTransient<IThumbnailTaskService, ThumbnailTaskService>();
 
-            serviceCollection.AddTransient<IImageResizer, ImageResizer>();
-            serviceCollection.AddTransient<IImageService, ImageService>();
+            serviceCollection.AddTransient<IImageResizer, DefaultImageResizer>();
+            serviceCollection.AddTransient<IImageService, DefaultImageService>();
             serviceCollection.AddTransient<IThumbnailGenerator, DefaultThumbnailGenerator>();
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();
