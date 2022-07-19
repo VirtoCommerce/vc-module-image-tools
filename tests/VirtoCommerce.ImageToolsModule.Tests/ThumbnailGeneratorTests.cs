@@ -7,8 +7,8 @@ using Moq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
+using VirtoCommerce.ImageTools.ImageAbstractions;
 using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
@@ -19,7 +19,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     {
 
         [Fact]
-        public async Task GenerateThumbnailsAsync_CancellationTokenNotNull_CancellationFired()
+        public Task GenerateThumbnailsAsync_CancellationTokenNotNull_CancellationFired()
         {
             var options = new List<ThumbnailOption>();
             var token = new CancellationToken(true);
@@ -29,7 +29,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             var mockResizer = new Mock<IImageResizer>();            
 
             var target = new DefaultThumbnailGenerator(mockStorage.Object, mockResizer.Object, Mock.Of<ILogger<DefaultThumbnailGenerator>>());
-            await Assert.ThrowsAsync<OperationCanceledException>(async () => await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, tokenWrapper));
+            return Assert.ThrowsAsync<OperationCanceledException>(async () => await target.GenerateThumbnailsAsync("http://pathToFile.bmp", "dest", options, tokenWrapper));
         }
 
         [Fact]

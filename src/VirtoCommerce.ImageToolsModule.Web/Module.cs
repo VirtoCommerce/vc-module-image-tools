@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.ImageTools.ImageAbstractions;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
@@ -49,8 +50,8 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailTaskSearchService, ThumbnailTaskSearchService>();
             serviceCollection.AddTransient<IThumbnailTaskService, ThumbnailTaskService>();
 
-            serviceCollection.AddTransient<IImageResizer, ImageResizer>();
-            serviceCollection.AddTransient<IImageService, ImageService>();
+            serviceCollection.AddTransient<IImageResizer, DefaultImageResizer>();
+            serviceCollection.AddTransient<IImageService, DefaultImageService>();
             serviceCollection.AddTransient<IThumbnailGenerator, DefaultThumbnailGenerator>();
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();

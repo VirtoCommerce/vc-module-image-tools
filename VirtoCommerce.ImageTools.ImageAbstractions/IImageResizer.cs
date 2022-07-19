@@ -1,8 +1,7 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using VirtoCommerce.ImageToolsModule.Core.Models;
 
-namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
     public interface IImageResizer
     {

@@ -1,20 +1,15 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.AssetsModule.Core.Assets;
-using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
-namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
-    public class ImageService : IImageService
+    public class DefaultImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
-        public ImageService(IBlobStorageProvider storageProvider)
+        public DefaultImageService(IBlobStorageProvider storageProvider)
         {
             _storageProvider = storageProvider;
         }
@@ -39,8 +34,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             }
             catch (Exception)
             {
-                format = null;
-                return Task.FromResult<Image<Rgba32>>(null);
+                format = null!;
+                return Task.FromResult<Image<Rgba32>>(null!);
             }
         }
 

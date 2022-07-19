@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
-namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
     /// <summary>
     /// Image resize library
     /// </summary>
-    public class ImageResizer : IImageResizer
+    public class DefaultImageResizer : IImageResizer
     {
         /// <summary>
         /// Scale image by given percent
@@ -141,7 +137,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        private AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
+        private static AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
         {
             var ancorPositionMap = new Dictionary<AnchorPosition, AnchorPositionMode>
             {
