@@ -62,8 +62,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             option.Name = Name;
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(ResizeMethod, Core.Models.ResizeMethod.Crop);
-            option.AnchorPosition = EnumUtility.SafeParse(AnchorPosition, Core.Models.AnchorPosition.Center);
-            option.JpegQuality = EnumUtility.SafeParse(JpegQuality, Core.Models.JpegQuality.High);
+            option.AnchorPosition = EnumUtility.SafeParse(AnchorPosition, ImageTools.ImageAbstractions.AnchorPosition.Center);
+            option.JpegQuality = EnumUtility.SafeParse(JpegQuality, ImageTools.ImageAbstractions.JpegQuality.High);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;

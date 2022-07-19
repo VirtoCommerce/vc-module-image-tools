@@ -1,4 +1,4 @@
-namespace VirtoCommerce.ImageToolsModule.Core.Models
+namespace VirtoCommerce.ImageTools.ImageAbstractions
 {
     public enum JpegQuality
     {
