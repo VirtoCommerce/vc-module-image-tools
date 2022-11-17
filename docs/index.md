@@ -136,4 +136,4 @@ You can specify an anchor to change cropping area: TopLeft, TopCenter, TopRight,
 
 ## Available resources
 
-* API client documentation  https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.ImageTools
+* API client documentation: https://virtocommerce.com/request-demo
