@@ -15,7 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageToolsModule.Web", "src\VirtoCommerce.ImageToolsModule.Web\VirtoCommerce.ImageToolsModule.Web.csproj", "{5B994549-519B-4B80-A3F7-7B04B81E7B2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageTools.ImageAbstractions", "VirtoCommerce.ImageTools.ImageAbstractions\VirtoCommerce.ImageTools.ImageAbstractions.csproj", "{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.ImageTools.ImageAbstractions", "VirtoCommerce.ImageTools.ImageAbstractions\VirtoCommerce.ImageTools.ImageAbstractions.csproj", "{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Data.SqlServer", "src\VirtoCommerce.ImageToolsModule.Data.SqlServer\VirtoCommerce.ImageToolsModule.Data.SqlServer.csproj", "{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Data.PostgreSql", "src\VirtoCommerce.ImageToolsModule.Data.PostgreSql\VirtoCommerce.ImageToolsModule.Data.PostgreSql.csproj", "{85D56F55-2A26-47C7-8778-9E4352AA89CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ImageToolsModule.Data.MySql", "src\VirtoCommerce.ImageToolsModule.Data.MySql\VirtoCommerce.ImageToolsModule.Data.MySql.csproj", "{B5B304BD-3A9E-4487-B2B2-C5202386F733}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +49,18 @@ Global
 		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85D56F55-2A26-47C7-8778-9E4352AA89CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85D56F55-2A26-47C7-8778-9E4352AA89CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85D56F55-2A26-47C7-8778-9E4352AA89CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85D56F55-2A26-47C7-8778-9E4352AA89CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B304BD-3A9E-4487-B2B2-C5202386F733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B304BD-3A9E-4487-B2B2-C5202386F733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B304BD-3A9E-4487-B2B2-C5202386F733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B304BD-3A9E-4487-B2B2-C5202386F733}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +71,9 @@ Global
 		{5F4E2885-A052-4883-8AFC-C3CA6AC96DF6} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 		{5B994549-519B-4B80-A3F7-7B04B81E7B2A} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 		{CF84A8E5-F55E-4BAF-9C1B-D4BCD2BCF465} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
+		{03B1E4C0-5CD7-468B-821F-C801EF4EA3CF} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
+		{85D56F55-2A26-47C7-8778-9E4352AA89CE} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
+		{B5B304BD-3A9E-4487-B2B2-C5202386F733} = {C742D8DA-3EDD-4191-BBCF-2BD2AA640320}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F759764-AF55-423C-9E17-6BF99422F7AC}
