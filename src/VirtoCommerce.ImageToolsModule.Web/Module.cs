@@ -14,8 +14,11 @@ using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ExportImport;
 using VirtoCommerce.ImageToolsModule.Data.Models;
+using VirtoCommerce.ImageToolsModule.Data.MySql;
+using VirtoCommerce.ImageToolsModule.Data.PostgreSql;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.ImageToolsModule.Data.SqlServer;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Core.Common;
@@ -29,16 +32,31 @@ using VirtoCommerce.Platform.Hangfire.Extensions;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
-    public class Module : IModule, IExportSupport, IImportSupport
+    public class Module : IModule, IExportSupport, IImportSupport, IHasConfiguration
     {
         public ManifestModuleInfo ModuleInfo { get; set; }
         private IApplicationBuilder _appBuilder;
+        public IConfiguration Configuration { get; set; }
+
         public void Initialize(IServiceCollection serviceCollection)
         {
             serviceCollection.AddDbContext<ThumbnailDbContext>((provider, options) =>
             {
-                var configuration = provider.GetRequiredService<IConfiguration>();
-                options.UseSqlServer(configuration.GetConnectionString(ModuleInfo.Id) ?? configuration.GetConnectionString("VirtoCommerce"));
+                var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+                var connectionString = Configuration.GetConnectionString(ModuleInfo.Id) ?? Configuration.GetConnectionString("VirtoCommerce");
+
+                switch (databaseProvider)
+                {
+                    case "MySql":
+                        options.UseMySqlDatabase(connectionString);
+                        break;
+                    case "PostgreSql":
+                        options.UsePostgreSqlDatabase(connectionString);
+                        break;
+                    default:
+                        options.UseSqlServerDatabase(connectionString);
+                        break;
+                }
             });
 
             serviceCollection.AddTransient<IThumbnailRepository, ThumbnailRepository>();
@@ -90,9 +108,13 @@ namespace VirtoCommerce.ImageToolsModule.Web
             //Force migrations
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
             {
+                var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+
                 var thumbnailDbContext = serviceScope.ServiceProvider.GetRequiredService<ThumbnailDbContext>();
-                thumbnailDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName(ModuleInfo.Id));
-                thumbnailDbContext.Database.EnsureCreated();
+                if (databaseProvider == "SqlServer")
+                {
+                    thumbnailDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName(ModuleInfo.Id));
+                }
                 thumbnailDbContext.Database.Migrate();
             }
         }

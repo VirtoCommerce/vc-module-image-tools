@@ -1,3 +1,4 @@
+using System.Reflection;
 using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.ImageToolsModule.Data.Models;
@@ -58,6 +59,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
             #endregion
 
             base.OnModelCreating(modelBuilder);
+
+            // Allows configuration for an entity type for different database types.
+            // Applies configuration from all <see cref="IEntityTypeConfiguration{TEntity}" in VirtoCommerce.ImageToolsModule.Data.XXX project. /> 
+            switch (this.Database.ProviderName)
+            {
+                case "Pomelo.EntityFrameworkCore.MySql":
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.ImageToolsModule.Data.MySql"));
+                    break;
+                case "Npgsql.EntityFrameworkCore.PostgreSQL":
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.ImageToolsModule.Data.PostgreSql"));
+                    break;
+                case "Microsoft.EntityFrameworkCore.SqlServer":
+                    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.ImageToolsModule.Data.SqlServer"));
+                    break;
+            }
+
         }
     }
 }

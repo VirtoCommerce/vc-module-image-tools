@@ -134,6 +134,3 @@ In this case will generate thumbnail with width = 160 and height = 160. The thum
 
 You can specify an anchor to change cropping area: TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight.  Url of thumbnail will receive the suffix by alias value, here is "topleft".
 
-## Available resources
-
-* API client documentation  https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.ImageTools
