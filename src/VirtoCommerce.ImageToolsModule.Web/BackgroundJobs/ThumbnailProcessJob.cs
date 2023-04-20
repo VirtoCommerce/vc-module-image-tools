@@ -31,7 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         }
 
         /// <summary>
-        /// Thumbnail generation process
+        /// Run set of thumbnail tasks by TaskIds.
         /// </summary>
         /// <param name="generateRequest"></param>
         /// <param name="notifyEvent"></param>
@@ -72,13 +72,16 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             finally
             {
                 notifyEvent.Finished = DateTime.UtcNow;
-                notifyEvent.Description = "Process finished" + (notifyEvent.Errors.Any() ? " with errors" : " successfully");
+                if (notifyEvent.Errors.Any())
+                    notifyEvent.Description = $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention.";
+                else
+                    notifyEvent.Description = $"Thumbnails generated successfully!";
                 _pushNotifier.Send(notifyEvent);
             }
         }
 
         /// <summary>
-        /// Find all tasks and run them
+        /// Run all thumbnails tasks.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -116,17 +119,18 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                         await _taskService.SaveChangesAsync(oneTaskArray);
                     }
 
-                    var progressInfo = new ThumbnailTaskProgress { Message = "Finished generating thumbnails!" };
+                    var progressInfo = new ThumbnailTaskProgress { Message = "Thumbnails generated successfully!" };
                     progressCallback(progressInfo);
 
                 }
             }
             catch (DistributedLockTimeoutException)
             {
+                var errorMsg = "A thumbnail generation process is currently running. Please wait until the process is complete before attempting to start another one.";
                 var progressInfo = new ThumbnailTaskProgress
                 {
-                    Message = "Indexation is already in progress.",
-                    Errors = new List<string> { "Indexation is already in progress." }
+                    Message = errorMsg,
+                    Errors = new List<string> { errorMsg }
                 };
                 progressCallback(progressInfo);
             }
