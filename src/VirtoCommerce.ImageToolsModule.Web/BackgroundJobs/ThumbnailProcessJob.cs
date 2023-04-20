@@ -121,7 +121,6 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 
                     var progressInfo = new ThumbnailTaskProgress { Message = "Thumbnails generated successfully!" };
                     progressCallback(progressInfo);
-
                 }
             }
             catch (DistributedLockTimeoutException)
