@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
+using Hangfire.Storage;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
@@ -30,7 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         }
 
         /// <summary>
-        /// Thumbnail generation process
+        /// Run set of thumbnail tasks by TaskIds.
         /// </summary>
         /// <param name="generateRequest"></param>
         /// <param name="notifyEvent"></param>
@@ -71,17 +72,21 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             finally
             {
                 notifyEvent.Finished = DateTime.UtcNow;
-                notifyEvent.Description = "Process finished" + (notifyEvent.Errors.Any() ? " with errors" : " successfully");
+                if (notifyEvent.Errors.Any())
+                    notifyEvent.Description = $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention.";
+                else
+                    notifyEvent.Description = $"Thumbnails generated successfully!";
                 _pushNotifier.Send(notifyEvent);
             }
         }
 
         /// <summary>
-        /// Find all tasks and run them
+        /// Run all thumbnails tasks.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
+        [DisableConcurrentExecution(10)]
         public async Task ProcessAll(IJobCancellationToken cancellationToken)
         {
             var thumbnailTasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria() { Take = 0, Skip = 0 });
@@ -94,24 +99,40 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 
         private async Task PerformGeneration(IEnumerable<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, IJobCancellationToken cancellationToken)
         {
-            var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-
-            foreach (var task in tasks)
+            try
             {
-                // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
-                var oneTaskArray = new[] { task };
-                //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
-                var runTime = DateTime.UtcNow;
+                using (JobStorage.Current.GetConnection().AcquireDistributedLock("ThumbnailProcessJob", TimeSpan.Zero))
+                {
+                    var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
-                await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
+                    foreach (var task in tasks)
+                    {
+                        // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
+                        var oneTaskArray = new[] { task };
+                        //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
+                        var runTime = DateTime.UtcNow;
 
-                task.LastRun = runTime;
+                        await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
 
-                await _taskService.SaveChangesAsync(oneTaskArray);
+                        task.LastRun = runTime;
+
+                        await _taskService.SaveChangesAsync(oneTaskArray);
+                    }
+
+                    var progressInfo = new ThumbnailTaskProgress { Message = "Thumbnails generated successfully!" };
+                    progressCallback(progressInfo);
+                }
             }
-
-            var progressInfo = new ThumbnailTaskProgress { Message = "Finished generating thumbnails!" };
-            progressCallback(progressInfo);
+            catch (DistributedLockTimeoutException)
+            {
+                var errorMsg = "A thumbnail generation process is currently running. Please wait until the process is complete before attempting to start another one.";
+                var progressInfo = new ThumbnailTaskProgress
+                {
+                    Message = errorMsg,
+                    Errors = new List<string> { errorMsg }
+                };
+                progressCallback(progressInfo);
+            }
         }
     }
 }

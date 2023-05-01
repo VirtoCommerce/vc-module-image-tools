@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <id>VirtoCommerce.ImageTools</id>
   <version>3.207.0</version>
   <version-tag />
   <platformVersion>3.200.0</platformVersion>
-  <title>Image tools module</title>
-  <description>Image tools helps to automate image transformation procedures such as resizing and cropping</description>
+  <title>Image Tools</title>
+  <description>Image tools helps to automate thumbnail generation procedures with resizing and cropping</description>
   <authors>
     <author>Konstantin Savosteev</author>
     <author>Nikolay Prohorov</author>
