@@ -2,15 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
-using Hangfire.Server;
-using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
-using VirtoCommerce.ImageToolsModule.Core.Services;
-using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.Model;
-using VirtoCommerce.Platform.Core.PushNotifications;
-using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 {
@@ -30,7 +21,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         }
 
         /// <summary>
-        /// Thumbnail generation process
+        /// Run set of thumbnail tasks by TaskIds.
         /// </summary>
         /// <param name="generateRequest"></param>
         /// <param name="notifyEvent"></param>
@@ -79,25 +70,22 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             finally
             {
                 notifyEvent.Finished = DateTime.UtcNow;
-                notifyEvent.Description = "Process finished" + (notifyEvent.Errors.Any() ? " with errors" : " successfully");
+                if (notifyEvent.Errors.Any())
+                    notifyEvent.Description = $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention.";
+                else
+                    notifyEvent.Description = $"Thumbnails generated successfully!";
                 _pushNotifier.Send(notifyEvent);
             }
         }
 
         /// <summary>
-        /// Find all tasks and run them
+        /// Run all thumbnails tasks.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [DisableConcurrentExecution(10)]
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        // Why attributes above are set. 
-        // "DisableConcurrentExecutionAttribute" should have short timeout, because this attribute implemented by following manner: newly started job falls into "processing" state immediately.
-        // Then it tries to receive job lock during timeout. If the lock received, the job starts payload.
-        // When the job is awaiting desired timeout for lock release, it stucks in "processing" anyway. (Therefore, you should not to set long timeouts (like 24*60*60), this will cause a lot of stucked jobs and performance degradation.)
-        // Then, if timeout is over and the lock NOT acquired, the job falls into "scheduled" state (this is default fail-retry scenario).
-        // We can change this default behavior using "AutomaticRetryAttribute". This allows to manage retries and reject jobs in case of retries exhaust.
-        // In our case, the job, awaiting for previous the same job more than 10 seconds, will fall into "deleted" state with no retries.
+        [DisableConcurrentExecution(10)]
         public async Task ProcessAll(IJobCancellationToken cancellationToken)
         {
             var thumbnailTasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria() { Take = 0, Skip = 0 });
@@ -110,24 +98,40 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 
         private async Task PerformGeneration(IEnumerable<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, IJobCancellationToken cancellationToken)
         {
-            var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
-
-            foreach (var task in tasks)
+            try
             {
-                // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
-                var oneTaskArray = new[] { task };
-                //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
-                var runTime = DateTime.UtcNow;
+                using (JobStorage.Current.GetConnection().AcquireDistributedLock("ThumbnailProcessJob", TimeSpan.Zero))
+                {
+                    var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
-                await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
+                    foreach (var task in tasks)
+                    {
+                        // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
+                        var oneTaskArray = new[] { task };
+                        //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
+                        var runTime = DateTime.UtcNow;
 
-                task.LastRun = runTime;
+                        await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
 
-                await _taskService.SaveChangesAsync(oneTaskArray);
+                        task.LastRun = runTime;
+
+                        await _taskService.SaveChangesAsync(oneTaskArray);
+                    }
+
+                    var progressInfo = new ThumbnailTaskProgress { Message = "Thumbnails generated successfully!" };
+                    progressCallback(progressInfo);
+                }
             }
-
-            var progressInfo = new ThumbnailTaskProgress { Message = "Finished generating thumbnails!" };
-            progressCallback(progressInfo);
+            catch (DistributedLockTimeoutException)
+            {
+                var errorMsg = "A thumbnail generation process is currently running. Please wait until the process is complete before attempting to start another one.";
+                var progressInfo = new ThumbnailTaskProgress
+                {
+                    Message = errorMsg,
+                    Errors = new List<string> { errorMsg }
+                };
+                progressCallback(progressInfo);
+            }
         }
     }
 }
