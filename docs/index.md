@@ -1,6 +1,6 @@
 # Overview
 
-VirtoCommerce.ImageTools module represents a functionality that helps working with images. This module allows generating thumbnails, which can be used for upload instead of the original images.
+Virto Commerce Image Tools module represents a functionality that helps working with images. This module allows generating thumbnails, which can be used on web sites instead of the original images.
 
 ## Key features
 
