@@ -2,6 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.Server;
+using Hangfire.Storage;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
+using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Web.Model;
+using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 {
@@ -27,15 +37,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         /// <param name="notifyEvent"></param>
         /// <param name="cancellationToken">Hangfire sets the cancellation token</param>
         /// <param name="context">Hangfire sets the process context</param>
-        [DisableConcurrentExecution(10)]
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        // Why attributes above are set. 
-        // "DisableConcurrentExecutionAttribute" should have short timeout, because this attribute implemented by following manner: newly started job falls into "processing" state immediately.
-        // Then it tries to receive job lock during timeout. If the lock received, the job starts payload.
-        // When the job is awaiting desired timeout for lock release, it stucks in "processing" anyway. (Therefore, you should not to set long timeouts (like 24*60*60), this will cause a lot of stucked jobs and performance degradation.)
-        // Then, if timeout is over and the lock NOT acquired, the job falls into "scheduled" state (this is default fail-retry scenario).
-        // We can change this default behavior using "AutomaticRetryAttribute". This allows to manage retries and reject jobs in case of retries exhaust.
-        // In our case, the job, awaiting for previous the same job more than 10 seconds, will fall into "deleted" state with no retries.
         public async Task Process(ThumbnailsTaskRunRequest generateRequest, ThumbnailProcessNotification notifyEvent, IJobCancellationToken cancellationToken, PerformContext context)
         {
             try
@@ -83,7 +85,6 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [DisableConcurrentExecution(10)]
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         [DisableConcurrentExecution(10)]
         public async Task ProcessAll(IJobCancellationToken cancellationToken)
