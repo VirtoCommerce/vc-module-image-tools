@@ -5,12 +5,12 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using VirtoCommerce.Platform.Caching;
-using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -48,7 +48,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     x => Task.FromResult(x.EndsWith(OptionSuffix) ? null : new BlobInfo() { })
                 );
 
-            ThumbnailOptionSearchServiceMock.Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>()))
+            ThumbnailOptionSearchServiceMock.Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>(), It.IsAny<bool>()))
                 .ReturnsAsync(new ThumbnailOptionSearchResult()
                 {
                     TotalCount = 1,

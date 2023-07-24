@@ -17,12 +17,16 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
 {
     public class ThumbnailProcessJob
     {
-        private readonly IThumbnailGenerationProcessor _thumbnailProcessor;
         private readonly IPushNotificationManager _pushNotifier;
+        private readonly IThumbnailGenerationProcessor _thumbnailProcessor;
         private readonly IThumbnailTaskService _taskService;
         private readonly IThumbnailTaskSearchService _taskSearchService;
 
-        public ThumbnailProcessJob(IPushNotificationManager pushNotifier, IThumbnailGenerationProcessor thumbnailProcessor, IThumbnailTaskService taskService, IThumbnailTaskSearchService taskSearchService)
+        public ThumbnailProcessJob(
+            IPushNotificationManager pushNotifier,
+            IThumbnailGenerationProcessor thumbnailProcessor,
+            IThumbnailTaskService taskService,
+            IThumbnailTaskSearchService taskSearchService)
         {
             _pushNotifier = pushNotifier;
             _thumbnailProcessor = thumbnailProcessor;
@@ -55,7 +59,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
                 };
 
                 //wrap token 
-                var tasks = await _taskService.GetByIdsAsync(generateRequest.TaskIds);
+                var tasks = await _taskService.GetAsync(generateRequest.TaskIds);
 
                 await PerformGeneration(tasks, generateRequest.Regenerate, progressCallback, cancellationToken);
             }
@@ -72,11 +76,12 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             finally
             {
                 notifyEvent.Finished = DateTime.UtcNow;
-                if (notifyEvent.Errors.Any())
-                    notifyEvent.Description = $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention.";
-                else
-                    notifyEvent.Description = $"Thumbnails generated successfully!";
-                _pushNotifier.Send(notifyEvent);
+
+                notifyEvent.Description = notifyEvent.Errors.Any()
+                    ? $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention."
+                    : "Thumbnails generated successfully!";
+
+                await _pushNotifier.SendAsync(notifyEvent);
             }
         }
 
@@ -89,10 +94,10 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         [DisableConcurrentExecution(10)]
         public async Task ProcessAll(IJobCancellationToken cancellationToken)
         {
-            var thumbnailTasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria() { Take = 0, Skip = 0 });
-            var tasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria() { Take = thumbnailTasks.TotalCount, Skip = 0 });
+            var thumbnailTasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria { Take = 0, Skip = 0 });
+            var tasks = await _taskSearchService.SearchAsync(new ThumbnailTaskSearchCriteria { Take = thumbnailTasks.TotalCount, Skip = 0 });
 
-            Action<ThumbnailTaskProgress> progressCallback = x => { };
+            Action<ThumbnailTaskProgress> progressCallback = _ => { };
 
             await PerformGeneration(tasks.Results, false, progressCallback, cancellationToken);
         }

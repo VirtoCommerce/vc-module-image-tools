@@ -19,7 +19,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         private readonly IImagesChangesProvider _imageChangesProvider;
         private readonly ILogger<ThumbnailGenerationProcessor> _logger;
 
-        public ThumbnailGenerationProcessor(IThumbnailGenerator generator,
+        public ThumbnailGenerationProcessor(
+            IThumbnailGenerator generator,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider,
             ILogger<ThumbnailGenerationProcessor> logger)
@@ -38,22 +39,24 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 progressCallback(progressInfo);
 
-                var pageSize = _settingsManager.GetValue(ModuleConstants.Settings.General.ProcessBatchSize.Name, 50);
+                var pageSize = await _settingsManager.GetValueAsync<int>(ModuleConstants.Settings.General.ProcessBatchSize);
                 foreach (var task in tasks)
-                {                    
+                {
                     progressInfo.Message = $"Processing task {task.Name}...";
                     progressCallback(progressInfo);
 
                     var changes = await _imageChangesProvider.GetNextChangesBatch(task, GetChangesSinceDate(task, regenerate), 0, int.MaxValue /*skip paging because no difference inside*/, token);
 
-                    progressInfo.TotalCount = changes.Length;
+                    progressInfo.TotalCount = changes.Count;
 
                     if (!changes.Any())
+                    {
                         break;
+                    }
 
                     // ! Note: It was spend a lot of time considering replacement the next foreach to a Parallel.ForEach.
                     // Reasons it wasn't done:
-                    // 1. High memory consumption and potential memory buggy leaks in ArrayPools (used inside of BlobClient and SixLabours) with multithreading.
+                    // 1. High memory consumption and potential memory buggy leaks in ArrayPools (used inside of BlobClient and SixLabours) with multi-threading.
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
                     foreach (var fileChange in changes)
                     {

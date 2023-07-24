@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 
-namespace VirtoCommerce.ImageTools.ImageAbstractions
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     /// <summary>
     /// Image resize library
@@ -113,10 +117,7 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
 
         protected virtual Image<Rgba32> Transform(Image<Rgba32> original, Rectangle source, Rectangle destination, Size canvasSize, Rgba32? backgroundColor)
         {
-            if (!backgroundColor.HasValue)
-            {
-                backgroundColor = Color.Transparent;
-            }
+            backgroundColor ??= Color.Transparent;
 
             var result = new Image<Rgba32>(new Configuration(), canvasSize.Width, canvasSize.Height, backgroundColor.Value);
             result.Metadata.HorizontalResolution = original.Metadata.HorizontalResolution;
@@ -131,7 +132,7 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
 
             result.Mutate(ctx =>
             {
-                ctx.DrawImage(imgToDraw, destination.Location, new GraphicsOptions() { Antialias = true });
+                ctx.DrawImage(imgToDraw, destination.Location, new GraphicsOptions { Antialias = true });
             });
 
             return result;
@@ -139,7 +140,7 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
 
         private static AnchorPositionMode GetAnchorPositionMode(AnchorPosition anchorPosition)
         {
-            var ancorPositionMap = new Dictionary<AnchorPosition, AnchorPositionMode>
+            var anchorPositionMap = new Dictionary<AnchorPosition, AnchorPositionMode>
             {
                 { AnchorPosition.TopLeft, AnchorPositionMode.TopLeft },
                 { AnchorPosition.TopCenter, AnchorPositionMode.Top},
@@ -151,11 +152,11 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
                 { AnchorPosition.BottomCenter,AnchorPositionMode.Bottom },
                 { AnchorPosition.BottomRight, AnchorPositionMode.BottomRight}
             };
-            if (!ancorPositionMap.ContainsKey(anchorPosition))
+            if (!anchorPositionMap.ContainsKey(anchorPosition))
             {
                 throw new ArgumentOutOfRangeException($"AnchorPosition {anchorPosition} not supported.");
             }
-            return ancorPositionMap[anchorPosition];
+            return anchorPositionMap[anchorPosition];
         }
     }
 }

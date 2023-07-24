@@ -1,20 +1,24 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.AssetsModule.Core.Assets;
+using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 
-namespace VirtoCommerce.ImageTools.ImageAbstractions
+namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     public class DefaultImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
+
         public DefaultImageService(IBlobStorageProvider storageProvider)
         {
             _storageProvider = storageProvider;
         }
-
-        #region Implementation of IImageService
 
         /// <summary>
         /// Load to Image from blob.
@@ -26,11 +30,9 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
         {
             try
             {
-                using (var blobStream = _storageProvider.OpenRead(imageUrl))
-                {
-                    var result = Image.Load<Rgba32>(blobStream, out format);
-                    return Task.FromResult(result);
-                }
+                using var blobStream = _storageProvider.OpenRead(imageUrl);
+                var result = Image.Load<Rgba32>(blobStream, out format);
+                return Task.FromResult(result);
             }
             catch (Exception)
             {
@@ -49,27 +51,25 @@ namespace VirtoCommerce.ImageTools.ImageAbstractions
         /// <param name="jpegQuality">Target image quality.</param>
         public virtual async Task SaveImageAsync(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality)
         {
-            using (var blobStream = _storageProvider.OpenWrite(imageUrl))
-            using (var stream = new MemoryStream())
+            await using var blobStream = await _storageProvider.OpenWriteAsync(imageUrl);
+            using var stream = new MemoryStream();
+
+            if (format.DefaultMimeType == "image/jpeg")
             {
-                if (format.DefaultMimeType == "image/jpeg")
+                var options = new JpegEncoder
                 {
-                    var options = new JpegEncoder
-                    {
-                        Quality = (int)jpegQuality
-                    };
+                    Quality = (int)jpegQuality
+                };
 
-                    image.Save(stream, options);
-                }
-                else
-                {
-                    image.Save(stream, format);
-                }
-                stream.Position = 0;
-                await stream.CopyToAsync(blobStream);
+                await image.SaveAsync(stream, options);
             }
-        }
+            else
+            {
+                await image.SaveAsync(stream, format);
+            }
 
-        #endregion
+            stream.Position = 0;
+            await stream.CopyToAsync(blobStream);
+        }
     }
 }
