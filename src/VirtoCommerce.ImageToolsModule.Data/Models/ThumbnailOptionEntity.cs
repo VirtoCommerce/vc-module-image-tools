@@ -2,10 +2,11 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Domain;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
-    public class ThumbnailOptionEntity : AuditableEntity
+    public class ThumbnailOptionEntity : AuditableEntity, IDataEntity<ThumbnailOptionEntity, ThumbnailOption>
     {
         [Required]
         [StringLength(1024)]
@@ -33,7 +34,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public virtual ThumbnailOptionEntity FromModel(ThumbnailOption option, PrimaryKeyResolvingMap pkMap)
         {
-            if (option == null) throw new ArgumentNullException(nameof(option));
+            if (option == null)
+            {
+                throw new ArgumentNullException(nameof(option));
+            }
 
             pkMap.AddPair(option, this);
 
@@ -56,14 +60,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public virtual ThumbnailOption ToModel(ThumbnailOption option)
         {
-            if (option == null) throw new ArgumentNullException(nameof(option));
+            if (option == null)
+            {
+                throw new ArgumentNullException(nameof(option));
+            }
 
             option.Id = Id;
             option.Name = Name;
             option.FileSuffix = FileSuffix;
             option.ResizeMethod = EnumUtility.SafeParse(ResizeMethod, Core.Models.ResizeMethod.Crop);
-            option.AnchorPosition = EnumUtility.SafeParse(AnchorPosition, ImageTools.ImageAbstractions.AnchorPosition.Center);
-            option.JpegQuality = EnumUtility.SafeParse(JpegQuality, ImageTools.ImageAbstractions.JpegQuality.High);
+            option.AnchorPosition = EnumUtility.SafeParse(AnchorPosition, Core.Models.AnchorPosition.Center);
+            option.JpegQuality = EnumUtility.SafeParse(JpegQuality, Core.Models.JpegQuality.High);
             option.Width = Width;
             option.Height = Height;
             option.BackgroundColor = BackgroundColor;

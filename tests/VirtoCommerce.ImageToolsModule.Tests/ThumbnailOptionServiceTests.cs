@@ -1,14 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Domain;
+using VirtoCommerce.Platform.Core.Events;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -16,90 +20,49 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     public class ThumbnailOptionServiceTests
     {
         [Fact]
-        public void GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailOption()
+        public async Task GetByIds_ArrayOfIds_ReturnsArrayOfThumbnailOption()
         {
-            var optionEntites = ThumbnailOptionEntitesDataSource.ToArray();
+            var entities = ThumbnailOptionEntitiesDataSource.ToList();
+            var ids = entities.Select(t => t.Id).ToList();
+            var expectedModels = entities.Select(t => t.ToModel(new ThumbnailOption())).ToList();
+            var service = GetThumbnailOptionService(entities);
 
-            var ids = optionEntites.Select(t => t.Id).ToArray();
-            var tasks = optionEntites.Select(t => t.ToModel(new ThumbnailOption())).ToArray();
+            var result = await service.GetAsync(ids);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsIn<string[]>(ids)))
-                .ReturnsAsync(optionEntites.Where(o => ids.Contains(o.Id)).ToArray());
-
-            var sut = new ThumbnailOptionService(() => mock.Object);
-            var result = sut.GetByIdsAsync(ids);
-
-            Assert.Equal(result.Result.Length, tasks.Length);
+            Assert.Equal(expectedModels, result);
         }
 
         [Fact]
         public async Task Delete_ThumbnailOptionIds_DeletedThumbnailOptionWithPassedIds()
         {
-            var optionEntites = ThumbnailOptionEntitesDataSource.ToList();
+            var entities = ThumbnailOptionEntitiesDataSource.ToList();
+            var ids = entities.Select(t => t.Id).ToList();
+            var service = GetThumbnailOptionService(entities);
 
-            var ids = optionEntites.Select(t => t.Id).ToArray();
+            await service.DeleteAsync(ids);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(r => r.RemoveThumbnailOptionsByIds(It.IsIn<string[]>(ids)))
-                .Callback((string[] arr) =>
-                {
-                    var entities = optionEntites.Where(e => arr.Contains(e.Id)).ToList();
-                    foreach (var entity in entities)
-                    {
-                        optionEntites.Remove(entity);
-                    }
-                })
-                .Returns(Task.CompletedTask);
-
-            var sut = new ThumbnailOptionService(() => mock.Object);
-            await sut.RemoveByIdsAsync(ids);
-
-            Assert.Empty(optionEntites);
+            Assert.Empty(entities);
         }
 
         [Fact]
         public async Task SaveChanges_ArrayOfThumbnailOptions_ThumbnailOptionsUpdatedAsync()
         {
-            var optionEntities = ThumbnailOptionEntitesDataSource.ToArray();
-            var options = ThumbnailOptionDataSource.ToArray();
+            var entities = ThumbnailOptionEntitiesDataSource.ToList();
+            var options = ThumbnailOptionDataSource.ToList();
+            var service = GetThumbnailOptionService(entities);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsAny<string[]>()))
-                .ReturnsAsync((string[] ids) =>
-                {
-                    var result = optionEntities.Where(t => ids.Contains(t.Id)).ToArray();
-                    return result;
-                });
+            await service.SaveChangesAsync(options);
 
-            var sut = new ThumbnailOptionService(() => mock.Object);
-            await sut.SaveOrUpdateAsync(options);
-
-            Assert.Contains(optionEntities, o => o.Name == "New Name");
+            Assert.Contains(entities, o => o.Name == "New Name");
         }
 
         [Fact]
         public async Task SaveChanges_ArrayOfThumbnailOptions_NewThumbnailOptionsSaved()
         {
-            var optionEntities = ThumbnailOptionEntitesDataSource.ToList();
+            var entities = ThumbnailOptionEntitiesDataSource.ToList();
+            var service = GetThumbnailOptionService(entities);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(x => x.Add(It.IsAny<ThumbnailOptionEntity>()))
-                .Callback((ThumbnailOptionEntity entity) =>
-                {
-                    optionEntities.Add(entity);
-                });
-            mock.Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsAny<string[]>()))
-                .ReturnsAsync((string[] ids) =>
-                {
-                    return optionEntities.Where(t => ids.Contains(t.Id)).ToArray();
-                });
-
-            var sut = new ThumbnailOptionService(() => mock.Object);
-            await sut.SaveOrUpdateAsync(new[]
+            await service.SaveChangesAsync(new[]
             {
                 new ThumbnailOption
                 {
@@ -107,10 +70,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 }
             });
 
-            Assert.Contains(optionEntities, x => x.Id == "NewOptionId");
+            Assert.Contains(entities, x => x.Id == "NewOptionId");
         }
 
-        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitesDataSource
+
+        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitiesDataSource
         {
             get
             {
@@ -128,6 +92,32 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 yield return new ThumbnailOption { Id = "Option 2", Name = "New Name" };
                 yield return new ThumbnailOption { Id = "Option 3", Name = "New Name" };
             }
+        }
+
+        private static IThumbnailOptionService GetThumbnailOptionService(IList<ThumbnailOptionEntity> entities)
+        {
+            var repositoryMock = new Mock<IThumbnailRepository>();
+
+            repositoryMock
+                .SetupGet(x => x.UnitOfWork)
+                .Returns(new Mock<IUnitOfWork>().Object);
+
+            repositoryMock
+                .Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsAny<IList<string>>()))
+                .ReturnsAsync((IList<string> ids) => { return entities.Where(t => ids.Contains(t.Id)).ToList(); });
+
+            repositoryMock
+                .Setup(x => x.Add(It.IsAny<ThumbnailOptionEntity>()))
+                .Callback((ThumbnailOptionEntity entity) => { entities.Add(entity); });
+
+            repositoryMock
+                .Setup(x => x.Remove(It.IsAny<ThumbnailOptionEntity>()))
+                .Callback((ThumbnailOptionEntity entity) => { entities.Remove(entity); });
+
+            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
+
+            return new ThumbnailOptionService(() => repositoryMock.Object, platformMemoryCache, new Mock<IEventPublisher>().Object);
         }
     }
 }

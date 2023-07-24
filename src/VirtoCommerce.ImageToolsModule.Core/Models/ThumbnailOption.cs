@@ -1,5 +1,4 @@
 using System;
-using VirtoCommerce.ImageTools.ImageAbstractions;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Models
@@ -22,13 +21,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
 
         public JpegQuality JpegQuality { get; set; }
 
-        #region ICloneable members
 
         public virtual object Clone()
         {
-            return MemberwiseClone() as ThumbnailOption;
+            return (ThumbnailOption)MemberwiseClone();
         }
-
-        #endregion
     }
 }

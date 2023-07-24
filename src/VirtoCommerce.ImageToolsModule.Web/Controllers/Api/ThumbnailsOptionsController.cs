@@ -1,9 +1,9 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.Platform.Core.Common;
 using Permission = VirtoCommerce.ImageToolsModule.Core.ModuleConstants.Security.Permissions;
 
 namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
@@ -36,9 +36,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [Authorize(Permission.Create)]
-        public async Task<ActionResult<ThumbnailOption>> CreateThumbnailOption([FromBody]ThumbnailOption option)
+        public async Task<ActionResult<ThumbnailOption>> CreateThumbnailOption([FromBody] ThumbnailOption option)
         {
-            await _thumbnailOptionService.SaveOrUpdateAsync(new[] { option });
+            await _thumbnailOptionService.SaveChangesAsync(new[] { option });
             return Ok(option);
         }
 
@@ -52,7 +52,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [Authorize(Permission.Delete)]
         public async Task<ActionResult> DeleteThumbnailOption([FromQuery] string[] ids)
         {
-            await _thumbnailOptionService.RemoveByIdsAsync(ids);
+            await _thumbnailOptionService.DeleteAsync(ids);
             return Ok();
         }
 
@@ -64,10 +64,10 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpGet]
         [Route("{id}")]
         [Authorize(Permission.Read)]
-        public async Task<ActionResult<ThumbnailOption>> GetThumbnailOption([FromRoute]string id)
+        public async Task<ActionResult<ThumbnailOption>> GetThumbnailOption([FromRoute] string id)
         {
-            var options = await _thumbnailOptionService.GetByIdsAsync(new[] { id });
-            return Ok(options.FirstOrDefault());
+            var options = await _thumbnailOptionService.GetNoCloneAsync(id);
+            return Ok(options);
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("search")]
         [Authorize(Permission.Read)]
-        public async Task<ActionResult<ThumbnailOptionSearchResult>> SearchThumbnailOption([FromBody]ThumbnailOptionSearchCriteria criteria)
+        public async Task<ActionResult<ThumbnailOptionSearchResult>> SearchThumbnailOption([FromBody] ThumbnailOptionSearchCriteria criteria)
         {
-            var result = await _thumbnailOptionSearchService.SearchAsync(criteria);
+            var result = await _thumbnailOptionSearchService.SearchNoCloneAsync(criteria);
             return Ok(result);
         }
 
@@ -92,9 +92,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPut]
         [Route("")]
         [Authorize(Permission.Update)]
-        public async Task<ActionResult> UpdateThumbnailOption([FromBody]ThumbnailOption option)
+        public async Task<ActionResult> UpdateThumbnailOption([FromBody] ThumbnailOption option)
         {
-            await _thumbnailOptionService.SaveOrUpdateAsync(new[] { option });
+            await _thumbnailOptionService.SaveChangesAsync(new[] { option });
             return Ok();
         }
     }

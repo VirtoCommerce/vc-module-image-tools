@@ -1,14 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Domain;
+using VirtoCommerce.Platform.Core.Events;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -18,86 +22,47 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         [Fact]
         public async Task Delete_ThumbnailOptionIds_DeletedThumbnailTasksWithPassedIds()
         {
-            var taskEntities = ThumbnailTaskEntitysDataSource.ToList();
+            var entities = ThumbnailTaskEntityDataSource.ToList();
+            var ids = entities.Select(t => t.Id).ToArray();
+            var service = GetThumbnailTaskService(entities);
 
-            var ids = taskEntities.Select(t => t.Id).ToArray();
+            await service.DeleteAsync(ids);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(r => r.RemoveThumbnailTasksByIdsAsync(It.IsIn<string[]>(ids))).Callback(
-                (string[] arr) =>
-                {
-                    var entities = taskEntities.Where(e => arr.Contains(e.Id)).ToList();
-                    foreach (var entity in entities)
-                    {
-                        taskEntities.Remove(entity);
-                    }
-                })
-                .Returns(Task.CompletedTask);
-
-            var sut = new ThumbnailTaskService(() => mock.Object);
-            await sut.RemoveByIdsAsync(ids);
-
-            Assert.Empty(taskEntities);
+            Assert.Empty(entities);
         }
 
         [Fact]
-        public async Task GetByIds_ArrayOfIdis_ReturnsArrayOfThumbnailTasksWithPassedIds()
+        public async Task GetByIds_ArrayOfIds_ReturnsArrayOfThumbnailTasksWithPassedIds()
         {
-            var taskEntities = ThumbnailTaskEntitysDataSource.ToArray();
+            var entities = ThumbnailTaskEntityDataSource.ToArray();
+            var ids = entities.Select(t => t.Id).ToArray();
+            var expectedModels = entities.Select(t => t.ToModel(new ThumbnailTask())).ToArray();
+            var service = GetThumbnailTaskService(entities);
 
-            var ids = taskEntities.Select(t => t.Id).ToArray();
-            var tasks = taskEntities.Select(t => t.ToModel(new ThumbnailTask())).ToArray();
+            var result = await service.GetAsync(ids);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(r => r.GetThumbnailTasksByIdsAsync(It.IsIn<string[]>(ids)))
-                .ReturnsAsync(taskEntities.Where(t => ids.Contains(t.Id)).ToArray());
-
-            var sut = new ThumbnailTaskService(() => mock.Object);
-            var result = await sut.GetByIdsAsync(ids);
-
-            Assert.Equal(result, tasks);
+            Assert.Equal(expectedModels, result);
         }
 
         [Fact]
         public async Task SaveChanges_ArrayOfThumbnailTasks_ThumbnailTasksSaved()
         {
-            var taskEntities = new List<ThumbnailTaskEntity>();
+            var entities = new List<ThumbnailTaskEntity>();
+            var service = GetThumbnailTaskService(entities);
 
-            var mock = new Mock<IThumbnailRepository>();
-            mock.SetupGet(x => x.UnitOfWork).Returns(new Mock<IUnitOfWork>().Object);
-            mock.Setup(x => x.Add(It.IsAny<ThumbnailTaskEntity>()))
-                .Callback((ThumbnailTaskEntity entity) =>
-                {
-                    taskEntities.Add(entity);
-                });
-            mock.Setup(r => r.GetThumbnailTasksByIdsAsync(It.IsAny<string[]>()))
-                .ReturnsAsync((string[] ids) => { return taskEntities.Where(t => ids.Contains(t.Id)).ToArray(); });
-
-            var sut = new ThumbnailTaskService(() => mock.Object);
-            await sut.SaveChangesAsync(new[]
+            await service.SaveChangesAsync(new[]
             {
-                new ThumbnailTask()
+                new ThumbnailTask
                 {
                     Id = "NewTaskId"
                 }
             });
 
-            Assert.Contains(taskEntities, x => x.Id == "NewTaskId");
+            Assert.Contains(entities, x => x.Id == "NewTaskId");
         }
 
-        private static IEnumerable<ThumbnailOption> ThumbnailOptionDataSource
-        {
-            get
-            {
-                yield return new ThumbnailOption { Id = "Option 1", Name = "New Name" };
-                yield return new ThumbnailOption { Id = "Option 2", Name = "New Name" };
-                yield return new ThumbnailOption { Id = "Option 3", Name = "New Name" };
-            }
-        }
 
-        private static IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitysDataSource
+        private static IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntityDataSource
         {
             get
             {
@@ -107,35 +72,30 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             }
         }
 
-        private static IEnumerable<ThumbnailTask> ThumbnailTasksDataSource
+        private static IThumbnailTaskService GetThumbnailTaskService(IList<ThumbnailTaskEntity> entities)
         {
-            get
-            {
-                var options = ThumbnailOptionDataSource.ToList();
+            var repositoryMock = new Mock<IThumbnailRepository>();
 
-                var i = 0;
-                yield return new ThumbnailTask
-                {
-                    Id = $"Task {++i}",
-                    Name = "New Name",
-                    WorkPath = "New Path",
-                    ThumbnailOptions = options
-                };
-                yield return new ThumbnailTask
-                {
-                    Id = $"Task {++i}",
-                    Name = "New Name",
-                    WorkPath = "New Path",
-                    ThumbnailOptions = options
-                };
-                yield return new ThumbnailTask
-                {
-                    Id = $"Task {++i}",
-                    Name = "New Name",
-                    WorkPath = "New Path",
-                    ThumbnailOptions = options
-                };
-            }
+            repositoryMock
+                .SetupGet(x => x.UnitOfWork)
+                .Returns(new Mock<IUnitOfWork>().Object);
+
+            repositoryMock
+                .Setup(r => r.GetThumbnailTasksByIdsAsync(It.IsAny<IList<string>>()))
+                .ReturnsAsync((IList<string> ids) => { return entities.Where(t => ids.Contains(t.Id)).ToList(); });
+
+            repositoryMock
+                .Setup(x => x.Add(It.IsAny<ThumbnailTaskEntity>()))
+                .Callback((ThumbnailTaskEntity entity) => { entities.Add(entity); });
+
+            repositoryMock
+                .Setup(x => x.Remove(It.IsAny<ThumbnailTaskEntity>()))
+                .Callback((ThumbnailTaskEntity entity) => { entities.Remove(entity); });
+
+            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
+
+            return new ThumbnailTaskService(() => repositoryMock.Object, platformMemoryCache, new Mock<IEventPublisher>().Object);
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.AssetsModule.Core.Assets;
+using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
 
@@ -52,7 +52,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             Assert.Single(changes1);
             Assert.Single(changes2);
-            for (var i = 0; i < changes1.Length; i++)
+            for (var i = 0; i < changes1.Count; i++)
             {
                 Assert.Same(changes1[i], changes2[i]);
             }

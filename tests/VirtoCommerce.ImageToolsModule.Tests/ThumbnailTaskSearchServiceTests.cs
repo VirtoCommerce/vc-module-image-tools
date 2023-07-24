@@ -1,7 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -9,6 +11,9 @@ using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.Platform.Caching;
+using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -16,62 +21,37 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     public class ThumbnailTaskSearchServiceTests
     {
         [Fact]
-        public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
+        public async Task Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
             // Arrange
-            var target = CreateTargetService();
+            var service = GetThumbnailTaskSearchService(ThumbnailTaskEntitiesDataSource.ToList());
             var criteria = new ThumbnailTaskSearchCriteria { Sort = "Name:desc;WorkPath:desc" };
-            var expectedTasks = ThumbnailTaskEntitiesDataSource.Select(x => x.ToModel(new ThumbnailTask())).OrderByDescending(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
+            var expectedModels = ThumbnailTaskEntitiesDataSource.Select(x => x.ToModel(new ThumbnailTask())).OrderByDescending(t => t.Name).ThenByDescending(t => t.WorkPath).ToArray();
 
             // Act
-            var resultTasks = target.SearchAsync(criteria);
+            var searchResult = await service.SearchAsync(criteria);
 
             // Assert
-            Assert.Equal(expectedTasks, resultTasks.Result.Results);
+            Assert.Equal(expectedModels, searchResult.Results);
         }
 
         [Fact]
-        public void Search_SearchByExistingKeyword_TasksFound()
+        public async Task Search_SearchByExistingKeyword_TasksFound()
         {
             // Arrange
+            var service = GetThumbnailTaskSearchService(ThumbnailTaskEntitiesDataSource.ToList());
             var keyword = "NameLong";
-            var target = CreateTargetService();
-            var count = ThumbnailTaskEntitiesDataSource.Count(x => x.Name.Contains(keyword));
+            var expectedCount = ThumbnailTaskEntitiesDataSource.Count(x => x.Name.Contains(keyword));
 
             // Act
-            var resultTasks = target.SearchAsync(new ThumbnailTaskSearchCriteria { Keyword = keyword });
+            var searchResult = await service.SearchAsync(new ThumbnailTaskSearchCriteria { Keyword = keyword });
 
             // Assert
-            Assert.Equal(resultTasks.Result.Results.Count, count);
+            Assert.Equal(expectedCount, searchResult.Results.Count);
         }
 
-        private ThumbnailTaskSearchService CreateTargetService()
-        {
-            var entities = ThumbnailTaskEntitiesDataSource.ToList();
-            var entitiesQueryableMock = entities.AsQueryable().BuildMock();
-            var repoMock = new Mock<IThumbnailRepository>();
 
-            repoMock.Setup(x => x.ThumbnailTasks).Returns(entitiesQueryableMock.Object);
-
-            repoMock.Setup(x => x.GetThumbnailTasksByIdsAsync(It.IsAny<string[]>()))
-                .ReturnsAsync((string[] ids) =>
-                {
-                    return entitiesQueryableMock.Object.Where(t => ids.Contains(t.Id)).ToArray();
-                });
-
-            var thumbnailTaskServiceMock = new Mock<IThumbnailTaskService>();
-            thumbnailTaskServiceMock.Setup(x => x.GetByIdsAsync(It.IsAny<string[]>()))
-                .ReturnsAsync((string[] ids) =>
-                {
-                    return ThumbnailTaskEntitiesDataSource.Where(entity => ids.Contains(entity.Id))
-                        .Select(entity => entity.ToModel(new ThumbnailTask()))
-                        .ToArray();
-                });
-
-            return new ThumbnailTaskSearchService(() => repoMock.Object, thumbnailTaskServiceMock.Object);
-        }
-
-        private IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitiesDataSource
+        private static IEnumerable<ThumbnailTaskEntity> ThumbnailTaskEntitiesDataSource
         {
             get
             {
@@ -80,6 +60,26 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 yield return new ThumbnailTaskEntity { Id = "Task3", Name = "Name 3", WorkPath = "Path 2" };
                 yield return new ThumbnailTaskEntity { Id = "Task4", Name = "NameLong 4", WorkPath = "Path 1" };
             }
+        }
+
+        private static IThumbnailTaskSearchService GetThumbnailTaskSearchService(IList<ThumbnailTaskEntity> entities)
+        {
+            var repositoryMock = new Mock<IThumbnailRepository>();
+
+            repositoryMock
+                .Setup(x => x.ThumbnailTasks)
+                .Returns(entities.AsQueryable().BuildMock().Object);
+
+            repositoryMock
+                .Setup(x => x.GetThumbnailTasksByIdsAsync(It.IsAny<IList<string>>()))
+                .ReturnsAsync((IList<string> ids) => { return entities.Where(t => ids.Contains(t.Id)).ToList(); });
+
+            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
+
+            var crudService = new ThumbnailTaskService(() => repositoryMock.Object, platformMemoryCache, new Mock<IEventPublisher>().Object);
+
+            return new ThumbnailTaskSearchService(() => repositoryMock.Object, platformMemoryCache, crudService, Options.Create(new CrudOptions()));
         }
     }
 }

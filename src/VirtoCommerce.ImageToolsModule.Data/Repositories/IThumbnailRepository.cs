@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Data.Models;
@@ -17,12 +18,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
         /// </summary>
         IQueryable<ThumbnailOptionEntity> ThumbnailOptions { get; }
 
-        Task<ThumbnailTaskEntity[]> GetThumbnailTasksByIdsAsync(string[] ids);
+        Task<IList<ThumbnailTaskEntity>> GetThumbnailTasksByIdsAsync(IList<string> ids);
 
-        Task<ThumbnailOptionEntity[]> GetThumbnailOptionsByIdsAsync(string[] ids);
-
-        Task RemoveThumbnailTasksByIdsAsync(string[] ids);
-
-        Task RemoveThumbnailOptionsByIds(string[] ids);
+        Task<IList<ThumbnailOptionEntity>> GetThumbnailOptionsByIdsAsync(IList<string> ids);
     }
 }

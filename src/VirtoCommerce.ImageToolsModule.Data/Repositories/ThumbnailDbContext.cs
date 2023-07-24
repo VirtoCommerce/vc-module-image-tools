@@ -19,25 +19,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region ThumbnailTask
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ThumbnailTaskEntity>().ToTable("ThumbnailTask").HasKey(t => t.Id);
             modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             modelBuilder.Entity<ThumbnailTaskEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
-            #endregion
-
-            #region ThumbnailOption
-
             modelBuilder.Entity<ThumbnailOptionEntity>().ToTable("ThumbnailOption").HasKey(t => t.Id);
             modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             modelBuilder.Entity<ThumbnailOptionEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
-
-            #endregion
-
-            #region ThumbnailTaskOption
 
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().ToTable("ThumbnailTaskOption").HasKey(x => x.Id);
             modelBuilder.Entity<ThumbnailTaskOptionEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
@@ -56,13 +48,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            #endregion
-
-            base.OnModelCreating(modelBuilder);
-
             // Allows configuration for an entity type for different database types.
             // Applies configuration from all <see cref="IEntityTypeConfiguration{TEntity}" in VirtoCommerce.ImageToolsModule.Data.XXX project. /> 
-            switch (this.Database.ProviderName)
+            switch (Database.ProviderName)
             {
                 case "Pomelo.EntityFrameworkCore.MySql":
                     modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.ImageToolsModule.Data.MySql"));
@@ -74,7 +62,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Repositories
                     modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("VirtoCommerce.ImageToolsModule.Data.SqlServer"));
                     break;
             }
-
         }
     }
 }
