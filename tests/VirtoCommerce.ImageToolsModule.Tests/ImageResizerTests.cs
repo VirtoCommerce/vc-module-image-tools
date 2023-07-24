@@ -1,6 +1,6 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using VirtoCommerce.ImageTools.ImageAbstractions;
+using VirtoCommerce.ImageToolsModule.Data.Services;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests

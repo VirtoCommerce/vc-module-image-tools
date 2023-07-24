@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Domain;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Models
 {
-    public class ThumbnailTaskEntity : AuditableEntity
+    public class ThumbnailTaskEntity : AuditableEntity, IDataEntity<ThumbnailTaskEntity, ThumbnailTask>
     {
         public ThumbnailTaskEntity()
         {
@@ -28,7 +29,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
 
         public virtual ThumbnailTaskEntity FromModel(ThumbnailTask task, PrimaryKeyResolvingMap pkMap)
         {
-            if (task == null) throw new ArgumentNullException(nameof(task));
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
 
             pkMap.AddPair(task, this);
 
@@ -56,12 +60,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
                 ThumbnailTaskId = task.Id,
                 ThumbnailOptionId = option.Id
             };
+
             return result;
         }
 
         public virtual ThumbnailTask ToModel(ThumbnailTask task)
         {
-            if (task == null) throw new ArgumentNullException(nameof(task));
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
 
             task.Id = Id;
             task.CreatedBy = CreatedBy;

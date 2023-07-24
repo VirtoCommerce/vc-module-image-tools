@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.Platform.Core.GenericCrud;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Services
 {
-    public interface IThumbnailTaskService
+    public interface IThumbnailTaskService : ICrudService<ThumbnailTask>
     {
-        Task SaveChangesAsync(ICollection<ThumbnailTask> options);
-        Task<ThumbnailTask[]> GetByIdsAsync(string[] ids);
-        Task RemoveByIdsAsync(string[] ids);
     }
 }

@@ -14,13 +14,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
 
         public IList<ThumbnailOption> ThumbnailOptions { get; set; }
 
-        #region ICloneable members
 
         public virtual object Clone()
         {
-            return MemberwiseClone() as ThumbnailTask;
+            return (ThumbnailTask)MemberwiseClone();
         }
-
-        #endregion
     }
 }

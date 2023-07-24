@@ -19,19 +19,43 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         public bool IsTotalCountSupported => true;
 
-        private readonly IPlatformMemoryCache _platformMemoryCache;
+        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png" };
+
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
-        private static readonly string[] SupportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png" };
+        private readonly IPlatformMemoryCache _platformMemoryCache;
 
-        public BlobImagesChangesProvider(IBlobStorageProvider storageProvider, IThumbnailOptionSearchService thumbnailOptionSearchService, IPlatformMemoryCache platformMemoryCache)
+        public BlobImagesChangesProvider(
+            IBlobStorageProvider storageProvider,
+            IThumbnailOptionSearchService thumbnailOptionSearchService,
+            IPlatformMemoryCache platformMemoryCache)
         {
-            _platformMemoryCache = platformMemoryCache;
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
+            _platformMemoryCache = platformMemoryCache;
         }
 
-        protected virtual async Task<IList<ImageChange>> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, ICancellationToken token)
+        public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
+        {
+            var changedFiles = await GetChangeFiles(task, changedSince, cancellationToken);
+
+            return changedFiles.Count;
+        }
+
+        public async Task<IList<ImageChange>> GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip, long? take, ICancellationToken cancellationToken)
+        {
+            var changedFiles = await GetChangeFiles(task, changedSince, cancellationToken);
+
+            return skip >= changedFiles.Count
+                ? Array.Empty<ImageChange>()
+                : changedFiles
+                    .Skip((int)(skip ?? 0))
+                    .Take((int)(take ?? 0))
+                    .ToList();
+        }
+
+
+        protected virtual async Task<IList<ImageChange>> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
         {
             var options = await GetOptionsCollection();
             var cacheKey = CacheKey.With(GetType(), "GetChangeFiles", task.WorkPath, changedSince?.ToString(), string.Join(":", options.Select(x => x.FileSuffix)));
@@ -39,11 +63,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 cacheEntry.AddExpirationToken(BlobChangesCacheRegion.CreateChangeToken(task, changedSince));
 
-                var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, token);
-                var orignalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
+                var allBlobInfos = await ReadBlobFolderAsync(task.WorkPath, cancellationToken);
+                var originalBlobInfos = GetOriginalItems(allBlobInfos.Values, options.Select(x => x.FileSuffix).ToList());
 
                 var result = new ConcurrentBag<ImageChange>();
-                await Parallel.ForEachAsync(orignalBlobInfos, async (blobInfo, token) =>
+                await Parallel.ForEachAsync(originalBlobInfos, async (blobInfo, token) =>
                 {
                     token.ThrowIfCancellationRequested();
 
@@ -61,43 +85,15 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             });
         }
 
-        #region Implementation of IImagesChangesProvider
-
-        public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince,
-            ICancellationToken token)
+        protected virtual async Task<ConcurrentDictionary<string, BlobEntry>> ReadBlobFolderAsync(string folderPath, ICancellationToken cancellationToken)
         {
-            var changedFiles = await GetChangeFiles(task, changedSince, token);
-
-            return changedFiles.Count;
-        }
-
-        public async Task<ImageChange[]> GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip,
-            long? take, ICancellationToken token)
-        {
-
-            var changedFiles = await GetChangeFiles(task, changedSince, token);
-
-            var count = changedFiles.Count;
-
-            if (skip >= count)
-            {
-                return Array.Empty<ImageChange>();
-            }
-
-            return changedFiles.Skip((int)(skip ?? 0)).Take((int)(take ?? 0)).ToArray();
-        }
-
-        #endregion
-
-        protected virtual async Task<ConcurrentDictionary<string, BlobEntry>> ReadBlobFolderAsync(string folderPath, ICancellationToken token)
-        {
-            token?.ThrowIfCancellationRequested();
+            cancellationToken?.ThrowIfCancellationRequested();
 
             var result = new ConcurrentDictionary<string, BlobEntry>();
 
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
-            result.AddRange(searchResults.Results.Where(item => SupportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
+            result.AddRange(searchResults.Results.Where(item => _supportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
 
             await Parallel.ForEachAsync(searchResults.Results.Where(x => x.Type == "folder"), async (blobFolder, token) =>
             {
@@ -105,25 +101,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 result.AddRange(folderResult);
             });
-
-            return result;
-        }
-
-        /// <summary>
-        /// Check if an image exist in the blob storage by url.
-        /// </summary>
-        /// <param name="imageUrl">Image url.</param>
-        protected virtual async Task<bool> ExistsAsync(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
-        {
-            bool result;
-            if (earlyReadBlobInfos == null)
-            {
-                result = null != await _storageProvider.GetBlobInfoAsync(imageUrl);
-            }
-            else
-            {
-                result = earlyReadBlobInfos.ContainsKey(imageUrl);
-            }
 
             return result;
         }
@@ -141,7 +118,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             foreach (var option in options)
             {
-                if (! await ExistsAsync (blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos))
+                if (!await ExistsAsync(blobInfo.Url.GenerateThumbnailName(option.FileSuffix), earlyReadBlobInfos))
                 {
                     return EntryState.Added;
                 }
@@ -155,10 +132,31 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return EntryState.Unchanged;
         }
 
+        /// <summary>
+        /// Check if an image exist in the blob storage by url.
+        /// </summary>
+        /// <param name="imageUrl">Image url.</param>
+        /// <param name="earlyReadBlobInfos"></param>
+        protected virtual async Task<bool> ExistsAsync(string imageUrl, ConcurrentDictionary<string, BlobEntry> earlyReadBlobInfos = null)
+        {
+            bool result;
+
+            if (earlyReadBlobInfos == null)
+            {
+                result = await _storageProvider.GetBlobInfoAsync(imageUrl) != null;
+            }
+            else
+            {
+                result = earlyReadBlobInfos.ContainsKey(imageUrl);
+            }
+
+            return result;
+        }
+
         //get all options to create a map of all potential file names
         protected virtual async Task<ICollection<ThumbnailOption>> GetOptionsCollection()
         {
-            var options = await _thumbnailOptionSearchService.SearchAsync(new ThumbnailOptionSearchCriteria()
+            var options = await _thumbnailOptionSearchService.SearchNoCloneAsync(new ThumbnailOptionSearchCriteria
             {
                 Take = int.MaxValue
             });

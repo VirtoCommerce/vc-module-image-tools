@@ -17,7 +17,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     Update = "thumbnail:update",
                     Read = "thumbnail:read";
 
-                public static string[] AllPermissions = { Access, Create, Delete, Update, Read };
+                public static string[] AllPermissions { get; } = { Access, Create, Delete, Update, Read };
             }
         }
 
@@ -25,31 +25,31 @@ namespace VirtoCommerce.ImageToolsModule.Core
         {
             public static class General
             {
-                public static SettingDescriptor EnableImageProcessJob = new SettingDescriptor
+                public static SettingDescriptor EnableImageProcessJob { get; } = new()
                 {
                     Name = "ImageTools.Thumbnails.EnableImageProcessJob",
                     GroupName = "Thumbnail|General",
                     ValueType = SettingValueType.Boolean,
-                    DefaultValue = false
+                    DefaultValue = false,
                 };
 
-                public static SettingDescriptor ImageProcessJobCronExpression = new SettingDescriptor
+                public static SettingDescriptor ImageProcessJobCronExpression { get; } = new()
                 {
                     Name = "ImageTools.Thumbnails.ImageProcessJobCronExpression",
                     GroupName = "Thumbnail|General",
                     ValueType = SettingValueType.ShortText,
-                    DefaultValue = "0 0 * * *"
+                    DefaultValue = "0 0 * * *",
                 };
 
-                public static SettingDescriptor ProcessBatchSize = new SettingDescriptor
+                public static SettingDescriptor ProcessBatchSize { get; } = new()
                 {
                     Name = "ImageTools.Thumbnails.ProcessBatchSize",
                     GroupName = "Thumbnail|General",
                     ValueType = SettingValueType.Integer,
-                    DefaultValue = "50"
+                    DefaultValue = 50,
                 };
 
-                public static IEnumerable<SettingDescriptor> AllSettings
+                public static IEnumerable<SettingDescriptor> AllGeneralSettings
                 {
                     get
                     {
@@ -59,7 +59,8 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     }
                 }
             }
-            public static IEnumerable<SettingDescriptor> AllSettings => General.AllSettings;
+
+            public static IEnumerable<SettingDescriptor> AllSettings => General.AllGeneralSettings;
         }
     }
 }

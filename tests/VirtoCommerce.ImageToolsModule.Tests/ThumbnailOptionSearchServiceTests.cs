@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
 using Moq;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
+using VirtoCommerce.Platform.Caching;
+using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using Xunit;
 
 namespace VirtoCommerce.ImageToolsModule.Tests
@@ -14,37 +21,19 @@ namespace VirtoCommerce.ImageToolsModule.Tests
     public class ThumbnailOptionSearchServiceTests
     {
         [Fact]
-        public void Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
+        public async Task Search_ThumbnailOptionSearchCriteria_ReturnsGenericSearchResponseOfTasksInExpectedOrder()
         {
-            var repoMock = GetOptionsRepositoryMock();
-            var optionsService = new ThumbnailOptionService(() => repoMock.Object);
-
-            var target = new ThumbnailOptionSearchService(() => repoMock.Object, optionsService);
+            var service = GetThumbnailOptionSearchService(ThumbnailOptionEntitiesDataSource.ToList());
             var criteria = new ThumbnailOptionSearchCriteria { Sort = "Name:desc;FileSuffix:desc" };
-            var resultTasks = target.SearchAsync(criteria).GetAwaiter().GetResult();
+            var expectedModels = ThumbnailOptionEntitiesDataSource.Select(x => x.ToModel(new ThumbnailOption())).OrderByDescending(t => t.Name).ThenByDescending(t => t.FileSuffix).ToList();
 
-            var expectedTasks = ThumbnailTaskEntitiesDataSource.Select(x => x.ToModel(new ThumbnailOption())).OrderByDescending(t => t.Name).ThenByDescending(t => t.FileSuffix).ToArray();
-            Assert.Equal(expectedTasks, resultTasks.Results);
+            var searchResult = await service.SearchAsync(criteria);
+
+            Assert.Equal(expectedModels, searchResult.Results);
         }
 
-        public Mock<IThumbnailRepository> GetOptionsRepositoryMock()
-        {
-            var entities = ThumbnailTaskEntitiesDataSource.ToList();
-            var entitiesQueryableMock = entities.AsQueryable().BuildMock();
-            var repoMock = new Mock<IThumbnailRepository>();
 
-            repoMock.Setup(x => x.ThumbnailOptions).Returns(entitiesQueryableMock.Object);
-
-            repoMock.Setup(x => x.GetThumbnailOptionsByIdsAsync(It.IsAny<string[]>()))
-                .Returns((string[] ids) =>
-                {
-                    return Task.FromResult(entitiesQueryableMock.Object.Where(t => ids.Contains(t.Id)).ToArray());
-                });
-
-            return repoMock;
-        }
-
-        public IEnumerable<ThumbnailOptionEntity> ThumbnailTaskEntitiesDataSource
+        private static IEnumerable<ThumbnailOptionEntity> ThumbnailOptionEntitiesDataSource
         {
             get
             {
@@ -53,6 +42,26 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 yield return new ThumbnailOptionEntity { Id = "Option3", Name = "Name 3", FileSuffix = "SuffixName2" };
                 yield return new ThumbnailOptionEntity { Id = "Option4", Name = "NameLong 4", FileSuffix = "SuffixName1" };
             }
+        }
+
+        private static IThumbnailOptionSearchService GetThumbnailOptionSearchService(IList<ThumbnailOptionEntity> entities)
+        {
+            var repositoryMock = new Mock<IThumbnailRepository>();
+
+            repositoryMock
+                .Setup(x => x.ThumbnailOptions)
+                .Returns(entities.AsQueryable().BuildMock().Object);
+
+            repositoryMock
+                .Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsAny<IList<string>>()))
+                .ReturnsAsync((IList<string> ids) => { return entities.Where(t => ids.Contains(t.Id)).ToList(); });
+
+            var memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+            var platformMemoryCache = new PlatformMemoryCache(memoryCache, Options.Create(new CachingOptions()), new Mock<ILogger<PlatformMemoryCache>>().Object);
+
+            var crudService = new ThumbnailOptionService(() => repositoryMock.Object, platformMemoryCache, new Mock<IEventPublisher>().Object);
+
+            return new ThumbnailOptionSearchService(() => repositoryMock.Object, platformMemoryCache, crudService, Options.Create(new CrudOptions()));
         }
     }
 }

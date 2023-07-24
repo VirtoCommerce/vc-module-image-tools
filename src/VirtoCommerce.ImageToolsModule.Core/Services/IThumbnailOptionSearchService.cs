@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
+using VirtoCommerce.Platform.Core.GenericCrud;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Services
 {
-    public interface IThumbnailOptionSearchService
+    public interface IThumbnailOptionSearchService : ISearchService<ThumbnailOptionSearchCriteria, ThumbnailOptionSearchResult, ThumbnailOption>
     {
-        Task<ThumbnailOptionSearchResult> SearchAsync(ThumbnailOptionSearchCriteria criteria);
     }
 }

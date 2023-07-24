@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,7 +7,6 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Data.ExportImport;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ExportImport
 {
@@ -41,48 +39,46 @@ namespace VirtoCommerce.ImageToolsModule.Data.ExportImport
             progressCallback(progressInfo);
 
             using (var sw = new StreamWriter(outStream, Encoding.UTF8))
+            using (var writer = new JsonTextWriter(sw))
             {
-                using (var writer = new JsonTextWriter(sw))
+                await writer.WriteStartObjectAsync();
+
+                progressInfo.Description = "Options are started to export";
+                progressCallback(progressInfo);
+
+                await writer.WritePropertyNameAsync("Options");
+                await writer.SerializeArrayWithPagingAsync(_jsonSerializer, _batchSize, async (skip, take) =>
                 {
-                    await writer.WriteStartObjectAsync();
-
-                    progressInfo.Description = "Options are started to export";
+                    var searchCriteria = AbstractTypeFactory<ThumbnailOptionSearchCriteria>.TryCreateInstance();
+                    searchCriteria.Take = take;
+                    searchCriteria.Skip = skip;
+                    var searchResult = await _optionSearchService.SearchNoCloneAsync(searchCriteria);
+                    return (GenericSearchResult<ThumbnailOption>)searchResult;
+                }, (processedCount, totalCount) =>
+                {
+                    progressInfo.Description = $"{processedCount} of {totalCount} Options have been exported";
                     progressCallback(progressInfo);
+                }, cancellationToken);
 
-                    await writer.WritePropertyNameAsync("Options");
-                    await writer.SerializeJsonArrayWithPagingAsync(_jsonSerializer, _batchSize, async (skip, take) =>
-                    {
-                        var searchCriteria = AbstractTypeFactory<ThumbnailOptionSearchCriteria>.TryCreateInstance();
-                        searchCriteria.Take = take;
-                        searchCriteria.Skip = skip;
-                        var searchResult = await _optionSearchService.SearchAsync(searchCriteria);
-                        return (GenericSearchResult<ThumbnailOption>)searchResult;
-                    }, (processedCount, totalCount) =>
-                    {
-                        progressInfo.Description = $"{processedCount} of {totalCount} Options have been exported";
-                        progressCallback(progressInfo);
-                    }, cancellationToken);
+                progressInfo.Description = "Tasks are started to export";
+                progressCallback(progressInfo);
 
-                    progressInfo.Description = "Tasks are started to export";
+                await writer.WritePropertyNameAsync("Tasks");
+                await writer.SerializeArrayWithPagingAsync(_jsonSerializer, _batchSize, async (skip, take) =>
+                {
+                    var searchCriteria = AbstractTypeFactory<ThumbnailTaskSearchCriteria>.TryCreateInstance();
+                    searchCriteria.Take = take;
+                    searchCriteria.Skip = skip;
+                    var searchResult = await _taskSearchService.SearchNoCloneAsync(searchCriteria);
+                    return (GenericSearchResult<ThumbnailTask>)searchResult;
+                }, (processedCount, totalCount) =>
+                {
+                    progressInfo.Description = $"{processedCount} of {totalCount} Tasks have been exported";
                     progressCallback(progressInfo);
+                }, cancellationToken);
 
-                    await writer.WritePropertyNameAsync("Tasks");
-                    await writer.SerializeJsonArrayWithPagingAsync(_jsonSerializer, _batchSize, async (skip, take) =>
-                    {
-                        var searchCriteria = AbstractTypeFactory<ThumbnailTaskSearchCriteria>.TryCreateInstance();
-                        searchCriteria.Take = take;
-                        searchCriteria.Skip = skip;
-                        var searchResult = await _taskSearchService.SearchAsync(searchCriteria);
-                        return (GenericSearchResult<ThumbnailTask>)searchResult;
-                    }, (processedCount, totalCount) =>
-                    {
-                        progressInfo.Description = $"{processedCount} of {totalCount} Tasks have been exported";
-                        progressCallback(progressInfo);
-                    }, cancellationToken);
-
-                    await writer.WriteEndObjectAsync();
-                    await writer.FlushAsync();
-                }
+                await writer.WriteEndObjectAsync();
+                await writer.FlushAsync();
             }
         }
 
@@ -92,29 +88,29 @@ namespace VirtoCommerce.ImageToolsModule.Data.ExportImport
 
             var progressInfo = new ExportImportProgressInfo();
             using (var streamReader = new StreamReader(inputStream))
+            using (var reader = new JsonTextReader(streamReader))
             {
-                using (var reader = new JsonTextReader(streamReader))
+                while (await reader.ReadAsync())
                 {
-                    while (reader.Read())
+                    if (reader.TokenType == JsonToken.PropertyName)
                     {
-                        if (reader.TokenType == JsonToken.PropertyName)
+                        var readerValueString = reader.Value?.ToString();
+
+                        if (readerValueString == "Options")
                         {
-                            if (reader.Value.ToString() == "Options")
+                            await reader.DeserializeArrayWithPagingAsync<ThumbnailOption>(_jsonSerializer, _batchSize, items => _optionService.SaveChangesAsync(items), processedCount =>
                             {
-                                await reader.DeserializeJsonArrayWithPagingAsync<ThumbnailOption>(_jsonSerializer, _batchSize, items => _optionService.SaveOrUpdateAsync(items.ToArray()), processedCount =>
-                                {
-                                    progressInfo.Description = $"{ processedCount } Options have been imported";
-                                    progressCallback(progressInfo);
-                                }, cancellationToken);
-                            }
-                            else if (reader.Value.ToString() == "Tasks")
+                                progressInfo.Description = $"{processedCount} Options have been imported";
+                                progressCallback(progressInfo);
+                            }, cancellationToken);
+                        }
+                        else if (readerValueString == "Tasks")
+                        {
+                            await reader.DeserializeArrayWithPagingAsync<ThumbnailTask>(_jsonSerializer, _batchSize, items => _taskService.SaveChangesAsync(items), processedCount =>
                             {
-                                await reader.DeserializeJsonArrayWithPagingAsync<ThumbnailTask>(_jsonSerializer, _batchSize, items => _taskService.SaveChangesAsync(items.ToArray()), processedCount =>
-                                {
-                                    progressInfo.Description = $"{ processedCount } Options have been imported";
-                                    progressCallback(progressInfo);
-                                }, cancellationToken);
-                            }
+                                progressInfo.Description = $"{processedCount} Options have been imported";
+                                progressCallback(progressInfo);
+                            }, cancellationToken);
                         }
                     }
                 }
