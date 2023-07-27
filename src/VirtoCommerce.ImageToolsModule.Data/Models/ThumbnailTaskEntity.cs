@@ -80,7 +80,10 @@ namespace VirtoCommerce.ImageToolsModule.Data.Models
             task.Name = Name;
             task.WorkPath = WorkPath;
 
-            task.ThumbnailOptions = ThumbnailTaskOptions.Select(o => o.ThumbnailOption.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance())).ToArray();
+            task.ThumbnailOptions = ThumbnailTaskOptions
+                .Where(x => x.ThumbnailOption is not null)
+                .Select(x => x.ThumbnailOption.ToModel(AbstractTypeFactory<ThumbnailOption>.TryCreateInstance()))
+                .ToArray();
 
             return task;
         }
