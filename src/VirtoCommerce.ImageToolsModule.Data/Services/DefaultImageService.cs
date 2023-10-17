@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -14,10 +15,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     public class DefaultImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
+        private readonly ILogger<DefaultImageService> _logger;
 
-        public DefaultImageService(IBlobStorageProvider storageProvider)
+        public DefaultImageService(IBlobStorageProvider storageProvider, ILogger<DefaultImageService> logger)
         {
             _storageProvider = storageProvider;
+            _logger = logger;
         }
 
         /// <summary>
@@ -31,11 +34,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             try
             {
                 using var blobStream = _storageProvider.OpenRead(imageUrl);
-                var result = Image.Load<Rgba32>(blobStream, out format);
-                return Task.FromResult(result);
+                var image = Image.Load<Rgba32>(blobStream);
+                format = image.Metadata.DecodedImageFormat;
+                return Task.FromResult(image);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, $"Could not load image {imageUrl}");
                 format = null!;
                 return Task.FromResult<Image<Rgba32>>(null!);
             }

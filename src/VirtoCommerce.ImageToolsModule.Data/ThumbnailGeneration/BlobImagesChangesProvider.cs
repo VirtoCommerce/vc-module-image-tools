@@ -178,17 +178,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 var name = blobInfo.Name;
 
-                var present = false;
-                foreach (var suffix in suffixCollection)
-                {
-                    if (name.Contains("_" + suffix))
-                    {
-                        present = true;
-                        break;
-                    }
-                }
-
-                if (!present)
+                if (!suffixCollection.Any(suffix => name.Contains("_" + suffix)))
                 {
                     result.Add(blobInfo);
                 }
