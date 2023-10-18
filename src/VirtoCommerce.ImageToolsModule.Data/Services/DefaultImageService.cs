@@ -31,6 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <returns>Image object.</returns>
         public virtual async Task<Image<Rgba32>> LoadImageAsync(string imageUrl)
         {
+            _logger.LogInformation($"Loading image {imageUrl}");
             try
             {
                 using var blobStream = _storageProvider.OpenRead(imageUrl);

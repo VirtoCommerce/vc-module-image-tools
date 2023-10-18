@@ -52,8 +52,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 foreach (var option in options)
                 {
-                    var thumbnail = GenerateThumbnail(originalImage, option);
                     var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
+                    var thumbnail = GenerateThumbnail(originalImage, option);
+
                     using (thumbnail)
                     {
                         try
@@ -66,7 +67,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(@"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
+                            _logger.LogError(ex, @"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
                             result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
                         }
                     }
