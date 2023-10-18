@@ -8,7 +8,7 @@ VirtoCommerce.ImageTools module represents a functionality that helps working wi
 
 1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example, this functionality can be used in listing or for previews;
 1. Possibility to resize Group images into tasks and run them against an asset catalog in the background;
-1. Supports all image formats.
+1. Supports image formats: Bmp, Gif, Jpeg, Pbm, Png, Tiff, Tga, WebP;
 
 ![image](https://user-images.githubusercontent.com/20122385/36428926-e483c5e6-1659-11e8-88aa-e4dc2b95b50b.png)
 
@@ -20,8 +20,8 @@ VirtoCommerce.ImageTools module represents a functionality that helps working wi
 
 ## References
 
-* Deploy: https://virtocommerce.com/docs/latest/developer-guide/deploy-module-from-source-code/
-* Installation:https://www.virtocommerce.com/docs/latest/user-guide/modules/
+* Deploy: https://docs.virtocommerce.org/developer-guide/deploy-module-from-source-code/
+* Installation: https://docs.virtocommerce.org/user-guide/modules/
 * Home: https://virtocommerce.com
 * Community: https://www.virtocommerce.org
 * [Download Latest Release](https://github.com/VirtoCommerce/vc-module-image-tools/releases)
