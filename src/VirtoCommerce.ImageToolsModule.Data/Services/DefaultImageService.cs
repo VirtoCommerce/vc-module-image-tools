@@ -29,36 +29,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <param name="imageUrl">image url.</param>
         /// <param name="format">image format.</param>
         /// <returns>Image object.</returns>
-        public virtual Task<Image<Rgba32>> LoadImageAsync(string imageUrl, out IImageFormat format)
+        public virtual async Task<Image<Rgba32>> LoadImageAsync(string imageUrl)
         {
             try
             {
                 using var blobStream = _storageProvider.OpenRead(imageUrl);
-                var image = Image.Load<Rgba32>(blobStream);
-                format = image.Metadata.DecodedImageFormat;
-                return Task.FromResult(image);
+                return await Image.LoadAsync<Rgba32>(blobStream);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Could not load image {imageUrl}");
-                format = null!;
-                return Task.FromResult<Image<Rgba32>>(null!);
-            }
-        }
-
-        public virtual Image<Rgba32> LoadImage(string imageUrl)
-        {
-            _logger.LogInformation($"Loading image {imageUrl}");
-            try
-            {
-                using var blobStream = _storageProvider.OpenRead(imageUrl);
-                var image = Image.Load<Rgba32>(blobStream);
-                return image;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Could not load image {imageUrl}");
-                return null;
+                return null!;
             }
         }
 
@@ -91,29 +72,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
             stream.Position = 0;
             await stream.CopyToAsync(blobStream);
-        }
-
-        public virtual void SaveImage(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality)
-        {
-            using var blobStream = _storageProvider.OpenWrite(imageUrl);
-            using var stream = new MemoryStream();
-
-            if (format.DefaultMimeType == "image/jpeg")
-            {
-                var options = new JpegEncoder
-                {
-                    Quality = (int)jpegQuality
-                };
-
-                image.Save(stream, options);
-            }
-            else
-            {
-                image.Save(stream, format);
-            }
-
-            stream.Position = 0;
-            stream.CopyTo(blobStream);
         }
     }
 }

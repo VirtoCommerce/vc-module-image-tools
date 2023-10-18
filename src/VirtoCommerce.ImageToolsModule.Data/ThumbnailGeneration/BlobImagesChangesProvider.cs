@@ -81,7 +81,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     result.Add(imageChange);
                 });
 
-                return result.Where(x => x.ChangeState != EntryState.Unchanged).ToList();
+                return result.Where(x => x.ChangeState != EntryState.Unchanged).OrderBy(x => x.Url).ToList();
             });
         }
 
