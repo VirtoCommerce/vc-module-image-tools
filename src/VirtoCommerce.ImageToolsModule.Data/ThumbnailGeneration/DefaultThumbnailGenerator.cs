@@ -36,14 +36,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token)
+        public virtual Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token)
         {
             token?.ThrowIfCancellationRequested();
 
-            var originalImage = await _imageService.LoadImageAsync(source, out var format);
+            var originalImage = _imageService.LoadImage(source);
             if (originalImage == null)
             {
-                return null;
+                return Task.FromResult<ThumbnailGenerationResult>(null);
             }
 
             var result = new ThumbnailGenerationResult();
@@ -60,7 +60,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         {
                             _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
 
-                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
+                            _imageService.SaveImage(thumbnailUrl, thumbnail, originalImage.Metadata.DecodedImageFormat, option.JpegQuality);
 
                             result.GeneratedThumbnails.Add(thumbnailUrl);
                         }
@@ -73,7 +73,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                 }
             }
 
-            return result;
+            return Task.FromResult(result);
         }
 
         /// <summary>

@@ -19,6 +19,8 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <returns>Image object.</returns>
         Task<Image<Rgba32>> LoadImageAsync(string imageUrl, out IImageFormat format);
 
+        Image<Rgba32> LoadImage(string imageUrl);
+
         /// <summary>
         /// Save given image to blob storage.
         /// </summary>
@@ -27,5 +29,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <param name="format">Image object format.</param>
         /// <param name="jpegQuality">Target image quality.</param>
         Task SaveImageAsync(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality);
+
+        void SaveImage(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality);
     }
 }

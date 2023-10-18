@@ -46,6 +46,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             }
         }
 
+        public virtual Image<Rgba32> LoadImage(string imageUrl)
+        {
+            _logger.LogInformation($"Loading image {imageUrl}");
+            try
+            {
+                using var blobStream = _storageProvider.OpenRead(imageUrl);
+                var image = Image.Load<Rgba32>(blobStream);
+                return image;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Could not load image {imageUrl}");
+                return null;
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// Save given image to blob storage.
@@ -75,6 +91,29 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
             stream.Position = 0;
             await stream.CopyToAsync(blobStream);
+        }
+
+        public virtual void SaveImage(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality)
+        {
+            using var blobStream = _storageProvider.OpenWrite(imageUrl);
+            using var stream = new MemoryStream();
+
+            if (format.DefaultMimeType == "image/jpeg")
+            {
+                var options = new JpegEncoder
+                {
+                    Quality = (int)jpegQuality
+                };
+
+                image.Save(stream, options);
+            }
+            else
+            {
+                image.Save(stream, format);
+            }
+
+            stream.Position = 0;
+            stream.CopyTo(blobStream);
         }
     }
 }
