@@ -48,8 +48,8 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             IImageFormat format;
 
             var mockStorage = new Mock<IImageService>();
-            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>(), out format))
-                       .Returns(Task.FromResult(image));
+            mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>(), out format)).Returns(Task.FromResult(image));
+            mockStorage.Setup(x => x.LoadImage(It.IsAny<string>())).Returns(image);
 
 
             var mockResizer = new Mock<IImageResizer>();
@@ -80,6 +80,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var mockStorage = new Mock<IImageService>();
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>(), out format)).Returns(Task.FromResult(image));
+            mockStorage.Setup(x => x.LoadImage(It.IsAny<string>())).Returns(image);
 
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.Crop(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AnchorPosition>())).Returns(image);
@@ -107,6 +108,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var mockStorage = new Mock<IImageService>();
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>(), out format)).Returns(Task.FromResult(image));
+            mockStorage.Setup(x => x.LoadImage(It.IsAny<string>())).Returns(image);
 
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.FixedWidth(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>())).Returns(image);
@@ -134,6 +136,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             var mockStorage = new Mock<IImageService>();
             mockStorage.Setup(x => x.LoadImageAsync(It.IsAny<string>(), out format)).Returns(Task.FromResult(image));
+            mockStorage.Setup(x => x.LoadImage(It.IsAny<string>())).Returns(image);
 
             var mockResizer = new Mock<IImageResizer>();
             mockResizer.Setup(x => x.FixedHeight(It.IsAny<Image<Rgba32>>(), It.IsAny<int>(), It.IsAny<Rgba32>())).Returns(image);
