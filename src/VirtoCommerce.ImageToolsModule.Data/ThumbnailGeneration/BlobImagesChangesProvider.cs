@@ -19,7 +19,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         public bool IsTotalCountSupported => true;
 
-        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png" };
+        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png", ".webp", ".pbm" };
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
