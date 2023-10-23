@@ -40,7 +40,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         {
             token?.ThrowIfCancellationRequested();
 
-            var originalImage = await _imageService.LoadImageAsync(source, out var format);
+            var originalImage = await _imageService.LoadImageAsync(source);
             if (originalImage == null)
             {
                 return null;
@@ -52,21 +52,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 foreach (var option in options)
                 {
-                    var thumbnail = GenerateThumbnail(originalImage, option);
                     var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
+                    var thumbnail = GenerateThumbnail(originalImage, option);
+
                     using (thumbnail)
                     {
                         try
                         {
                             _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
 
-                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, format, option.JpegQuality);
+                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, originalImage.Metadata.DecodedImageFormat, option.JpegQuality);
 
                             result.GeneratedThumbnails.Add(thumbnailUrl);
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(@"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
+                            _logger.LogError(ex, @"Cannot save thumbnail image {url}, error {ex}", thumbnailUrl, ex);
                             result.Errors.Add($"Cannot save thumbnail image {thumbnailUrl}");
                         }
                     }

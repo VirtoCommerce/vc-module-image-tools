@@ -6,7 +6,7 @@ Virto Commerce Image Tools module represents a functionality that helps working 
 
 1. Possibility to make different image thumbnails and use them, instead of using the  original images. For example, this functionality can be used in listing or for previews;
 1. Possibility to resize Group images into tasks and run them against an asset catalog in the background;
-1. Supports all image formats.
+1. Out of the box ImageSharp supports the following image formats: Bmp, Gif, Jpeg, Pbm, Png, Tiff, Tga, WebP;
 
 ![image](https://user-images.githubusercontent.com/20122385/36428926-e483c5e6-1659-11e8-88aa-e4dc2b95b50b.png)
 

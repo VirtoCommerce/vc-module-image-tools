@@ -19,7 +19,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         public bool IsTotalCountSupported => true;
 
-        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png" };
+        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png", ".webp", ".pbm" };
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
@@ -81,7 +81,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     result.Add(imageChange);
                 });
 
-                return result.Where(x => x.ChangeState != EntryState.Unchanged).ToList();
+                return result.Where(x => x.ChangeState != EntryState.Unchanged).OrderBy(x => x.Url).ToList();
             });
         }
 
@@ -178,17 +178,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             {
                 var name = blobInfo.Name;
 
-                var present = false;
-                foreach (var suffix in suffixCollection)
-                {
-                    if (name.Contains("_" + suffix))
-                    {
-                        present = true;
-                        break;
-                    }
-                }
-
-                if (!present)
+                if (!suffixCollection.Any(suffix => name.Contains("_" + suffix)))
                 {
                     result.Add(blobInfo);
                 }
