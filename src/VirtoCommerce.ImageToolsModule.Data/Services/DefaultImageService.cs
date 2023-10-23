@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -14,10 +15,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     public class DefaultImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
+        private readonly ILogger<DefaultImageService> _logger;
 
-        public DefaultImageService(IBlobStorageProvider storageProvider)
+        public DefaultImageService(IBlobStorageProvider storageProvider, ILogger<DefaultImageService> logger)
         {
             _storageProvider = storageProvider;
+            _logger = logger;
         }
 
         /// <summary>
@@ -26,18 +29,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <param name="imageUrl">image url.</param>
         /// <param name="format">image format.</param>
         /// <returns>Image object.</returns>
-        public virtual Task<Image<Rgba32>> LoadImageAsync(string imageUrl, out IImageFormat format)
+        public virtual async Task<Image<Rgba32>> LoadImageAsync(string imageUrl)
         {
+            _logger.LogInformation($"Loading image {imageUrl}");
             try
             {
                 using var blobStream = _storageProvider.OpenRead(imageUrl);
-                var result = Image.Load<Rgba32>(blobStream, out format);
-                return Task.FromResult(result);
+                return await Image.LoadAsync<Rgba32>(blobStream);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                format = null!;
-                return Task.FromResult<Image<Rgba32>>(null!);
+                _logger.LogError(ex, $"Could not load image {imageUrl}");
+                return null!;
             }
         }
 

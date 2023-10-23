@@ -12,12 +12,12 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
     public interface IImageService
     {
         /// <summary>
-        /// Load to Image from blob.
+        ///Loads Image from blob storage
         /// </summary>
         /// <param name="imageUrl">image url.</param>
         /// <param name="format">image format.</param>
         /// <returns>Image object.</returns>
-        Task<Image<Rgba32>> LoadImageAsync(string imageUrl, out IImageFormat format);
+        Task<Image<Rgba32>> LoadImageAsync(string imageUrl);
 
         /// <summary>
         /// Save given image to blob storage.
