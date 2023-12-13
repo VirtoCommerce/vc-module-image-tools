@@ -2,10 +2,11 @@ using System.Reflection;
 using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.ImageToolsModule.Data.Models;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Repositories
 {
-    public class ThumbnailDbContext : DbContextWithTriggers
+    public class ThumbnailDbContext : DbContextBase
     {
         public ThumbnailDbContext(DbContextOptions<ThumbnailDbContext> options)
             : base(options)
