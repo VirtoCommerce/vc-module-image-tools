@@ -3,9 +3,9 @@
   <id>VirtoCommerce.ImageTools</id>
   <version>3.800.0</version>
   <version-tag />
-  <platformVersion>3.800.0-alpha.12824-net8</platformVersion>
+  <platformVersion>3.800.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Assets" version="3.800.0-alpha.108-pt-14740-net8" />
+    <dependency id="VirtoCommerce.Assets" version="3.800.0" />
   </dependencies>
   <title>Image Tools</title>
   <description>Image tools helps to automate thumbnail generation procedures with resizing and cropping</description>
