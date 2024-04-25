@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -81,7 +80,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
             {
                 notifyEvent.Finished = DateTime.UtcNow;
 
-                notifyEvent.Description = notifyEvent.Errors.Any()
+                notifyEvent.Description = notifyEvent.Errors.Count != 0
                     ? $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention."
                     : "Thumbnails generated successfully!";
 
