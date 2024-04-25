@@ -33,6 +33,14 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     DefaultValue = false,
                 };
 
+                public static SettingDescriptor EventBasedThumbnailGeneration { get; } = new()
+                {
+                    Name = "ImageTools.Thumbnails.EventBasedThumbnailGeneration",
+                    GroupName = "Thumbnail|General",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true,
+                };
+
                 public static SettingDescriptor ImageProcessJobCronExpression { get; } = new()
                 {
                     Name = "ImageTools.Thumbnails.ImageProcessJobCronExpression",
@@ -54,6 +62,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     get
                     {
                         yield return EnableImageProcessJob;
+                        yield return EventBasedThumbnailGeneration;
                         yield return ImageProcessJobCronExpression;
                         yield return ProcessBatchSize;
                     }

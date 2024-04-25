@@ -153,6 +153,10 @@
     "ImageTools.Thumbnails.EnableImageProcessJob": {
       "title": "Enable image processing job",
       "description": "Flag for activating background image processing job"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Enable event based thumbnail generation",
+      "description": "Start thumbnail generation as soon as an asset is added"
     }
   },
   "module": {

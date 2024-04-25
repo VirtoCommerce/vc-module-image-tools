@@ -9,11 +9,10 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.Model;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Hangfire;
 
-namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
+namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 {
     public class ThumbnailProcessJob
     {
@@ -46,6 +45,11 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         {
             try
             {
+                if (notifyEvent == null)
+                {
+                    notifyEvent = new ThumbnailProcessNotification(Guid.NewGuid().ToString());
+                }
+
                 Action<ThumbnailTaskProgress> progressCallback = x =>
                 {
                     notifyEvent.Description = x.Message;
