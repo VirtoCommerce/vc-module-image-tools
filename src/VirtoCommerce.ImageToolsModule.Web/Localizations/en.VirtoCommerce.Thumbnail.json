@@ -12,7 +12,7 @@
       },
       "task-detail": {
         "title": "Thumbnails generation task detail",
-        "subtitle": "Manage the task settings and detail",
+        "subtitle": "Manage task settings and detail",
         "labels": {
           "name": "Name",
           "path-images": "Path to images",
@@ -39,7 +39,7 @@
       },
       "setting-managment": {
         "title": "Thumbnails settings",
-        "subtitle": "Manage a thumbnails settings",
+        "subtitle": "Manage thumbnails settings",
         "background": "background",
         "height": "height",
         "width": "width",
@@ -153,6 +153,10 @@
     "ImageTools.Thumbnails.EnableImageProcessJob": {
       "title": "Enable image processing job",
       "description": "Flag for activating background image processing job"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Enable event based thumbnail generation",
+      "description": "Start thumbnail generation as soon as an asset is added"
     }
   },
   "module": {

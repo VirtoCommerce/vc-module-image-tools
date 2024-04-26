@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.AssetsModule.Core.Events;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
 using VirtoCommerce.ImageToolsModule.Data.ExportImport;
+using VirtoCommerce.ImageToolsModule.Data.Handlers;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.MySql;
 using VirtoCommerce.ImageToolsModule.Data.PostgreSql;
@@ -18,7 +21,7 @@ using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.SqlServer;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -73,6 +76,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();
             serviceCollection.AddTransient<ThumbnailsExportImport>();
+            serviceCollection.AddTransient<BlobCreatedEventHandler>();
         }
 
         public void PostInitialize(IApplicationBuilder appBuilder)
@@ -81,6 +85,10 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
             AbstractTypeFactory<ThumbnailOption>.RegisterType<ThumbnailOption>().MapToType<ThumbnailOptionEntity>();
             AbstractTypeFactory<ThumbnailTask>.RegisterType<ThumbnailTask>().MapToType<ThumbnailTaskEntity>();
+
+            // Register event handlers
+            var handlerRegistrar = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
+            handlerRegistrar.RegisterHandler<BlobCreatedEvent>((message, _) => appBuilder.ApplicationServices.GetService<BlobCreatedEventHandler>().Handle(message));
 
             //Register module settings
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();

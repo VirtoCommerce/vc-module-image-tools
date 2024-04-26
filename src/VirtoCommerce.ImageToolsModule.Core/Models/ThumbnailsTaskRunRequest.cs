@@ -1,4 +1,4 @@
-namespace VirtoCommerce.ImageToolsModule.Web.Model
+namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
     /// <summary>
     /// ThumbnailsTaskRunRequest
