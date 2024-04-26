@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -9,11 +8,10 @@ using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
-using VirtoCommerce.ImageToolsModule.Web.Model;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Hangfire;
 
-namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
+namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 {
     public class ThumbnailProcessJob
     {
@@ -46,6 +44,11 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
         {
             try
             {
+                if (notifyEvent == null)
+                {
+                    notifyEvent = new ThumbnailProcessNotification(Guid.NewGuid().ToString());
+                }
+
                 Action<ThumbnailTaskProgress> progressCallback = x =>
                 {
                     notifyEvent.Description = x.Message;
@@ -77,7 +80,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.BackgroundJobs
             {
                 notifyEvent.Finished = DateTime.UtcNow;
 
-                notifyEvent.Description = notifyEvent.Errors.Any()
+                notifyEvent.Description = notifyEvent.Errors.Count != 0
                     ? $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention."
                     : "Thumbnails generated successfully!";
 
