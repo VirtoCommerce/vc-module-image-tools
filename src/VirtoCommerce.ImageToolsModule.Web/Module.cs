@@ -21,8 +21,8 @@ using VirtoCommerce.ImageToolsModule.Data.Repositories;
 using VirtoCommerce.ImageToolsModule.Data.Services;
 using VirtoCommerce.ImageToolsModule.Data.SqlServer;
 using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
-using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -87,8 +87,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
             AbstractTypeFactory<ThumbnailTask>.RegisterType<ThumbnailTask>().MapToType<ThumbnailTaskEntity>();
 
             // Register event handlers
-            var handlerRegistrar = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-            handlerRegistrar.RegisterHandler<BlobCreatedEvent>((message, _) => appBuilder.ApplicationServices.GetService<BlobCreatedEventHandler>().Handle(message));
+            appBuilder.RegisterEventHandler<BlobCreatedEvent, BlobCreatedEventHandler>();
 
             //Register module settings
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
