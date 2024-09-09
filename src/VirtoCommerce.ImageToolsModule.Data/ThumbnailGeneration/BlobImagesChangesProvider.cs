@@ -93,36 +93,34 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
-            // Add files that are images, has supported extension into the result
-            foreach (var blobInfo in searchResults.Results
-                .Where(item => IsSupportedImage(item))
-                .Select(x => KeyValuePair.Create(x.Url, x)))
+            // Add supported images
+            foreach (var imageBlob in searchResults.Results.Where(IsSupportedImage))
             {
-                result.TryAdd(blobInfo.Key, blobInfo.Value);
+                result.TryAdd(imageBlob.Url, imageBlob);
             }
 
-            // Enumerate all folders and read them recursively
-            await Parallel.ForEachAsync(searchResults.Results.Where(x => IsFolder(x)), async (blobFolder, token) =>
+            // Add images from child folders recursively
+            await Parallel.ForEachAsync(searchResults.Results.Where(IsFolder), async (folderBlob, token) =>
             {
-                var folderItems = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
+                var childFolderImages = await ReadBlobFolderAsync(folderBlob.RelativeUrl, new CancellationTokenWrapper(token));
 
-                foreach (var folderItem in folderItems)
+                foreach (var imageBlob in childFolderImages.Values)
                 {
-                    result.TryAdd(folderItem.Key, folderItem.Value);
+                    result.TryAdd(imageBlob.Url, imageBlob);
                 }
             });
 
             return result;
         }
 
-        protected virtual bool IsFolder(BlobEntry x)
+        protected virtual bool IsSupportedImage(BlobEntry blobEntry)
         {
-            return string.Equals(x.Type, "folder", StringComparison.OrdinalIgnoreCase);
+            return _supportedImageExtensions.Contains(Path.GetExtension(blobEntry.Name), StringComparer.OrdinalIgnoreCase);
         }
 
-        protected virtual bool IsSupportedImage(BlobEntry item)
+        protected virtual bool IsFolder(BlobEntry blobEntry)
         {
-            return _supportedImageExtensions.Contains(Path.GetExtension(item.Name), StringComparer.OrdinalIgnoreCase);
+            return blobEntry.Type.EqualsIgnoreCase("folder");
         }
 
         protected virtual async Task<EntryState> GetItemStateAsync(
