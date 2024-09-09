@@ -93,16 +93,36 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
-            result.AddRange(searchResults.Results.Where(item => _supportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
-
-            await Parallel.ForEachAsync(searchResults.Results.Where(x => x.Type == "folder"), async (blobFolder, token) =>
+            // Add files that are images, has supported extension into the result
+            foreach (var blobInfo in searchResults.Results
+                .Where(item => IsSupportedImage(item))
+                .Select(x => KeyValuePair.Create(x.Url, x)))
             {
-                var folderResult = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
+                result.TryAdd(blobInfo.Key, blobInfo.Value);
+            }
 
-                result.AddRange(folderResult);
+            // Enumerate all folders and read them recursively
+            await Parallel.ForEachAsync(searchResults.Results.Where(x => IsFolder(x)), async (blobFolder, token) =>
+            {
+                var folderItems = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
+
+                foreach (var folderItem in folderItems)
+                {
+                    result.TryAdd(folderItem.Key, folderItem.Value);
+                }
             });
 
             return result;
+        }
+
+        protected virtual bool IsFolder(BlobEntry x)
+        {
+            return string.Equals(x.Type, "folder", StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected virtual bool IsSupportedImage(BlobEntry item)
+        {
+            return _supportedImageExtensions.Contains(Path.GetExtension(item.Name), StringComparer.OrdinalIgnoreCase);
         }
 
         protected virtual async Task<EntryState> GetItemStateAsync(
