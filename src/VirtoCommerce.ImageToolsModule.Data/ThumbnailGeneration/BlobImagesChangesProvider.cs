@@ -93,16 +93,34 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
-            result.AddRange(searchResults.Results.Where(item => _supportedImageExtensions.Contains(Path.GetExtension(item.Name).ToLowerInvariant())).Select(x => KeyValuePair.Create(x.Url, x)));
-
-            await Parallel.ForEachAsync(searchResults.Results.Where(x => x.Type == "folder"), async (blobFolder, token) =>
+            // Add supported images
+            foreach (var imageBlob in searchResults.Results.Where(IsSupportedImage))
             {
-                var folderResult = await ReadBlobFolderAsync(blobFolder.RelativeUrl, new CancellationTokenWrapper(token));
+                result.TryAdd(imageBlob.Url, imageBlob);
+            }
 
-                result.AddRange(folderResult);
+            // Add images from child folders recursively
+            await Parallel.ForEachAsync(searchResults.Results.Where(IsFolder), async (folderBlob, token) =>
+            {
+                var childFolderImages = await ReadBlobFolderAsync(folderBlob.RelativeUrl, new CancellationTokenWrapper(token));
+
+                foreach (var imageBlob in childFolderImages.Values)
+                {
+                    result.TryAdd(imageBlob.Url, imageBlob);
+                }
             });
 
             return result;
+        }
+
+        protected virtual bool IsSupportedImage(BlobEntry blobEntry)
+        {
+            return _supportedImageExtensions.Contains(Path.GetExtension(blobEntry.Name), StringComparer.OrdinalIgnoreCase);
+        }
+
+        protected virtual bool IsFolder(BlobEntry blobEntry)
+        {
+            return blobEntry.Type.EqualsIgnoreCase("folder");
         }
 
         protected virtual async Task<EntryState> GetItemStateAsync(
