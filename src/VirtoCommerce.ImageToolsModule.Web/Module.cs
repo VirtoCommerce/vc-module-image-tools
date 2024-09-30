@@ -29,7 +29,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Hangfire;
-using VirtoCommerce.Platform.Hangfire.Extensions;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
@@ -98,11 +97,9 @@ namespace VirtoCommerce.ImageToolsModule.Web
             permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "Thumbnail", ModuleConstants.Security.Permissions.AllPermissions);
 
             //Schedule periodic image processing job
-            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
-            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
 
-            recurringJobManager.WatchJobSetting(
-                settingsManager,
+            recurringJobService.WatchJobSetting(
                 new SettingCronJobBuilder()
                     .SetEnablerSetting(ModuleConstants.Settings.General.EnableImageProcessJob)
                     .SetCronSetting(ModuleConstants.Settings.General.ImageProcessJobCronExpression)
