@@ -21,16 +21,19 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
         public Mock<IBlobStorageProvider> StorageProviderMock { get; private set; }
         public Mock<IThumbnailOptionSearchService> ThumbnailOptionSearchServiceMock { get; private set; }
+        public Mock<IImageService> ImageServiceMock { get; private set; }
 
         protected BlobChangesProviderTestBase()
         {
             StorageProviderMock = new Mock<IBlobStorageProvider>();
             ThumbnailOptionSearchServiceMock = new Mock<IThumbnailOptionSearchService>();
+            ImageServiceMock = new Mock<IImageService>();
         }
 
         public IImagesChangesProvider GetBlobImagesChangesProvider(IEnumerable<BlobEntry> blobContents)
         {
-            StorageProviderMock.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()))
+            StorageProviderMock
+                .Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns<string, string>((folderUrl, keyword) =>
                 {
 
@@ -43,12 +46,14 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     });
                 });
 
-            StorageProviderMock.Setup(x => x.GetBlobInfoAsync(It.IsAny<string>()))
+            StorageProviderMock
+                .Setup(x => x.GetBlobInfoAsync(It.IsAny<string>()))
                 .Returns<string>(
                     x => Task.FromResult(x.EndsWith(OptionSuffix) ? null : new BlobInfo() { })
                 );
 
-            ThumbnailOptionSearchServiceMock.Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>(), It.IsAny<bool>()))
+            ThumbnailOptionSearchServiceMock
+                .Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>(), It.IsAny<bool>()))
                 .ReturnsAsync(new ThumbnailOptionSearchResult()
                 {
                     TotalCount = 1,
@@ -58,7 +63,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, GetPlatformMemoryCache());
+            ImageServiceMock
+                .Setup(x => x.IsFileExtensionAllowedAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
 
             return result;
         }

@@ -157,6 +157,10 @@
     "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
       "title": "Enable event based thumbnail generation",
       "description": "Start thumbnail generation as soon as an asset is added"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "Allowed image formats",
+      "description": "Thumbnails will only be generated for the specified image formats. For a list of image formats supported by ImageSharp, please visit the following link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
     }
   },
   "module": {

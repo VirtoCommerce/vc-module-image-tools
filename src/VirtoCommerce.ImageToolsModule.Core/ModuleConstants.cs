@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Webp;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Core
@@ -17,7 +20,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     Update = "thumbnail:update",
                     Read = "thumbnail:read";
 
-                public static string[] AllPermissions { get; } = { Access, Create, Delete, Update, Read };
+                public static string[] AllPermissions { get; } = [Access, Create, Delete, Update, Read];
             }
         }
 
@@ -57,6 +60,21 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     DefaultValue = 50,
                 };
 
+                public static SettingDescriptor AllowedImageFormats { get; } = new()
+                {
+                    Name = "ImageTools.Thumbnails.AllowedImageFormats",
+                    GroupName = "Thumbnail|General",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = string.Empty,
+                    IsDictionary = true,
+                    AllowedValues =
+                    [
+                        JpegFormat.Instance.Name,
+                        PngFormat.Instance.Name,
+                        WebpFormat.Instance.Name,
+                    ],
+                };
+
                 public static IEnumerable<SettingDescriptor> AllGeneralSettings
                 {
                     get
@@ -65,6 +83,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                         yield return EventBasedThumbnailGeneration;
                         yield return ImageProcessJobCronExpression;
                         yield return ProcessBatchSize;
+                        yield return AllowedImageFormats;
                     }
                 }
             }
