@@ -18,8 +18,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         public bool IsTotalCountSupported => true;
 
-        private readonly string[] _supportedImageExtensions;
-
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
         private readonly IImageService _imageService;
@@ -35,8 +33,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
             _imageService = imageService;
             _platformMemoryCache = platformMemoryCache;
-
-            _supportedImageExtensions = SixLabors.ImageSharp.Configuration.Default.ImageFormats.SelectMany(x => x.FileExtensions).ToArray();
         }
 
         public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
