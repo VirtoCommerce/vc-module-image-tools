@@ -20,7 +20,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     Update = "thumbnail:update",
                     Read = "thumbnail:read";
 
-                public static string[] AllPermissions { get; } = { Access, Create, Delete, Update, Read };
+                public static string[] AllPermissions { get; } = [Access, Create, Delete, Update, Read];
             }
         }
 
@@ -67,10 +67,12 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = string.Empty,
                     IsDictionary = true,
-                    AllowedValues = [
+                    AllowedValues =
+                    [
                         JpegFormat.Instance.Name,
                         PngFormat.Instance.Name,
-                        WebpFormat.Instance.Name]
+                        WebpFormat.Instance.Name,
+                    ],
                 };
 
                 public static IEnumerable<SettingDescriptor> AllGeneralSettings

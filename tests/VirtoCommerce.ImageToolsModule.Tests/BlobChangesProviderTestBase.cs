@@ -32,7 +32,8 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
         public IImagesChangesProvider GetBlobImagesChangesProvider(IEnumerable<BlobEntry> blobContents)
         {
-            StorageProviderMock.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()))
+            StorageProviderMock
+                .Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns<string, string>((folderUrl, keyword) =>
                 {
 
@@ -45,12 +46,14 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     });
                 });
 
-            StorageProviderMock.Setup(x => x.GetBlobInfoAsync(It.IsAny<string>()))
+            StorageProviderMock
+                .Setup(x => x.GetBlobInfoAsync(It.IsAny<string>()))
                 .Returns<string>(
                     x => Task.FromResult(x.EndsWith(OptionSuffix) ? null : new BlobInfo() { })
                 );
 
-            ThumbnailOptionSearchServiceMock.Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>(), It.IsAny<bool>()))
+            ThumbnailOptionSearchServiceMock
+                .Setup(x => x.SearchAsync(It.IsAny<ThumbnailOptionSearchCriteria>(), It.IsAny<bool>()))
                 .ReturnsAsync(new ThumbnailOptionSearchResult()
                 {
                     TotalCount = 1,
@@ -60,7 +63,8 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            ImageServiceMock.Setup(x => x.IsFileExtensionAllowed(It.IsAny<string>()))
+            ImageServiceMock
+                .Setup(x => x.IsFileExtensionAllowedAsync(It.IsAny<string>()))
                 .ReturnsAsync(true);
 
             var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
