@@ -12,11 +12,11 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
     public interface IImageService
     {
         /// <summary>
-        /// Defines if given extension is allowed for image processing
+        /// Defines if given file extension is allowed for image processing
         /// </summary>
         /// <param name="extension"></param>
         /// <returns></returns>
-        Task<bool> IsExtensionAllowed(string path);
+        Task<bool> IsFileExtensionAllowed(string path);
 
         /// <summary>
         /// Defines if given image format is allowed for image processing
@@ -27,7 +27,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
 
 
         /// <summary>
-        ///Loads Image from blob storage
+        /// Loads Image from blob storage
         /// </summary>
         /// <param name="imageUrl">image url.</param>
         /// <param name="format">image format.</param>

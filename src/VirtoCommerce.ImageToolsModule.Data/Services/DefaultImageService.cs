@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,18 +19,19 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     public class DefaultImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
-        private readonly ILogger<DefaultImageService> _logger;
         private readonly ISettingsManager _settingsManager;
-        private IImageFormat[] _allowedImageFormats;
+        private readonly ILogger<DefaultImageService> _logger;
+
+        private IList<IImageFormat> _allowedImageFormats;
 
         public DefaultImageService(IBlobStorageProvider storageProvider, ISettingsManager settingsManager, ILogger<DefaultImageService> logger)
         {
             _storageProvider = storageProvider;
-            _logger = logger;
             _settingsManager = settingsManager;
+            _logger = logger;
         }
 
-        public virtual async Task<bool> IsExtensionAllowed(string path)
+        public virtual async Task<bool> IsFileExtensionAllowed(string path)
         {
             var allowedImageFormats = await GetAllowedImageFormats();
 
@@ -45,7 +47,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             return allowedImageFormats.Any(f => string.Equals(f.Name, format.Name, StringComparison.OrdinalIgnoreCase));
         }
 
-        protected virtual async Task<IImageFormat[]> GetAllowedImageFormats()
+        private async Task<IList<IImageFormat>> GetAllowedImageFormats()
         {
             if (_allowedImageFormats == null)
             {

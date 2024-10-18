@@ -118,7 +118,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         protected virtual Task<bool> IsSupportedImage(BlobEntry blobEntry)
         {
-            return _imageService.IsExtensionAllowed(blobEntry.Name);
+            return _imageService.IsFileExtensionAllowed(blobEntry.Name);
         }
 
         protected virtual bool IsFolder(BlobEntry blobEntry)

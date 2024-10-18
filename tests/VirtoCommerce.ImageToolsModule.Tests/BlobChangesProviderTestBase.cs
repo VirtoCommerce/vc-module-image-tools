@@ -60,7 +60,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            ImageServiceMock.Setup(x => x.IsExtensionAllowed(It.IsAny<string>()))
+            ImageServiceMock.Setup(x => x.IsFileExtensionAllowed(It.IsAny<string>()))
                 .ReturnsAsync(true);
 
             var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
