@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,20 +18,25 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         public bool IsTotalCountSupported => true;
 
-        private static readonly string[] _supportedImageExtensions = { ".bmp", ".gif", ".jpg", ".jpeg", ".png", ".webp", ".pbm" };
+        private readonly string[] _supportedImageExtensions;
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
+        private readonly IImageService _imageService;
         private readonly IPlatformMemoryCache _platformMemoryCache;
 
         public BlobImagesChangesProvider(
             IBlobStorageProvider storageProvider,
             IThumbnailOptionSearchService thumbnailOptionSearchService,
+            IImageService imageService,
             IPlatformMemoryCache platformMemoryCache)
         {
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
+            _imageService = imageService;
             _platformMemoryCache = platformMemoryCache;
+
+            _supportedImageExtensions = SixLabors.ImageSharp.Configuration.Default.ImageFormats.SelectMany(x => x.FileExtensions).ToArray();
         }
 
         public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
@@ -94,9 +98,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             var searchResults = await _storageProvider.SearchAsync(folderPath, null);
 
             // Add supported images
-            foreach (var imageBlob in searchResults.Results.Where(IsSupportedImage))
+            foreach (var imageBlob in searchResults.Results)
             {
-                result.TryAdd(imageBlob.Url, imageBlob);
+                if (await IsSupportedImage(imageBlob))
+                {
+                    result.TryAdd(imageBlob.Url, imageBlob);
+                }
             }
 
             // Add images from child folders recursively
@@ -113,9 +120,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        protected virtual bool IsSupportedImage(BlobEntry blobEntry)
+        protected virtual Task<bool> IsSupportedImage(BlobEntry blobEntry)
         {
-            return _supportedImageExtensions.Contains(Path.GetExtension(blobEntry.Name), StringComparer.OrdinalIgnoreCase);
+            return _imageService.IsExtensionAllowed(blobEntry.Name);
         }
 
         protected virtual bool IsFolder(BlobEntry blobEntry)

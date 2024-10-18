@@ -21,11 +21,13 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
         public Mock<IBlobStorageProvider> StorageProviderMock { get; private set; }
         public Mock<IThumbnailOptionSearchService> ThumbnailOptionSearchServiceMock { get; private set; }
+        public Mock<IImageService> ImageServiceMock { get; private set; }
 
         protected BlobChangesProviderTestBase()
         {
             StorageProviderMock = new Mock<IBlobStorageProvider>();
             ThumbnailOptionSearchServiceMock = new Mock<IThumbnailOptionSearchService>();
+            ImageServiceMock = new Mock<IImageService>();
         }
 
         public IImagesChangesProvider GetBlobImagesChangesProvider(IEnumerable<BlobEntry> blobContents)
@@ -58,7 +60,10 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, GetPlatformMemoryCache());
+            ImageServiceMock.Setup(x => x.IsExtensionAllowed(It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
 
             return result;
         }

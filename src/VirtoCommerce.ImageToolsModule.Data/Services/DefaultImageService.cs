@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
@@ -7,8 +8,10 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.AssetsModule.Core.Assets;
+using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
@@ -16,11 +19,45 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     {
         private readonly IBlobStorageProvider _storageProvider;
         private readonly ILogger<DefaultImageService> _logger;
+        private readonly ISettingsManager _settingsManager;
+        private IImageFormat[] _allowedImageFormats;
 
-        public DefaultImageService(IBlobStorageProvider storageProvider, ILogger<DefaultImageService> logger)
+        public DefaultImageService(IBlobStorageProvider storageProvider, ISettingsManager settingsManager, ILogger<DefaultImageService> logger)
         {
             _storageProvider = storageProvider;
             _logger = logger;
+            _settingsManager = settingsManager;
+        }
+
+        public virtual async Task<bool> IsExtensionAllowed(string path)
+        {
+            var allowedImageFormats = await GetAllowedImageFormats();
+
+            var extension = Path.GetExtension(path).TrimStart('.');
+
+            return allowedImageFormats.SelectMany(x => x.FileExtensions).Contains(extension, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public virtual async Task<bool> IsImageFormatAllowed(IImageFormat format)
+        {
+            var allowedImageFormats = await GetAllowedImageFormats();
+
+            return allowedImageFormats.Any(f => string.Equals(f.Name, format.Name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        protected virtual async Task<IImageFormat[]> GetAllowedImageFormats()
+        {
+            if (_allowedImageFormats == null)
+            {
+                var allowedImageFormatsSetting = await _settingsManager.GetObjectSettingAsync(ModuleConstants.Settings.General.AllowedImageFormats.Name);
+                var allowedFormatNames = allowedImageFormatsSetting.AllowedValues.OfType<string>().ToArray();
+
+                _allowedImageFormats = Configuration.Default.ImageFormats
+                    .Where(x => allowedFormatNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase))
+                    .ToArray();
+            }
+
+            return _allowedImageFormats;
         }
 
         /// <summary>
@@ -31,17 +68,23 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <returns>Image object.</returns>
         public virtual async Task<Image<Rgba32>> LoadImageAsync(string imageUrl)
         {
-            _logger.LogInformation($"Loading image {imageUrl}");
+            _logger.LogInformation("Loading image {imageUrl}", imageUrl);
             try
             {
                 using var blobStream = _storageProvider.OpenRead(imageUrl);
-                return await Image.LoadAsync<Rgba32>(blobStream);
+
+                var imageFormat = await Image.DetectFormatAsync(blobStream);
+
+                if (await IsImageFormatAllowed(imageFormat))
+                {
+                    return await Image.LoadAsync<Rgba32>(blobStream);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Could not load image {imageUrl}");
-                return null!;
+                _logger.LogError(ex, "Could not load image {imageUrl}", imageUrl);
             }
+            return null!;
         }
 
         /// <inheritdoc />
@@ -57,7 +100,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             await using var blobStream = await _storageProvider.OpenWriteAsync(imageUrl);
             using var stream = new MemoryStream();
 
-            if (format.DefaultMimeType == "image/jpeg")
+            if (format.DefaultMimeType == JpegFormat.Instance.DefaultMimeType)
             {
                 var options = new JpegEncoder
                 {
