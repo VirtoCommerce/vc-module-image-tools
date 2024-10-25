@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "Miniaturansichten",
+    "blades": {
+      "tasks-list": {
+        "title": "Liste der Miniaturansichten-Generierungsaufgaben",
+        "subtitle": "Liste aller Aufgaben zur Generierung von Miniaturansichten",
+        "labels": {
+          "task-name": "Aufgabenname",
+          "last-run": "Letzte Ausführung"
+        }
+      },
+      "task-detail": {
+        "title": "Details der Miniaturansichten-Generierungsaufgabe",
+        "subtitle": "Aufgabeneinstellungen und Details verwalten",
+        "labels": {
+          "name": "Name",
+          "path-images": "Pfad zu Bildern",
+          "thumbnail-settings": "Miniaturansichten-Einstellungen"
+        },
+        "placeholders": {
+          "name": "Namen eingeben",
+          "path-images": "Bilderpfad auswählen",
+          "thumbnail-settings": "Einstellungen auswählen..."
+        },
+        "descriptions": {
+          "name": "Der angezeigte Aufgabenname",
+          "path-images": "Der Pfad im Asset-System, der für die Bilderkennung verwendet wird. Alle Bilder in diesem Ordner werden rekursiv verarbeitet",
+          "thumbnail-settings": "Die Liste der Miniaturansichten-Auflösungen"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "Start",
+          "end": "Ende",
+          "stats": "Verarbeitet — {{ processedCount }} von {{ totalCount }} Bildern",
+          "errors": "Fehler"
+        }
+      },
+      "setting-managment": {
+        "title": "Miniaturansichten-Einstellungen",
+        "subtitle": "Miniaturansichten-Einstellungen verwalten",
+        "background": "Hintergrund",
+        "height": "Höhe",
+        "width": "Breite",
+        "no-settings": "Keine Einstellungen"
+      },
+      "setting-detail": {
+        "title": "Details der Miniaturansichten-Option",
+        "subtitle": "Details der Miniaturansichten-Einstellung verwalten",
+        "labels": {
+          "name": "Name",
+          "file-suffix": "Dateinamen-Suffix für Miniaturansicht",
+          "resize-method": "Größenänderungsmethode",
+          "width": "Breite (Pixel)",
+          "height": "Höhe (Pixel)",
+          "background-color": "Hintergrundfarbe",
+          "anchor-position": "Ankerposition",
+          "jpeg-quality": "JPEG-Qualität"
+        },
+        "placeholders": {
+          "name": "Optionsnamen eingeben",
+          "file-suffix": "Namenssuffix eingeben",
+          "width": "Breite eingeben",
+          "height": "Höhe eingeben",
+          "background-color": "Hintergrundfarbe eingeben"
+        },
+        "discription": {
+          "name": "Der angezeigte Einstellungsname",
+          "file-suffix": "Das Suffix, das am Ende des ursprünglichen Dateinamens hinzugefügt wird, getrennt durch '_'",
+          "resize-method": "Größenänderungsmethode, die für die Bildtransformation verwendet wird",
+          "width": "Breite der Miniaturansicht in Pixeln",
+          "height": "Höhe der Miniaturansicht in Pixeln",
+          "background-color": "Hintergrundfarbe der Miniaturansicht, z.B. #FFFFFF",
+          "anchor-position": "Ankerposition für Bildzuschnitt",
+          "jpeg-quality": "Ausgabe-JPEG-Qualität"
+        },
+        "resize-method": {
+          "fixed-size": "Feste Größe",
+          "fixed-width": "Feste Breite",
+          "fixed-height": "Feste Höhe",
+          "crop": "Zuschneiden"
+        },
+        "anchor-position": {
+          "top-left": "Oben links",
+          "top-center": "Oben Mitte",
+          "top-right": "Oben rechts",
+          "center-left": "Mitte links",
+          "center": "Mitte",
+          "center-right": "Mitte rechts",
+          "bottom-left": "Unten links",
+          "bottom-center": "Unten Mitte",
+          "bottom-right": "Unten rechts"
+        },
+        "jpeg-quality": {
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch",
+          "very-high": "Sehr hoch"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "Miniaturansichten-Generierung",
+        "msg1": "Wählen Sie aus, wie die Miniaturansichten generiert werden sollen. Optionen:",
+        "msg2": "Änderungen verarbeiten: Miniaturansichten nur für neue oder geänderte Bilder generieren",
+        "msg3": "Neu generieren: Den Generierungsprozess für alle Bilder erzwingen",
+        "btn-changes": "Änderungen verarbeiten",
+        "btn-regenerate": "Neu generieren"
+      },
+      "select-folder": {
+        "title": "Pfad zu Bildern für Miniaturansichten-Generierung",
+        "msg1": "Sie können nur ein Verzeichnis und nur eines auswählen"
+      },
+      "task-save": {
+        "title": "Änderungen speichern",
+        "message": "Die Aufgabe wurde geändert. Möchten Sie die Änderungen speichern?"
+      },
+      "task-delete": {
+        "title": "Löschen bestätigen",
+        "message": "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten?"
+      },
+      "setting-save": {
+        "title": "Änderungen speichern",
+        "message": "Die Einstellung wurde geändert. Möchten Sie die Änderungen speichern?"
+      },
+      "setting-delete": {
+        "title": "Löschen bestätigen",
+        "message": "Sind Sie sicher, dass Sie diese Einstellung löschen möchten?"
+      }
+    },
+    "commands": {
+      "run": "Ausführen"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "Miniaturansichten-Menü öffnen",
+    "thumbnail:create": "Miniaturansichten-Daten erstellen",
+    "thumbnail:read": "Miniaturansichten-Daten anzeigen",
+    "thumbnail:update": "Miniaturansichten-Daten aktualisieren",
+    "thumbnail:delete": "Miniaturansichten-Daten löschen"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "Cron-Ausdruck für die Planung der Bildverarbeitungsaufgabenausführung"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "Partitionsgröße",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "Bildverarbeitungsaufgabe aktivieren",
+      "description": "Flag zur Aktivierung der Hintergrund-Bildverarbeitungsaufgabe"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Ereignisbasierte Miniaturansichten-Generierung aktivieren",
+      "description": "Miniaturansichten-Generierung starten, sobald ein Asset hinzugefügt wird"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "Erlaubte Bildformate",
+      "description": "Miniaturansichten werden nur für die angegebenen Bildformate generiert. Eine Liste der von ImageSharp unterstützten Bildformate finden Sie unter folgendem Link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "Gespeicherte Aufgaben und Optionen exportieren/importieren"
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "缩略图",
+    "blades": {
+      "tasks-list": {
+        "title": "缩略图生成任务列表",
+        "subtitle": "所有缩略图生成任务的列表",
+        "labels": {
+          "task-name": "任务名称",
+          "last-run": "上次运行"
+        }
+      },
+      "task-detail": {
+        "title": "缩略图生成任务详情",
+        "subtitle": "管理任务设置和详情",
+        "labels": {
+          "name": "名称",
+          "path-images": "图片路径",
+          "thumbnail-settings": "缩略图设置"
+        },
+        "placeholders": {
+          "name": "输入名称",
+          "path-images": "选择图片路径",
+          "thumbnail-settings": "选择设置..."
+        },
+        "descriptions": {
+          "name": "显示的任务名称",
+          "path-images": "用于发现图片的资产系统中的路径。此文件夹中的所有图片将被递归处理",
+          "thumbnail-settings": "缩略图分辨率列表"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "开始",
+          "end": "结束",
+          "stats": "已处理 — {{ totalCount }}张图片中的{{ processedCount }}张",
+          "errors": "错误"
+        }
+      },
+      "setting-managment": {
+        "title": "缩略图设置",
+        "subtitle": "管理缩略图设置",
+        "background": "背景",
+        "height": "高度",
+        "width": "宽度",
+        "no-settings": "无设置"
+      },
+      "setting-detail": {
+        "title": "缩略图选项详情",
+        "subtitle": "管理缩略图设置详情",
+        "labels": {
+          "name": "名称",
+          "file-suffix": "缩略图文件名后缀",
+          "resize-method": "调整大小方法",
+          "width": "宽度（像素）",
+          "height": "高度（像素）",
+          "background-color": "背景颜色",
+          "anchor-position": "锚点位置",
+          "jpeg-quality": "JPEG质量"
+        },
+        "placeholders": {
+          "name": "输入选项名称",
+          "file-suffix": "输入名称后缀",
+          "width": "输入宽度",
+          "height": "输入高度",
+          "background-color": "输入背景颜色"
+        },
+        "discription": {
+          "name": "显示的设置名称",
+          "file-suffix": "将添加到原始文件名后面的后缀，用'_'分隔",
+          "resize-method": "用于图像转换的调整大小方法",
+          "width": "缩略图宽度（像素）",
+          "height": "缩略图高度（像素）",
+          "background-color": "缩略图背景颜色，例如 #FFFFFF",
+          "anchor-position": "图像裁剪的锚点位置",
+          "jpeg-quality": "JPEG输出质量"
+        },
+        "resize-method": {
+          "fixed-size": "固定大小",
+          "fixed-width": "固定宽度",
+          "fixed-height": "固定高度",
+          "crop": "裁剪"
+        },
+        "anchor-position": {
+          "top-left": "左上",
+          "top-center": "顶部中心",
+          "top-right": "右上",
+          "center-left": "左中",
+          "center": "中心",
+          "center-right": "右中",
+          "bottom-left": "左下",
+          "bottom-center": "底部中心",
+          "bottom-right": "右下"
+        },
+        "jpeg-quality": {
+          "low": "低",
+          "medium": "中",
+          "high": "高",
+          "very-high": "非常高"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "缩略图生成",
+        "msg1": "选择如何生成缩略图。选项：",
+        "msg2": "处理更改：仅为新的或更改的图像生成缩略图",
+        "msg3": "重新生成：强制对所有图像进行生成处理",
+        "btn-changes": "处理更改",
+        "btn-regenerate": "重新生成"
+      },
+      "select-folder": {
+        "title": "缩略图生成的图像路径",
+        "msg1": "您只能选择一个目录，且只能选择一个"
+      },
+      "task-save": {
+        "title": "保存更改",
+        "message": "任务已被修改。您想保存更改吗？"
+      },
+      "task-delete": {
+        "title": "确认删除",
+        "message": "您确定要删除此任务吗？"
+      },
+      "setting-save": {
+        "title": "保存更改",
+        "message": "设置已被修改。您想保存更改吗？"
+      },
+      "setting-delete": {
+        "title": "确认删除",
+        "message": "您确定要删除此设置吗？"
+      }
+    },
+    "commands": {
+      "run": "运行"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "打开缩略图菜单",
+    "thumbnail:create": "创建缩略图数据",
+    "thumbnail:read": "查看缩略图数据",
+    "thumbnail:update": "更新缩略图数据",
+    "thumbnail:delete": "删除缩略图数据"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "用于调度图像处理作业执行的Cron表达式"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "批处理大小",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "启用图像处理作业",
+      "description": "激活后台图像处理作业的标志"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "启用基于事件的缩略图生成",
+      "description": "在添加资产时立即开始生成缩略图"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "允许的图像格式",
+      "description": "只会为指定的图像格式生成缩略图。有关ImageSharp支持的图像格式列表，请访问以下链接：https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "导出/导入保存的任务和选项"
+    }
+  }
+}
