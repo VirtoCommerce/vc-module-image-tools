@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "Miniaturas",
+    "blades": {
+      "tasks-list": {
+        "title": "Lista de tarefas de geração de miniaturas",
+        "subtitle": "Lista de todas as tarefas para geração de miniaturas",
+        "labels": {
+          "task-name": "Nome da tarefa",
+          "last-run": "Última execução"
+        }
+      },
+      "task-detail": {
+        "title": "Detalhes da tarefa de geração de miniaturas",
+        "subtitle": "Gerenciar configurações e detalhes da tarefa",
+        "labels": {
+          "name": "Nome",
+          "path-images": "Caminho para as imagens",
+          "thumbnail-settings": "Configurações de miniatura"
+        },
+        "placeholders": {
+          "name": "Digite o nome",
+          "path-images": "Selecione o caminho das imagens",
+          "thumbnail-settings": "Selecione as configurações..."
+        },
+        "descriptions": {
+          "name": "O nome de exibição da tarefa",
+          "path-images": "O caminho no sistema de ativos que será usado para descoberta de imagens. Todas as imagens nesta pasta serão processadas recursivamente",
+          "thumbnail-settings": "A lista de resoluções de miniaturas"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "Início",
+          "end": "Fim",
+          "stats": "Processadas — {{ processedCount }} de {{ totalCount }} imagens",
+          "errors": "Erros"
+        }
+      },
+      "setting-managment": {
+        "title": "Configurações de miniaturas",
+        "subtitle": "Gerenciar configurações de miniaturas",
+        "background": "Fundo",
+        "height": "Altura",
+        "width": "Largura",
+        "no-settings": "Sem configurações"
+      },
+      "setting-detail": {
+        "title": "Detalhe da opção de miniatura",
+        "subtitle": "Gerenciar detalhes da configuração de miniatura",
+        "labels": {
+          "name": "Nome",
+          "file-suffix": "Sufixo do nome do arquivo de miniatura",
+          "resize-method": "Método de redimensionamento",
+          "width": "Largura (pixels)",
+          "height": "Altura (pixels)",
+          "background-color": "Cor de fundo",
+          "anchor-position": "Posição de ancoragem",
+          "jpeg-quality": "Qualidade JPEG"
+        },
+        "placeholders": {
+          "name": "Digite o nome da opção",
+          "file-suffix": "Digite o sufixo do nome",
+          "width": "Digite a largura",
+          "height": "Digite a altura",
+          "background-color": "Digite a cor de fundo"
+        },
+        "discription": {
+          "name": "O nome de exibição da configuração",
+          "file-suffix": "O sufixo que será adicionado ao final do nome do arquivo original, separado por '_'",
+          "resize-method": "Método de redimensionamento que será usado para transformação da imagem",
+          "width": "Largura da miniatura em pixels",
+          "height": "Altura da miniatura em pixels",
+          "background-color": "Cor de fundo da miniatura, por exemplo #FFFFFF",
+          "anchor-position": "Posição de ancoragem para recorte da imagem",
+          "jpeg-quality": "Qualidade de saída JPEG"
+        },
+        "resize-method": {
+          "fixed-size": "Tamanho fixo",
+          "fixed-width": "Largura fixa",
+          "fixed-height": "Altura fixa",
+          "crop": "Recortar"
+        },
+        "anchor-position": {
+          "top-left": "Superior esquerdo",
+          "top-center": "Superior centro",
+          "top-right": "Superior direito",
+          "center-left": "Centro esquerdo",
+          "center": "Centro",
+          "center-right": "Centro direito",
+          "bottom-left": "Inferior esquerdo",
+          "bottom-center": "Inferior centro",
+          "bottom-right": "Inferior direito"
+        },
+        "jpeg-quality": {
+          "low": "Baixa",
+          "medium": "Média",
+          "high": "Alta",
+          "very-high": "Muito alta"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "Geração de miniaturas",
+        "msg1": "Escolha como gerar as miniaturas. Opções:",
+        "msg2": "Processar alterações: gerar miniaturas apenas para imagens novas ou alteradas",
+        "msg3": "Regenerar: forçar o processo de geração para todas as imagens",
+        "btn-changes": "Processar alterações",
+        "btn-regenerate": "Regenerar"
+      },
+      "select-folder": {
+        "title": "Caminho para imagens de geração de miniaturas",
+        "msg1": "Você pode selecionar apenas um diretório e somente um"
+      },
+      "task-save": {
+        "title": "Salvar alterações",
+        "message": "A tarefa foi modificada. Deseja salvar as alterações?"
+      },
+      "task-delete": {
+        "title": "Confirmar exclusão",
+        "message": "Tem certeza de que deseja excluir esta tarefa?"
+      },
+      "setting-save": {
+        "title": "Salvar alterações",
+        "message": "A configuração foi modificada. Deseja salvar as alterações?"
+      },
+      "setting-delete": {
+        "title": "Confirmar exclusão",
+        "message": "Tem certeza de que deseja excluir esta configuração?"
+      }
+    },
+    "commands": {
+      "run": "Executar"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "Abrir menu de miniaturas",
+    "thumbnail:create": "Criar dados de miniatura",
+    "thumbnail:read": "Visualizar dados de miniatura",
+    "thumbnail:update": "Atualizar dados de miniatura",
+    "thumbnail:delete": "Excluir dados de miniatura"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "Expressão cron para agendar a execução do trabalho de processamento de imagem"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "Tamanho do lote",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "Habilitar trabalho de processamento de imagem",
+      "description": "Sinalizador para ativar o trabalho de processamento de imagem em segundo plano"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Habilitar geração de miniaturas baseada em eventos",
+      "description": "Iniciar a geração de miniaturas assim que um ativo for adicionado"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "Formatos de imagem permitidos",
+      "description": "As miniaturas serão geradas apenas para os formatos de imagem especificados. Para obter a lista de formatos de imagem suportados pelo ImageSharp, visite o seguinte link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "Exportar/Importar tarefas e opções salvas"
+    }
+  }
+}

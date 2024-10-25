@@ -6,7 +6,7 @@
         "title": "Thumbnails generation tasks list",
         "subtitle": "List of all tasks for thumbnails generations",
         "labels": {
-          "task-name": "Task Name",
+          "task-name": "Task name",
           "last-run": "Last run"
         }
       },
@@ -40,9 +40,9 @@
       "setting-managment": {
         "title": "Thumbnails settings",
         "subtitle": "Manage thumbnails settings",
-        "background": "background",
-        "height": "height",
-        "width": "width",
+        "background": "Background",
+        "height": "Height",
+        "width": "Width",
         "no-settings": "No settings"
       },
       "setting-detail": {
@@ -55,8 +55,8 @@
           "width": "Width (pixels)",
           "height": "Height (pixels)",
           "background-color": "Background color",
-          "anchor-position": "Anchor Position",
-          "jpeg-quality": "Jpeg quality"
+          "anchor-position": "Anchor position",
+          "jpeg-quality": "JPEG quality"
         },
         "placeholders": {
           "name": "Enter option name",
@@ -71,26 +71,26 @@
           "resize-method": "Resize method which will be used for image transformation",
           "width": "Thumbnail width in pixels",
           "height": "Thumbnail height in pixels",
-          "background-color": "Thumbnail background color i.e. #FFFFFF",
-          "anchor-position": "Anchor position when cropping the image",
-          "jpeg-quality": "Output Jpeg quality"
+          "background-color": "Thumbnail background color, e.g. #FFFFFF",
+          "anchor-position": "Image cropping anchor position",
+          "jpeg-quality": "Output JPEG quality"
         },
         "resize-method": {
-          "fixed-size": "Fixed Size",
-          "fixed-width": "Fixed Width",
-          "fixed-height": "Fixed Height",
+          "fixed-size": "Fixed size",
+          "fixed-width": "Fixed width",
+          "fixed-height": "Fixed height",
           "crop": "Crop"
         },
         "anchor-position": {
-          "top-left": "Top Left",
-          "top-center": "Top Center",
-          "top-right": "Top Right",
-          "center-left": "Center Left",
+          "top-left": "Top left",
+          "top-center": "Top center",
+          "top-right": "Top right",
+          "center-left": "Center left",
           "center": "Center",
-          "center-right": "Center Right",
-          "bottom-left": "Bottom Left",
-          "bottom-center": "Bottom Center",
-          "bottom-right": "Bottom Right"
+          "center-right": "Center right",
+          "bottom-left": "Bottom left",
+          "bottom-center": "Bottom center",
+          "bottom-right": "Bottom right"
         },
         "jpeg-quality": {
           "low": "Low",
@@ -102,32 +102,32 @@
     },
     "dialogs": {
       "task-run": {
-        "title": "The thumbnail generation",
+        "title": "Thumbnail generation",
         "msg1": "Choose how to generate the thumbnails. Options:",
         "msg2": "Process changes: generate thumbnails only for new or changed images",
-        "msg3": "Regenerate: force to generation process for all images",
+        "msg3": "Regenerate: force the generation process for all images",
         "btn-changes": "Process changes",
         "btn-regenerate": "Regenerate"
       },
       "select-folder": {
         "title": "Thumbnails generation path to images",
-        "msg1": "You can select only the directory and only one."
+        "msg1": "You can select only directory and only one"
       },
       "task-save": {
         "title": "Save changes",
-        "message": "The Task has been modified. Do you want to save changes?"
+        "message": "The task has been modified. Do you want to save changes?"
       },
       "task-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this Task?"
+        "message": "Are you sure you want to delete this task?"
       },
       "setting-save": {
         "title": "Save changes",
-        "message": "The Setting has been modified. Do you want to save changes?"
+        "message": "The setting has been modified. Do you want to save changes?"
       },
       "setting-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this Setting?"
+        "message": "Are you sure you want to delete this setting?"
       }
     },
     "commands": {
@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Allowed image formats",
-      "description": "Thumbnails will only be generated for the specified image formats. For a list of image formats supported by ImageSharp, please visit the following link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Thumbnails will only be generated for the specified image formats. For the list of image formats supported by ImageSharp, please visit the following link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
     }
   },
   "module": {
