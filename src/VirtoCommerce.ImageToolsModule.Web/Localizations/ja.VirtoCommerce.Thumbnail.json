@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "サムネイル",
+    "blades": {
+      "tasks-list": {
+        "title": "サムネイル生成タスクリスト",
+        "subtitle": "サムネイル生成のすべてのタスクのリスト",
+        "labels": {
+          "task-name": "タスク名",
+          "last-run": "最終実行"
+        }
+      },
+      "task-detail": {
+        "title": "サムネイル生成タスクの詳細",
+        "subtitle": "タスクの設定と詳細を管理",
+        "labels": {
+          "name": "名前",
+          "path-images": "画像のパス",
+          "thumbnail-settings": "サムネイル設定"
+        },
+        "placeholders": {
+          "name": "名前を入力",
+          "path-images": "画像のパスを選択",
+          "thumbnail-settings": "設定を選択..."
+        },
+        "descriptions": {
+          "name": "表示されるタスク名",
+          "path-images": "画像の検出に使用されるアセットシステム内のパス。このフォルダ内のすべての画像が再帰的に処理されます",
+          "thumbnail-settings": "サムネイルの解像度のリスト"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "開始",
+          "end": "終了",
+          "stats": "処理済み — {{ totalCount }}枚中{{ processedCount }}枚の画像",
+          "errors": "エラー"
+        }
+      },
+      "setting-managment": {
+        "title": "サムネイル設定",
+        "subtitle": "サムネイル設定を管理",
+        "background": "背景",
+        "height": "高さ",
+        "width": "幅",
+        "no-settings": "設定なし"
+      },
+      "setting-detail": {
+        "title": "サムネイルオプションの詳細",
+        "subtitle": "サムネイル設定の詳細を管理",
+        "labels": {
+          "name": "名前",
+          "file-suffix": "サムネイルファイル名のサフィックス",
+          "resize-method": "リサイズ方法",
+          "width": "幅（ピクセル）",
+          "height": "高さ（ピクセル）",
+          "background-color": "背景色",
+          "anchor-position": "アンカー位置",
+          "jpeg-quality": "JPEG品質"
+        },
+        "placeholders": {
+          "name": "オプション名を入力",
+          "file-suffix": "名前のサフィックスを入力",
+          "width": "幅を入力",
+          "height": "高さを入力",
+          "background-color": "背景色を入力"
+        },
+        "discription": {
+          "name": "表示される設定名",
+          "file-suffix": "元のファイル名の後ろに追加されるサフィックス（'_'で区切られます）",
+          "resize-method": "画像変換に使用されるリサイズ方法",
+          "width": "サムネイルの幅（ピクセル単位）",
+          "height": "サムネイルの高さ（ピクセル単位）",
+          "background-color": "サムネイルの背景色（例：#FFFFFF）",
+          "anchor-position": "画像切り抜きのアンカー位置",
+          "jpeg-quality": "JPEG出力品質"
+        },
+        "resize-method": {
+          "fixed-size": "固定サイズ",
+          "fixed-width": "固定幅",
+          "fixed-height": "固定高さ",
+          "crop": "切り抜き"
+        },
+        "anchor-position": {
+          "top-left": "左上",
+          "top-center": "上中央",
+          "top-right": "右上",
+          "center-left": "左中央",
+          "center": "中央",
+          "center-right": "右中央",
+          "bottom-left": "左下",
+          "bottom-center": "下中央",
+          "bottom-right": "右下"
+        },
+        "jpeg-quality": {
+          "low": "低",
+          "medium": "中",
+          "high": "高",
+          "very-high": "最高"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "サムネイル生成",
+        "msg1": "サムネイルの生成方法を選択してください。オプション：",
+        "msg2": "変更を処理：新規または変更された画像のみサムネイルを生成",
+        "msg3": "再生成：すべての画像に対して生成プロセスを強制実行",
+        "btn-changes": "変更を処理",
+        "btn-regenerate": "再生成"
+      },
+      "select-folder": {
+        "title": "サムネイル生成用の画像パス",
+        "msg1": "ディレクトリを1つだけ選択できます"
+      },
+      "task-save": {
+        "title": "変更を保存",
+        "message": "タスクが変更されました。変更を保存しますか？"
+      },
+      "task-delete": {
+        "title": "削除の確認",
+        "message": "このタスクを削除してもよろしいですか？"
+      },
+      "setting-save": {
+        "title": "変更を保存",
+        "message": "設定が変更されました。変更を保存しますか？"
+      },
+      "setting-delete": {
+        "title": "削除の確認",
+        "message": "この設定を削除してもよろしいですか？"
+      }
+    },
+    "commands": {
+      "run": "実行"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "サムネイルメニューを開く",
+    "thumbnail:create": "サムネイルデータを作成",
+    "thumbnail:read": "サムネイルデータを表示",
+    "thumbnail:update": "サムネイルデータを更新",
+    "thumbnail:delete": "サムネイルデータを削除"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "画像処理ジョブ実行のスケジューリング用Cron式"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "バッチサイズ",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "画像処理ジョブを有効化",
+      "description": "バックグラウンドの画像処理ジョブを有効にするフラグ"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "イベントベースのサムネイル生成を有効化",
+      "description": "アセットが追加されたらすぐにサムネイル生成を開始"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "許可される画像フォーマット",
+      "description": "指定された画像フォーマットに対してのみサムネイルが生成されます。ImageSharpでサポートされている画像フォーマットのリストについては、次のリンクをご覧ください：https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "保存されたタスクとオプションをエクスポート/インポート"
+    }
+  }
+}
