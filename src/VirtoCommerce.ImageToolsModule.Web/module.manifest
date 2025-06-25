@@ -21,7 +21,7 @@
   <iconUrl>Modules/$(VirtoCommerce.ImageTools)/Content/logo.png</iconUrl>
   <requireLicenseAcceptance>false</requireLicenseAcceptance>
   <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2024 Virto Commerce. All rights reserved</copyright>
+  <copyright>Copyright © 2011-2025 Virto Commerce. All rights reserved</copyright>
   <tags>images</tags>
   <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
