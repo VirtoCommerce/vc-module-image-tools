@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <id>VirtoCommerce.ImageTools</id>
-  <version>3.809.0</version>
+  <version>3.810.0</version>
   <version-tag />
   <platformVersion>3.853.0</platformVersion>
   <dependencies>
@@ -21,7 +21,7 @@
   <iconUrl>Modules/$(VirtoCommerce.ImageTools)/Content/logo.png</iconUrl>
   <requireLicenseAcceptance>false</requireLicenseAcceptance>
   <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2024 Virto Commerce. All rights reserved</copyright>
+  <copyright>Copyright © 2011-2025 Virto Commerce. All rights reserved</copyright>
   <tags>images</tags>
   <assemblyFile>VirtoCommerce.ImageToolsModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.ImageToolsModule.Web.Module, VirtoCommerce.ImageToolsModule.Web</moduleType>
