@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "Pikkukuvat",
+    "blades": {
+      "tasks-list": {
+        "title": "Pikkukuvien luontitehtävien luettelo",
+        "subtitle": "Luettelo kaikista pikkukuvien luontitehtävistä",
+        "labels": {
+          "task-name": "Tehtävän nimi",
+          "last-run": "Viimeksi suoritettu"
+        }
+      },
+      "task-detail": {
+        "title": "Pikkukuvien luontitehtävän tiedot",
+        "subtitle": "Hallitse tehtävän asetuksia ja tietoja",
+        "labels": {
+          "name": "Nimi",
+          "path-images": "Kuvien polku",
+          "thumbnail-settings": "Pikkukuvien asetukset"
+        },
+        "placeholders": {
+          "name": "Anna nimi",
+          "path-images": "Valitse kuvien polku",
+          "thumbnail-settings": "Valitse asetukset..."
+        },
+        "descriptions": {
+          "name": "Tehtävän näyttönimi",
+          "path-images": "Polku resurssijärjestelmässä, jota käytetään kuvien löytämiseen. Kaikki tämän kansion kuvat käsitellään rekursiivisesti",
+          "thumbnail-settings": "Luettelo pikkukuvien tarkkuuksista"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "Alku",
+          "end": "Loppu",
+          "stats": "Käsitelty — {{ processedCount }} / {{ totalCount }} kuvaa",
+          "errors": "Virheet"
+        }
+      },
+      "setting-managment": {
+        "title": "Pikkukuvien asetukset",
+        "subtitle": "Hallitse pikkukuvien asetuksia",
+        "background": "Tausta",
+        "height": "Korkeus",
+        "width": "Leveys",
+        "no-settings": "Ei asetuksia"
+      },
+      "setting-detail": {
+        "title": "Pikkukuvavaihtoehdon tiedot",
+        "subtitle": "Hallitse pikkukuvien asetusten tietoja",
+        "labels": {
+          "name": "Nimi",
+          "file-suffix": "Pikkukuvatiedoston nimen tunniste",
+          "resize-method": "Koonmuutosmenetelmä",
+          "width": "Leveys (pikseleitä)",
+          "height": "Korkeus (pikseleitä)",
+          "background-color": "Taustaväri",
+          "anchor-position": "Ankkuripaikka",
+          "jpeg-quality": "JPEG-laatu"
+        },
+        "placeholders": {
+          "name": "Anna vaihtoehdon nimi",
+          "file-suffix": "Anna nimen tunniste",
+          "width": "Anna leveys",
+          "height": "Anna korkeus",
+          "background-color": "Anna taustaväri"
+        },
+        "discription": {
+          "name": "Asetuksen näyttönimi",
+          "file-suffix": "Tunniste, joka lisätään alkuperäisen tiedostonimen loppuun, erotettuna '_'",
+          "resize-method": "Koonmuutosmenetelmä, jota käytetään kuvan muuntamiseen",
+          "width": "Pikkukuvan leveys pikseleinä",
+          "height": "Pikkukuvan korkeus pikseleinä",
+          "background-color": "Pikkukuvan taustaväri, esim. #FFFFFF",
+          "anchor-position": "Kuvan rajauksen ankkuripaikka",
+          "jpeg-quality": "Tulostetun JPEG-kuvan laatu"
+        },
+        "resize-method": {
+          "fixed-size": "Kiinteä koko",
+          "fixed-width": "Kiinteä leveys",
+          "fixed-height": "Kiinteä korkeus",
+          "crop": "Rajaa"
+        },
+        "anchor-position": {
+          "top-left": "Ylävasen",
+          "top-center": "Yläkeski",
+          "top-right": "Yläoikea",
+          "center-left": "Keskivasen",
+          "center": "Keski",
+          "center-right": "Keskioikea",
+          "bottom-left": "Alavasen",
+          "bottom-center": "Alakeski",
+          "bottom-right": "Alaoikea"
+        },
+        "jpeg-quality": {
+          "low": "Matala",
+          "medium": "Keskitaso",
+          "high": "Korkea",
+          "very-high": "Erittäin korkea"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "Pikkukuvien luonti",
+        "msg1": "Valitse, miten pikkukuvat luodaan. Vaihtoehdot:",
+        "msg2": "Käsittele muutokset: luo pikkukuvat vain uusille tai muuttuneille kuville",
+        "msg3": "Luo uudelleen: pakota luontiprosessi kaikille kuville",
+        "btn-changes": "Käsittele muutokset",
+        "btn-regenerate": "Luo uudelleen"
+      },
+      "select-folder": {
+        "title": "Kuvien polku pikkukuvien luontiin",
+        "msg1": "Voit valita vain yhden kansion"
+      },
+      "task-save": {
+        "title": "Tallenna muutokset",
+        "message": "Tehtävää on muokattu. Haluatko tallentaa muutokset?"
+      },
+      "task-delete": {
+        "title": "Poistovahvistus",
+        "message": "Haluatko varmasti poistaa tämän tehtävän?"
+      },
+      "setting-save": {
+        "title": "Tallenna muutokset",
+        "message": "Asetusta on muokattu. Haluatko tallentaa muutokset?"
+      },
+      "setting-delete": {
+        "title": "Poistovahvistus",
+        "message": "Haluatko varmasti poistaa tämän asetuksen?"
+      }
+    },
+    "commands": {
+      "run": "Suorita"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "Avaa pikkukuvavalikko",
+    "thumbnail:create": "Luo pikkukuvatietoja",
+    "thumbnail:read": "Näytä pikkukuvatietoja",
+    "thumbnail:update": "Päivitä pikkukuvatietoja",
+    "thumbnail:delete": "Poista pikkukuvatietoja"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "Cron-lauseke kuvankäsittelytehtävän ajastamiseen"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "Eräkoko",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "Ota kuvankäsittelytehtävä käyttöön",
+      "description": "Lippu taustalla toimivan kuvankäsittelytehtävän aktivointiin"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Ota käyttöön tapahtumapohjainen pikkukuvien luonti",
+      "description": "Aloita pikkukuvien luonti heti, kun resurssi lisätään"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "Sallitut kuvaformaatit",
+      "description": "Pikkukuvat luodaan vain määritetyille kuvaformaateille. ImageSharpin tukemien formaattien luettelo löytyy osoitteesta: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "Vie/tuo tallennetut tehtävät ja vaihtoehdot"
+    }
+  }
+}

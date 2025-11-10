@@ -1,0 +1,171 @@
+{
+  "imageTools": {
+    "main-menu-title": "Miniatyrbilder",
+    "blades": {
+      "tasks-list": {
+        "title": "Lista över uppgifter för miniatyrgenerering",
+        "subtitle": "Lista över alla uppgifter för generering av miniatyrbilder",
+        "labels": {
+          "task-name": "Uppgiftsnamn",
+          "last-run": "Senast körd"
+        }
+      },
+      "task-detail": {
+        "title": "Detaljer för miniatyrgenereringsuppgift",
+        "subtitle": "Hantera uppgiftsinställningar och detaljer",
+        "labels": {
+          "name": "Namn",
+          "path-images": "Sökväg till bilder",
+          "thumbnail-settings": "Miniatyrinställningar"
+        },
+        "placeholders": {
+          "name": "Ange namn",
+          "path-images": "Välj bildsökväg",
+          "thumbnail-settings": "Välj inställningar..."
+        },
+        "descriptions": {
+          "name": "Visningsnamn för uppgiften",
+          "path-images": "Sökvägen i resurssystemet som används för att upptäcka bilder. Alla bilder i denna mapp behandlas rekursivt",
+          "thumbnail-settings": "Listan över upplösningar för miniatyrbilder"
+        }
+      },
+      "task-run": {
+        "labels": {
+          "start": "Start",
+          "end": "Slut",
+          "stats": "Bearbetat — {{ processedCount }} av {{ totalCount }} bilder",
+          "errors": "Fel"
+        }
+      },
+      "setting-managment": {
+        "title": "Miniatyrinställningar",
+        "subtitle": "Hantera miniatyrinställningar",
+        "background": "Bakgrund",
+        "height": "Höjd",
+        "width": "Bredd",
+        "no-settings": "Inga inställningar"
+      },
+      "setting-detail": {
+        "title": "Detaljer för miniatyralternativ",
+        "subtitle": "Hantera detaljer för miniatyrinställning",
+        "labels": {
+          "name": "Namn",
+          "file-suffix": "Miniatyrfilnamnssuffix",
+          "resize-method": "Storleksändringsmetod",
+          "width": "Bredd (pixlar)",
+          "height": "Höjd (pixlar)",
+          "background-color": "Bakgrundsfärg",
+          "anchor-position": "Förankringsposition",
+          "jpeg-quality": "JPEG-kvalitet"
+        },
+        "placeholders": {
+          "name": "Ange alternativnamn",
+          "file-suffix": "Ange namnsuffix",
+          "width": "Ange bredd",
+          "height": "Ange höjd",
+          "background-color": "Ange bakgrundsfärg"
+        },
+        "discription": {
+          "name": "Visningsnamn för inställningen",
+          "file-suffix": "Suffixet som läggs till i slutet av originalfilnamnet, åtskilt med '_'",
+          "resize-method": "Storleksändringsmetod som används för bildomformning",
+          "width": "Miniatyrbredd i pixlar",
+          "height": "Miniatyrhöjd i pixlar",
+          "background-color": "Bakgrundsfärg för miniatyr, t.ex. #FFFFFF",
+          "anchor-position": "Förankringsposition för bildbeskärning",
+          "jpeg-quality": "Kvalitet på utdata-JPEG"
+        },
+        "resize-method": {
+          "fixed-size": "Fast storlek",
+          "fixed-width": "Fast bredd",
+          "fixed-height": "Fast höjd",
+          "crop": "Beskär"
+        },
+        "anchor-position": {
+          "top-left": "Överst vänster",
+          "top-center": "Överst mitten",
+          "top-right": "Överst höger",
+          "center-left": "Mitten vänster",
+          "center": "Mitten",
+          "center-right": "Mitten höger",
+          "bottom-left": "Nederst vänster",
+          "bottom-center": "Nederst mitten",
+          "bottom-right": "Nederst höger"
+        },
+        "jpeg-quality": {
+          "low": "Låg",
+          "medium": "Medel",
+          "high": "Hög",
+          "very-high": "Mycket hög"
+        }
+      }
+    },
+    "dialogs": {
+      "task-run": {
+        "title": "Generering av miniatyrbilder",
+        "msg1": "Välj hur miniatyrbilderna ska genereras. Alternativ:",
+        "msg2": "Bearbeta ändringar: generera miniatyrbilder endast för nya eller ändrade bilder",
+        "msg3": "Återgenerera: tvinga genereringsprocessen för alla bilder",
+        "btn-changes": "Bearbeta ändringar",
+        "btn-regenerate": "Återgenerera"
+      },
+      "select-folder": {
+        "title": "Sökväg till bilder för miniatyrgenerering",
+        "msg1": "Du kan endast välja en katalog och endast en"
+      },
+      "task-save": {
+        "title": "Spara ändringar",
+        "message": "Uppgiften har ändrats. Vill du spara ändringarna?"
+      },
+      "task-delete": {
+        "title": "Bekräftelse för borttagning",
+        "message": "Är du säker på att du vill ta bort denna uppgift?"
+      },
+      "setting-save": {
+        "title": "Spara ändringar",
+        "message": "Inställningen har ändrats. Vill du spara ändringarna?"
+      },
+      "setting-delete": {
+        "title": "Bekräftelse för borttagning",
+        "message": "Är du säker på att du vill ta bort denna inställning?"
+      }
+    },
+    "commands": {
+      "run": "Kör"
+    }
+  },
+  "permissions": {
+    "thumbnail:access": "Öppna miniatyrmenyn",
+    "thumbnail:create": "Skapa miniatyrdata",
+    "thumbnail:read": "Visa miniatyrdata",
+    "thumbnail:update": "Uppdatera miniatyrdata",
+    "thumbnail:delete": "Ta bort miniatyrdata"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "Cron-uttryck för schemaläggning av bildbehandlingsjobb"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "Partitionsstorlek",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "Aktivera bildbehandlingsjobb",
+      "description": "Flagg för att aktivera bakgrundsjobb för bildbehandling"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "Aktivera händelsebaserad miniatyrgenerering",
+      "description": "Starta miniatyrgenerering så snart en resurs läggs till"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "Tillåtna bildformat",
+      "description": "Miniatyrbilder genereras endast för de angivna bildformaten. För listan över bildformat som stöds av ImageSharp, besök följande länk: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+    }
+  },
+  "module": {
+    "VirtoCommerce.ImageTools": {
+      "description": "Exportera/importera sparade uppgifter och alternativ"
+    }
+  }
+}
