@@ -10,6 +10,11 @@ namespace VirtoCommerce.ImageToolsModule.Core
     [ExcludeFromCodeCoverage]
     public static class ModuleConstants
     {
+        /// <summary>
+        /// SVG format name constant (not part of ImageSharp, so defined here)
+        /// </summary>
+        public const string SvgFormatName = "Svg";
+
         public static class Security
         {
             public static class Permissions
@@ -72,6 +77,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
                         JpegFormat.Instance.Name,
                         PngFormat.Instance.Name,
                         WebpFormat.Instance.Name,
+                        SvgFormatName,
                     ],
                 };
 

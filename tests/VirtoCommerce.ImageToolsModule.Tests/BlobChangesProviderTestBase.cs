@@ -22,12 +22,14 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         public Mock<IBlobStorageProvider> StorageProviderMock { get; private set; }
         public Mock<IThumbnailOptionSearchService> ThumbnailOptionSearchServiceMock { get; private set; }
         public Mock<IImageService> ImageServiceMock { get; private set; }
+        public Mock<IImageFormatDetector> ImageFormatDetectorMock { get; private set; }
 
         protected BlobChangesProviderTestBase()
         {
             StorageProviderMock = new Mock<IBlobStorageProvider>();
             ThumbnailOptionSearchServiceMock = new Mock<IThumbnailOptionSearchService>();
             ImageServiceMock = new Mock<IImageService>();
+            ImageFormatDetectorMock = new Mock<IImageFormatDetector>();
         }
 
         public IImagesChangesProvider GetBlobImagesChangesProvider(IEnumerable<BlobEntry> blobContents)
@@ -67,7 +69,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Setup(x => x.IsFileExtensionAllowedAsync(It.IsAny<string>()))
                 .ReturnsAsync(true);
 
-            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
+            ImageFormatDetectorMock
+                .Setup(x => x.IsFormatSupportedAsync(It.IsAny<string>()))
+                .ReturnsAsync(false); // Let IImageService handle the check first
+
+            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, ImageFormatDetectorMock.Object, GetPlatformMemoryCache());
 
             return result;
         }

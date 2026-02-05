@@ -15,17 +15,20 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
         private readonly IThumbnailGenerator _generator;
+        private readonly IThumbnailHandlerFactory _handlerFactory;
         private readonly ISettingsManager _settingsManager;
         private readonly IImagesChangesProvider _imageChangesProvider;
         private readonly ILogger<ThumbnailGenerationProcessor> _logger;
 
         public ThumbnailGenerationProcessor(
             IThumbnailGenerator generator,
+            IThumbnailHandlerFactory handlerFactory,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider,
             ILogger<ThumbnailGenerationProcessor> logger)
         {
             _generator = generator;
+            _handlerFactory = handlerFactory;
             _settingsManager = settingsManager;
             _imageChangesProvider = imageChangesProvider;
             _logger = logger;
@@ -60,7 +63,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
                     foreach (var fileChange in changes)
                     {
-                        var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                        // Use format-specific handler if available, otherwise fall back to default generator
+                        var handler = await _handlerFactory.GetHandlerAsync(fileChange.Url);
+                        var result = handler != null
+                            ? await handler.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token)
+                            : await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
 
                         progressInfo.ProcessedCount++;
 

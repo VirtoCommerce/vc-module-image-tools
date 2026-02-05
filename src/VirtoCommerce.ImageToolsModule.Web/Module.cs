@@ -74,6 +74,21 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailGenerator, DefaultThumbnailGenerator>();
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();
+
+            // Format-agnostic image processing support
+            serviceCollection.AddTransient<IImageFormatDetector, DefaultImageFormatDetector>();
+
+            // SVG support
+            serviceCollection.AddTransient<ISvgResizer, DefaultSvgResizer>();
+            serviceCollection.AddTransient<ISvgService, DefaultSvgService>();
+
+            // Format handlers (registered as collection for IThumbnailHandlerFactory)
+            serviceCollection.AddTransient<IFormatThumbnailHandler, RasterThumbnailHandler>();
+            serviceCollection.AddTransient<IFormatThumbnailHandler, SvgThumbnailHandler>();
+
+            // Handler factory for format-based routing
+            serviceCollection.AddTransient<IThumbnailHandlerFactory, DefaultThumbnailHandlerFactory>();
+
             serviceCollection.AddTransient<ThumbnailsExportImport>();
             serviceCollection.AddTransient<BlobCreatedEventHandler>();
         }
