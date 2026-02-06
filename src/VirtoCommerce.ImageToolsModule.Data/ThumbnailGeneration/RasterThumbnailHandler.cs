@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -14,18 +13,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     public class RasterThumbnailHandler : IFormatThumbnailHandler
     {
         private readonly IThumbnailGenerator _thumbnailGenerator;
-        private readonly IImageFormatDetector _formatDetector;
 
         public RasterThumbnailHandler(
-            IThumbnailGenerator thumbnailGenerator,
-            IImageFormatDetector formatDetector)
+            IThumbnailGenerator thumbnailGenerator)
         {
             _thumbnailGenerator = thumbnailGenerator;
-            _formatDetector = formatDetector;
         }
-
-        /// <inheritdoc />
-        public ImageFormatType SupportedFormatType => ImageFormatType.Raster;
 
         /// <inheritdoc />
         public int Priority => 0; // Default priority for base raster handler
@@ -33,8 +26,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <inheritdoc />
         public Task<bool> CanHandleAsync(string imageUrl)
         {
-            var formatType = _formatDetector.DetectFormatType(imageUrl);
-            return Task.FromResult(formatType == ImageFormatType.Raster);
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />

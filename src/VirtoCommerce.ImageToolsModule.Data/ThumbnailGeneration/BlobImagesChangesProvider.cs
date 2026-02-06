@@ -20,21 +20,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
-        private readonly IImageService _imageService;
-        private readonly IImageFormatDetector _formatDetector;
+        private readonly IAllowedImageFormatsService _allowedImageFormatsService;
         private readonly IPlatformMemoryCache _platformMemoryCache;
 
         public BlobImagesChangesProvider(
             IBlobStorageProvider storageProvider,
             IThumbnailOptionSearchService thumbnailOptionSearchService,
-            IImageService imageService,
-            IImageFormatDetector formatDetector,
+            IAllowedImageFormatsService allowedImageFormatsService,
             IPlatformMemoryCache platformMemoryCache)
         {
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
-            _imageService = imageService;
-            _formatDetector = formatDetector;
+            _allowedImageFormatsService = allowedImageFormatsService;
             _platformMemoryCache = platformMemoryCache;
         }
 
@@ -119,16 +116,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             return result;
         }
 
-        protected virtual async Task<bool> IsSupportedImage(BlobEntry blobEntry)
+        protected virtual Task<bool> IsSupportedImage(BlobEntry blobEntry)
         {
-            // Check if it's a supported raster format (JPEG, PNG, WebP via IImageService)
-            if (await _imageService.IsFileExtensionAllowedAsync(blobEntry.Name))
-            {
-                return true;
-            }
-
-            // Check if it's a supported vector format (SVG via IImageFormatDetector)
-            return await _formatDetector.IsFormatSupportedAsync(blobEntry.Name);
+            return _allowedImageFormatsService.IsAllowedAsync(blobEntry.Name);
         }
 
         protected virtual bool IsFolder(BlobEntry blobEntry)

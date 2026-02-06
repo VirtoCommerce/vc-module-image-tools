@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
-using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
@@ -12,11 +11,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
     /// </summary>
     public interface IFormatThumbnailHandler
     {
-        /// <summary>
-        /// The format type this handler supports
-        /// </summary>
-        ImageFormatType SupportedFormatType { get; }
-
         /// <summary>
         /// Priority for handler selection. Higher values are preferred.
         /// Use 0 for default handlers, positive values for specialized handlers.

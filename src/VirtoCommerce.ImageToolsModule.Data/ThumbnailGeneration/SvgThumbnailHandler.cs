@@ -18,23 +18,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     {
         private readonly ISvgService _svgService;
         private readonly ISvgResizer _svgResizer;
-        private readonly IImageFormatDetector _formatDetector;
         private readonly ILogger<SvgThumbnailHandler> _logger;
 
         public SvgThumbnailHandler(
             ISvgService svgService,
             ISvgResizer svgResizer,
-            IImageFormatDetector formatDetector,
             ILogger<SvgThumbnailHandler> logger)
         {
             _svgService = svgService;
             _svgResizer = svgResizer;
-            _formatDetector = formatDetector;
             _logger = logger;
         }
-
-        /// <inheritdoc />
-        public ImageFormatType SupportedFormatType => ImageFormatType.Vector;
 
         /// <inheritdoc />
         public int Priority => 0; // Default priority
@@ -42,8 +36,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <inheritdoc />
         public Task<bool> CanHandleAsync(string imageUrl)
         {
-            var formatType = _formatDetector.DetectFormatType(imageUrl);
-            return Task.FromResult(formatType == ImageFormatType.Vector);
+            return Task.FromResult(_svgService.IsSvgFile(imageUrl));
         }
 
         /// <inheritdoc />
@@ -87,18 +80,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         await _svgService.SaveSvgAsync(thumbnailUrl, resizedSvg);
                         result.GeneratedThumbnails.Add(thumbnailUrl);
 
-                        _logger.LogInformation("Generated SVG thumbnail {url}", thumbnailUrl);
+                        _logger.LogDebug("Generated SVG thumbnail {Url}", thumbnailUrl);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Could not generate SVG thumbnail {url}", thumbnailUrl);
+                        _logger.LogError(ex, "Could not generate SVG thumbnail {Url}", thumbnailUrl);
                         result.Errors.Add($"Could not generate SVG thumbnail {thumbnailUrl}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing SVG {source}", source);
+                _logger.LogError(ex, "Error processing SVG {Source}", source);
                 result.Errors.Add($"Error processing SVG: {source}");
             }
 

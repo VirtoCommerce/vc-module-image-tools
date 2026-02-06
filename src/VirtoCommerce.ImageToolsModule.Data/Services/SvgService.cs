@@ -9,20 +9,20 @@ using VirtoCommerce.ImageToolsModule.Core.Services;
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     /// <summary>
-    /// Default implementation of SVG service for loading and saving SVG files
+    /// SVG service for loading and saving SVG files
     /// </summary>
-    public class DefaultSvgService : ISvgService
+    public class SvgService : ISvgService
     {
-        private static readonly string[] SvgExtensions = { ".svg", ".svgz" };
+        private static readonly string[] SvgExtensions = [".svg", ".svgz"];
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly ISvgResizer _svgResizer;
-        private readonly ILogger<DefaultSvgService> _logger;
+        private readonly ILogger<SvgService> _logger;
 
-        public DefaultSvgService(
+        public SvgService(
             IBlobStorageProvider storageProvider,
             ISvgResizer svgResizer,
-            ILogger<DefaultSvgService> logger)
+            ILogger<SvgService> logger)
         {
             _storageProvider = storageProvider;
             _svgResizer = svgResizer;
@@ -32,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <inheritdoc />
         public async Task<string> LoadSvgAsync(string svgUrl)
         {
-            _logger.LogInformation("Loading SVG {svgUrl}", svgUrl);
+            _logger.LogDebug("Loading SVG {svgUrl}", svgUrl);
 
             try
             {
@@ -50,7 +50,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         /// <inheritdoc />
         public async Task SaveSvgAsync(string svgUrl, string svgContent)
         {
-            _logger.LogInformation("Saving SVG {svgUrl}", svgUrl);
+            _logger.LogDebug("Saving SVG {svgUrl}", svgUrl);
 
             try
             {
@@ -85,7 +85,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 return false;
             }
 
-            var extension = Path.GetExtension(url)?.ToLowerInvariant();
+            var extension = Path.GetExtension(url);
             return Array.Exists(SvgExtensions, ext => ext.Equals(extension, StringComparison.OrdinalIgnoreCase));
         }
     }

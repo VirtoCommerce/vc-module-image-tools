@@ -69,25 +69,25 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IThumbnailTaskSearchService, ThumbnailTaskSearchService>();
             serviceCollection.AddTransient<IThumbnailTaskService, ThumbnailTaskService>();
 
-            serviceCollection.AddTransient<IImageResizer, DefaultImageResizer>();
-            serviceCollection.AddTransient<IImageService, DefaultImageService>();
-            serviceCollection.AddTransient<IThumbnailGenerator, DefaultThumbnailGenerator>();
+            serviceCollection.AddTransient<IImageResizer, ImageResizer>();
+            serviceCollection.AddTransient<IImageService, ImageService>();
+            serviceCollection.AddTransient<IThumbnailGenerator, ThumbnailGenerator>();
             serviceCollection.AddTransient<IThumbnailGenerationProcessor, ThumbnailGenerationProcessor>();
             serviceCollection.AddTransient<IImagesChangesProvider, BlobImagesChangesProvider>();
 
-            // Format-agnostic image processing support
-            serviceCollection.AddTransient<IImageFormatDetector, DefaultImageFormatDetector>();
-
             // SVG support
-            serviceCollection.AddTransient<ISvgResizer, DefaultSvgResizer>();
-            serviceCollection.AddTransient<ISvgService, DefaultSvgService>();
+            serviceCollection.AddTransient<ISvgResizer, SvgResizer>();
+            serviceCollection.AddTransient<ISvgService, SvgService>();
+
+            // Image format validation
+            serviceCollection.AddSingleton<IAllowedImageFormatsService, AllowedImageFormatsService>();
 
             // Format handlers (registered as collection for IThumbnailHandlerFactory)
             serviceCollection.AddTransient<IFormatThumbnailHandler, RasterThumbnailHandler>();
             serviceCollection.AddTransient<IFormatThumbnailHandler, SvgThumbnailHandler>();
 
             // Handler factory for format-based routing
-            serviceCollection.AddTransient<IThumbnailHandlerFactory, DefaultThumbnailHandlerFactory>();
+            serviceCollection.AddTransient<IThumbnailHandlerFactory, ThumbnailHandlerFactory>();
 
             serviceCollection.AddTransient<ThumbnailsExportImport>();
             serviceCollection.AddTransient<BlobCreatedEventHandler>();

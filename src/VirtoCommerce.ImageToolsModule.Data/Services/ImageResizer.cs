@@ -11,7 +11,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// <summary>
     /// Image resize library
     /// </summary>
-    public class DefaultImageResizer : IImageResizer
+    public class ImageResizer : IImageResizer
     {
         /// <summary>
         /// Scale image by given percent

@@ -63,15 +63,22 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
                     foreach (var fileChange in changes)
                     {
-                        // Use format-specific handler if available, otherwise fall back to default generator
+                        // Use format-specific handler if available
                         var handler = await _handlerFactory.GetHandlerAsync(fileChange.Url);
-                        var result = handler != null
-                            ? await handler.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token)
-                            : await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                        if (handler != null)
+                        {
+                            var result = await handler.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                            if (result?.Errors?.Count > 0)
+                            {
+                                progressInfo.Errors.AddRange(result.Errors);
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogWarning("No handler found for image: {Url}", fileChange.Url);
+                        }
 
                         progressInfo.ProcessedCount++;
-
-                        _ = (result != null && !result.Errors.IsNullOrEmpty()) ? progressInfo.Errors.AddRange(result.Errors) : null;
 
                         AfterPageProgress(progressCallback, progressInfo, pageSize);
 

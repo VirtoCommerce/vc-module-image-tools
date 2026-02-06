@@ -9,15 +9,15 @@ using VirtoCommerce.ImageToolsModule.Core.Services;
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     /// <summary>
-    /// Default implementation of SVG resizer using XML manipulation.
+    /// SVG resizer using XML manipulation.
     /// SVG resizing works differently from raster - we modify width/height attributes
     /// while preserving the viewBox for proper scaling.
     /// </summary>
-    public partial class DefaultSvgResizer : ISvgResizer
+    public partial class SvgResizer : ISvgResizer
     {
-        private readonly ILogger<DefaultSvgResizer> _logger;
+        private readonly ILogger<SvgResizer> _logger;
 
-        public DefaultSvgResizer(ILogger<DefaultSvgResizer> logger)
+        public SvgResizer(ILogger<SvgResizer> logger)
         {
             _logger = logger;
         }
