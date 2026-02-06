@@ -260,7 +260,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 ResizeMethod.FixedSize => CalculateFixedSize(currentWidth, currentHeight, targetWidth, targetHeight),
                 ResizeMethod.FixedWidth => CalculateFixedWidth(currentWidth, currentHeight, targetWidth),
                 ResizeMethod.FixedHeight => CalculateFixedHeight(currentWidth, currentHeight, targetHeight),
-                ResizeMethod.Crop => (targetWidth ?? currentWidth, targetHeight ?? currentHeight),
+                //ResizeMethod.Crop => (targetWidth ?? currentWidth, targetHeight ?? currentHeight),
                 _ => (targetWidth, targetHeight)
             };
         }

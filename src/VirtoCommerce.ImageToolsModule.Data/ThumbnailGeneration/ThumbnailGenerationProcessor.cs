@@ -14,20 +14,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
-        private readonly IThumbnailGenerator _generator;
         private readonly IThumbnailHandlerFactory _handlerFactory;
         private readonly ISettingsManager _settingsManager;
         private readonly IImagesChangesProvider _imageChangesProvider;
         private readonly ILogger<ThumbnailGenerationProcessor> _logger;
 
         public ThumbnailGenerationProcessor(
-            IThumbnailGenerator generator,
             IThumbnailHandlerFactory handlerFactory,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider,
             ILogger<ThumbnailGenerationProcessor> logger)
         {
-            _generator = generator;
             _handlerFactory = handlerFactory;
             _settingsManager = settingsManager;
             _imageChangesProvider = imageChangesProvider;

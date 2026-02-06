@@ -17,15 +17,13 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ThumbnailGenerationProcessorTests : BlobChangesProviderTestBase
     {
-        private readonly Mock<IThumbnailGenerator> _generator;
         private readonly Mock<IThumbnailHandlerFactory> _handlerFactory;
         private readonly Mock<ISettingsManager> _settingsManager;
 
         public ThumbnailGenerationProcessorTests()
         {
-            _generator = new Mock<IThumbnailGenerator>();
             _handlerFactory = new Mock<IThumbnailHandlerFactory>();
-            // Setup handler factory to return null (fall back to generator)
+            // Setup handler factory to return null (no handler found)
             _handlerFactory.Setup(x => x.GetHandlerAsync(It.IsAny<string>()))
                 .ReturnsAsync((IFormatThumbnailHandler)null);
 
@@ -48,7 +46,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 },
             };
             var imageChangesProvider = GetBlobImagesChangesProvider(blobContents);
-            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _handlerFactory.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
+            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_handlerFactory.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
 
             var thumbnailOption = new ThumbnailOption() { FileSuffix = OptionSuffix };
             var workPath = "testPath";
@@ -83,7 +81,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 },
             };
             var imageChangesProvider = GetBlobImagesChangesProvider(blobContents);
-            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_generator.Object, _handlerFactory.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
+            var thumbnailGenerationProcessor = new ThumbnailGenerationProcessor(_handlerFactory.Object, _settingsManager.Object, imageChangesProvider, Mock.Of<ILogger<ThumbnailGenerationProcessor>>());
 
             var thumbnailOption = new ThumbnailOption() { FileSuffix = OptionSuffix };
             var workPath = "testPath";

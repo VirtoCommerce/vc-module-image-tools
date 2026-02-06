@@ -13,7 +13,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// </summary>
     public class SvgService : ISvgService
     {
-        private static readonly string[] SvgExtensions = [".svg", ".svgz"];
+        private static readonly string[] SvgExtensions = [".svg"];
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly ISvgResizer _svgResizer;

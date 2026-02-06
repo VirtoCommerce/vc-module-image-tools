@@ -92,13 +92,16 @@ To add support for a new format:
 ```csharp
 public class PdfThumbnailHandler : IFormatThumbnailHandler
 {
-    public ImageFormatType SupportedFormatType => ImageFormatType.Raster;
     public int Priority => 10;
 
     public Task<bool> CanHandleAsync(string imageUrl)
-        => Task.FromResult(imageUrl.EndsWith(".pdf"));
+        => Task.FromResult(imageUrl.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase));
 
-    public Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(...) { ... }
+    public Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(
+        string source, string destination, IList<ThumbnailOption> options, ICancellationToken token)
+    {
+        // Custom PDF thumbnail generation logic
+    }
 }
 ```
 
@@ -117,10 +120,10 @@ serviceCollection.AddTransient<IFormatThumbnailHandler, PdfThumbnailHandler>();
 | `IImageResizer` | Raster image resize operations |
 | `ISvgService` | Load/save SVG content from blob storage |
 | `ISvgResizer` | SVG dimension manipulation |
-| `IImageFormatDetector` | Detect raster vs vector format type |
+| `IAllowedImageFormatsService` | Check if image format is in allowed formats list |
 | `IFormatThumbnailHandler` | Format-specific thumbnail generation |
 | `IThumbnailHandlerFactory` | Route to appropriate format handler |
-| `IThumbnailGenerator` | Core thumbnail generation orchestration |
+| `IThumbnailGenerator` | Core thumbnail generation (obsolete - use handlers) |
 | `IThumbnailGenerationProcessor` | Batch processing with progress tracking |
 | `IImagesChangesProvider` | Detect new/modified images in blob storage |
 
@@ -128,14 +131,14 @@ serviceCollection.AddTransient<IFormatThumbnailHandler, PdfThumbnailHandler>();
 
 | Service | Description |
 |---------|-------------|
-| `DefaultImageService` | ImageSharp-based raster image I/O |
-| `DefaultImageResizer` | ImageSharp resize with multiple methods |
-| `DefaultSvgService` | SVG blob storage operations |
-| `DefaultSvgResizer` | SVG XML manipulation for resizing |
-| `DefaultImageFormatDetector` | Extension-based format detection |
-| `DefaultThumbnailHandlerFactory` | Priority-based handler selection |
-| `RasterThumbnailHandler` | Raster format processing |
-| `SvgThumbnailHandler` | Vector format processing |
+| `ImageService` | ImageSharp-based raster image I/O |
+| `ImageResizer` | ImageSharp resize with multiple methods |
+| `SvgService` | SVG blob storage operations |
+| `SvgResizer` | SVG XML manipulation for resizing |
+| `AllowedImageFormatsService` | Settings-based format validation |
+| `ThumbnailHandlerFactory` | Priority-based handler selection |
+| `RasterThumbnailHandler` | Raster format processing via IThumbnailGenerator |
+| `SvgThumbnailHandler` | Vector format processing via ISvgService |
 
 ### Background Jobs
 

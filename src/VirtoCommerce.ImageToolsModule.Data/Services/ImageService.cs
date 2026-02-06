@@ -9,20 +9,17 @@ using SixLabors.ImageSharp.PixelFormats;
 using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
     public class ImageService : IImageService
     {
         private readonly IBlobStorageProvider _storageProvider;
-        private readonly ISettingsManager _settingsManager;
         private readonly ILogger<ImageService> _logger;
 
-        public ImageService(IBlobStorageProvider storageProvider, ISettingsManager settingsManager, ILogger<ImageService> logger)
+        public ImageService(IBlobStorageProvider storageProvider, ILogger<ImageService> logger)
         {
             _storageProvider = storageProvider;
-            _settingsManager = settingsManager;
             _logger = logger;
         }
 
@@ -38,7 +35,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             try
             {
                 await using var blobStream = await _storageProvider.OpenReadAsync(imageUrl);
-                var imageFormat = await Image.DetectFormatAsync(blobStream);
                 return await Image.LoadAsync<Rgba32>(blobStream);
             }
             catch (Exception ex)

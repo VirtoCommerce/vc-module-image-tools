@@ -1,3 +1,6 @@
+using System;
+using System.Globalization;
+
 namespace VirtoCommerce.ImageToolsModule.Core.Models
 {
     /// <summary>
@@ -37,10 +40,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
                 return null;
             }
 
-            var parts = ViewBox.Split([' ', ','], System.StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length >= 3 && int.TryParse(parts[2], out var width))
+            var parts = ViewBox.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 3 && double.TryParse(parts[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var width))
             {
-                return width;
+                return (int)Math.Round(width);
             }
 
             return null;
@@ -53,10 +56,10 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
                 return null;
             }
 
-            var parts = ViewBox.Split([' ', ','], System.StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length >= 4 && int.TryParse(parts[3], out var height))
+            var parts = ViewBox.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 4 && double.TryParse(parts[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var height))
             {
-                return height;
+                return (int)Math.Round(height);
             }
 
             return null;

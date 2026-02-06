@@ -152,11 +152,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 { AnchorPosition.BottomCenter,AnchorPositionMode.Bottom },
                 { AnchorPosition.BottomRight, AnchorPositionMode.BottomRight}
             };
-            if (!anchorPositionMap.ContainsKey(anchorPosition))
+            if (!anchorPositionMap.TryGetValue(anchorPosition, out var mode))
             {
                 throw new ArgumentOutOfRangeException($"AnchorPosition {anchorPosition} not supported.");
             }
-            return anchorPositionMap[anchorPosition];
+            return mode;
         }
     }
 }
