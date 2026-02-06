@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
@@ -13,15 +12,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     public class DefaultThumbnailHandlerFactory : IThumbnailHandlerFactory
     {
         private readonly List<IFormatThumbnailHandler> _handlers;
-        private readonly IImageFormatDetector _formatDetector;
 
-        public DefaultThumbnailHandlerFactory(
-            IEnumerable<IFormatThumbnailHandler> handlers,
-            IImageFormatDetector formatDetector)
+        public DefaultThumbnailHandlerFactory(IEnumerable<IFormatThumbnailHandler> handlers)
         {
             // Order handlers by priority (highest first)
             _handlers = handlers.OrderByDescending(h => h.Priority).ToList();
-            _formatDetector = formatDetector;
         }
 
         /// <inheritdoc />

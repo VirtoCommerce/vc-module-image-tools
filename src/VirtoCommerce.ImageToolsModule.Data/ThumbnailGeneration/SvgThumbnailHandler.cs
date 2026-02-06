@@ -81,7 +81,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                             svgContent,
                             option.Width,
                             option.Height,
-                            option.ResizeMethod);
+                            option.ResizeMethod,
+                            option.AnchorPosition);
 
                         await _svgService.SaveSvgAsync(thumbnailUrl, resizedSvg);
                         result.GeneratedThumbnails.Add(thumbnailUrl);

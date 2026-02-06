@@ -5,6 +5,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
     /// <summary>
     /// SVG resizing operations. Unlike raster resizing, SVG resizing modifies
     /// the width/height attributes while preserving the viewBox for scalability.
+    /// For crop operations, the viewBox is modified to show only the cropped portion.
     /// </summary>
     public interface ISvgResizer
     {
@@ -15,8 +16,9 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <param name="width">Target width (may be null depending on method)</param>
         /// <param name="height">Target height (may be null depending on method)</param>
         /// <param name="method">The resize method to apply</param>
+        /// <param name="anchorPosition">Anchor position for crop operations (default: Center)</param>
         /// <returns>The resized SVG content</returns>
-        string Resize(string svgContent, int? width, int? height, ResizeMethod method);
+        string Resize(string svgContent, int? width, int? height, ResizeMethod method, AnchorPosition anchorPosition = AnchorPosition.Center);
 
         /// <summary>
         /// Set explicit dimensions on SVG

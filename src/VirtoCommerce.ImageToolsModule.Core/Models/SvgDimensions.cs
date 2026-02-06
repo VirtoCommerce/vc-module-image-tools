@@ -37,7 +37,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
                 return null;
             }
 
-            var parts = ViewBox.Split(' ', ',');
+            var parts = ViewBox.Split([' ', ','], System.StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length >= 3 && int.TryParse(parts[2], out var width))
             {
                 return width;
@@ -53,7 +53,7 @@ namespace VirtoCommerce.ImageToolsModule.Core.Models
                 return null;
             }
 
-            var parts = ViewBox.Split(' ', ',');
+            var parts = ViewBox.Split([' ', ','], System.StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length >= 4 && int.TryParse(parts[3], out var height))
             {
                 return height;

@@ -13,9 +13,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// SVG resizing works differently from raster - we modify width/height attributes
     /// while preserving the viewBox for proper scaling.
     /// </summary>
-    public class DefaultSvgResizer : ISvgResizer
+    public partial class DefaultSvgResizer : ISvgResizer
     {
-        private static readonly XNamespace SvgNamespace = "http://www.w3.org/2000/svg";
         private readonly ILogger<DefaultSvgResizer> _logger;
 
         public DefaultSvgResizer(ILogger<DefaultSvgResizer> logger)
@@ -24,7 +23,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         }
 
         /// <inheritdoc />
-        public string Resize(string svgContent, int? width, int? height, ResizeMethod method)
+        public string Resize(string svgContent, int? width, int? height, ResizeMethod method, AnchorPosition anchorPosition = AnchorPosition.Center)
         {
             if (string.IsNullOrEmpty(svgContent))
             {
@@ -33,6 +32,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
             try
             {
+                // Ensure viewBox exists for proper scaling
+                svgContent = EnsureViewBox(svgContent);
                 var doc = XDocument.Parse(svgContent);
                 var svg = doc.Root;
 
@@ -41,15 +42,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                     return svgContent;
                 }
 
-                // Ensure viewBox exists for proper scaling
-                svgContent = EnsureViewBox(svgContent);
-                doc = XDocument.Parse(svgContent);
-                svg = doc.Root;
-
-                // Get current dimensions
+                // Get current dimensions from viewBox
                 var dimensions = ParseDimensions(svgContent);
                 var currentWidth = dimensions.EffectiveWidth;
                 var currentHeight = dimensions.EffectiveHeight;
+
+                if (method == ResizeMethod.Crop)
+                {
+                    // For crop, modify the viewBox to show only the cropped portion
+                    return ApplyCrop(svg, doc, currentWidth, currentHeight, width ?? currentWidth, height ?? currentHeight, anchorPosition);
+                }
 
                 // Calculate new dimensions based on resize method
                 var (newWidth, newHeight) = CalculateNewDimensions(
@@ -73,6 +75,47 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 _logger.LogError(ex, "Error resizing SVG");
                 return svgContent;
             }
+        }
+
+        private static string ApplyCrop(XElement svg, XDocument doc, int currentWidth, int currentHeight, int targetWidth, int targetHeight, AnchorPosition anchor)
+        {
+            // Calculate the viewBox crop region based on anchor position
+            var (viewBoxX, viewBoxY) = CalculateCropOffset(currentWidth, currentHeight, targetWidth, targetHeight, anchor);
+
+            // Clamp the crop region to valid bounds
+            var cropWidth = Math.Min(targetWidth, currentWidth);
+            var cropHeight = Math.Min(targetHeight, currentHeight);
+            viewBoxX = Math.Max(0, Math.Min(viewBoxX, currentWidth - cropWidth));
+            viewBoxY = Math.Max(0, Math.Min(viewBoxY, currentHeight - cropHeight));
+
+            // Set new viewBox to show only the cropped portion
+            svg.SetAttributeValue("viewBox", $"{viewBoxX} {viewBoxY} {cropWidth} {cropHeight}");
+
+            // Set output dimensions to target size
+            svg.SetAttributeValue("width", targetWidth);
+            svg.SetAttributeValue("height", targetHeight);
+
+            return doc.ToString();
+        }
+
+        private static (int X, int Y) CalculateCropOffset(int currentWidth, int currentHeight, int targetWidth, int targetHeight, AnchorPosition anchor)
+        {
+            var excessWidth = Math.Max(0, currentWidth - targetWidth);
+            var excessHeight = Math.Max(0, currentHeight - targetHeight);
+
+            return anchor switch
+            {
+                AnchorPosition.TopLeft => (0, 0),
+                AnchorPosition.TopCenter => (excessWidth / 2, 0),
+                AnchorPosition.TopRight => (excessWidth, 0),
+                AnchorPosition.CenterLeft => (0, excessHeight / 2),
+                AnchorPosition.Center => (excessWidth / 2, excessHeight / 2),
+                AnchorPosition.CenterRight => (excessWidth, excessHeight / 2),
+                AnchorPosition.BottomLeft => (0, excessHeight),
+                AnchorPosition.BottomCenter => (excessWidth / 2, excessHeight),
+                AnchorPosition.BottomRight => (excessWidth, excessHeight),
+                _ => (excessWidth / 2, excessHeight / 2)
+            };
         }
 
         /// <inheritdoc />
@@ -194,7 +237,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             }
 
             // Remove units (px, em, pt, etc.)
-            var numericPart = Regex.Replace(value, @"[^\d.]", "");
+            var numericPart = NonNumericRegex().Replace(value, "");
 
             if (double.TryParse(numericPart, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
             {
@@ -203,6 +246,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
 
             return null;
         }
+
+        [GeneratedRegex(@"[^\d.]")]
+        private static partial Regex NonNumericRegex();
 
         private static (int? Width, int? Height) CalculateNewDimensions(
             int currentWidth, int currentHeight,

@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
@@ -15,10 +17,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
         private static readonly string[] RasterExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tiff", ".tif" };
 
         private readonly IImageService _imageService;
+        private readonly ISettingsManager _settingsManager;
 
-        public DefaultImageFormatDetector(IImageService imageService)
+        public DefaultImageFormatDetector(IImageService imageService, ISettingsManager settingsManager)
         {
             _imageService = imageService;
+            _settingsManager = settingsManager;
         }
 
         /// <inheritdoc />
@@ -78,7 +82,17 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             if (formatType == ImageFormatType.Vector)
             {
                 var extension = Path.GetExtension(imageUrl)?.ToLowerInvariant();
-                return VectorExtensions.Contains(extension);
+                if (!VectorExtensions.Contains(extension))
+                {
+                    return false;
+                }
+
+                // Check if SVG is enabled in AllowedImageFormats setting
+                var allowedFormatsSetting = await _settingsManager.GetObjectSettingAsync(
+                    ModuleConstants.Settings.General.AllowedImageFormats.Name);
+                var allowedFormats = allowedFormatsSetting?.AllowedValues?.OfType<string>() ?? [];
+
+                return allowedFormats.Contains(ModuleConstants.SvgFormatName, StringComparer.OrdinalIgnoreCase);
             }
 
             // For raster formats, delegate to existing IImageService
