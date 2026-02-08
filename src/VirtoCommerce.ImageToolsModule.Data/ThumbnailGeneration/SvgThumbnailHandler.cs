@@ -31,7 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         }
 
         /// <inheritdoc />
-        public int Priority => 0; // Default priority
+        public int Priority => 100;
 
         /// <inheritdoc />
         public Task<bool> CanHandleAsync(string imageUrl)

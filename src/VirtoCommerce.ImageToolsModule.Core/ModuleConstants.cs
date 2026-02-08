@@ -13,7 +13,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
         /// <summary>
         /// SVG format name constant (not part of ImageSharp, so defined here)
         /// </summary>
-        public const string SvgFormatName = "Svg";
+        public const string SvgFormatName = "SVG";
 
         public static class Security
         {

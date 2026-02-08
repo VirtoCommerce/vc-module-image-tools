@@ -58,13 +58,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     // Reasons it wasn't done:
                     // 1. High memory consumption and potential memory buggy leaks in ArrayPools (used inside of BlobClient and SixLabours) with multi-threading.
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
-                    foreach (var fileChange in changes)
+                    foreach (var fileChangeUrl in changes.Select(f => f.Url))
                     {
                         // Use format-specific handler if available
-                        var handler = await _handlerFactory.GetHandlerAsync(fileChange.Url);
+                        var handler = await _handlerFactory.GetHandlerAsync(fileChangeUrl);
                         if (handler != null)
                         {
-                            var result = await handler.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                            var result = await handler.GenerateThumbnailsAsync(fileChangeUrl, task.WorkPath, task.ThumbnailOptions, token);
                             if (result?.Errors?.Count > 0)
                             {
                                 progressInfo.Errors.AddRange(result.Errors);
@@ -72,7 +72,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         }
                         else
                         {
-                            _logger.LogWarning("No handler found for image: {Url}", fileChange.Url);
+                            _logger.LogWarning("No handler found for image: {Url}", fileChangeUrl);
                         }
 
                         progressInfo.ProcessedCount++;
