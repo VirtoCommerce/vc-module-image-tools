@@ -15,13 +15,13 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     /// <summary>
     /// Generates thumbnails by certain criteria
     /// </summary>
-    public class DefaultThumbnailGenerator : IThumbnailGenerator
+    public class ThumbnailGenerator : IThumbnailGenerator
     {
         private readonly IImageService _imageService;
         private readonly IImageResizer _imageResizer;
-        private readonly ILogger<DefaultThumbnailGenerator> _logger;
+        private readonly ILogger<ThumbnailGenerator> _logger;
 
-        public DefaultThumbnailGenerator(IImageService imageService, IImageResizer imageResizer, ILogger<DefaultThumbnailGenerator> logger)
+        public ThumbnailGenerator(IImageService imageService, IImageResizer imageResizer, ILogger<ThumbnailGenerator> logger)
         {
             _imageService = imageService;
             _imageResizer = imageResizer;
