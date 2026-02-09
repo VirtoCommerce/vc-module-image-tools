@@ -21,13 +21,17 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
         public Mock<IBlobStorageProvider> StorageProviderMock { get; private set; }
         public Mock<IThumbnailOptionSearchService> ThumbnailOptionSearchServiceMock { get; private set; }
-        public Mock<IImageService> ImageServiceMock { get; private set; }
+        public Mock<IAllowedImageFormatsService> AllowedImageFormatsServiceMock { get; private set; }
 
         protected BlobChangesProviderTestBase()
         {
             StorageProviderMock = new Mock<IBlobStorageProvider>();
             ThumbnailOptionSearchServiceMock = new Mock<IThumbnailOptionSearchService>();
-            ImageServiceMock = new Mock<IImageService>();
+            AllowedImageFormatsServiceMock = new Mock<IAllowedImageFormatsService>();
+
+            AllowedImageFormatsServiceMock
+                .Setup(x => x.IsAllowedAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
         }
 
         public IImagesChangesProvider GetBlobImagesChangesProvider(IEnumerable<BlobEntry> blobContents)
@@ -36,7 +40,6 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 .Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns<string, string>((folderUrl, keyword) =>
                 {
-
                     var searchResult = blobContents.Where(x => x.Url.StartsWith(folderUrl)).ToList();
 
                     return Task.FromResult(new BlobEntrySearchResult()
@@ -63,11 +66,11 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                     }
                 });
 
-            ImageServiceMock
-                .Setup(x => x.IsFileExtensionAllowedAsync(It.IsAny<string>()))
-                .ReturnsAsync(true);
-
-            var result = new BlobImagesChangesProvider(StorageProviderMock.Object, ThumbnailOptionSearchServiceMock.Object, ImageServiceMock.Object, GetPlatformMemoryCache());
+            var result = new BlobImagesChangesProvider(
+                StorageProviderMock.Object,
+                ThumbnailOptionSearchServiceMock.Object,
+                AllowedImageFormatsServiceMock.Object,
+                GetPlatformMemoryCache());
 
             return result;
         }

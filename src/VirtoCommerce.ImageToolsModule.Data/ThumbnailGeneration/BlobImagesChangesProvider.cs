@@ -20,18 +20,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly IThumbnailOptionSearchService _thumbnailOptionSearchService;
-        private readonly IImageService _imageService;
+        private readonly IAllowedImageFormatsService _allowedImageFormatsService;
         private readonly IPlatformMemoryCache _platformMemoryCache;
 
         public BlobImagesChangesProvider(
             IBlobStorageProvider storageProvider,
             IThumbnailOptionSearchService thumbnailOptionSearchService,
-            IImageService imageService,
+            IAllowedImageFormatsService allowedImageFormatsService,
             IPlatformMemoryCache platformMemoryCache)
         {
             _storageProvider = storageProvider;
             _thumbnailOptionSearchService = thumbnailOptionSearchService;
-            _imageService = imageService;
+            _allowedImageFormatsService = allowedImageFormatsService;
             _platformMemoryCache = platformMemoryCache;
         }
 
@@ -118,7 +118,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
         protected virtual Task<bool> IsSupportedImage(BlobEntry blobEntry)
         {
-            return _imageService.IsFileExtensionAllowedAsync(blobEntry.Name);
+            return _allowedImageFormatsService.IsAllowedAsync(blobEntry.Name);
         }
 
         protected virtual bool IsFolder(BlobEntry blobEntry)

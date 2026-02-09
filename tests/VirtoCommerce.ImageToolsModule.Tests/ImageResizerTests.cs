@@ -7,7 +7,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 {
     public class ImageResizerTests
     {
-        private class ImageResizerTestClass : DefaultImageResizer
+        private class ImageResizerTestClass : ImageResizer
         {
             public Image<Rgba32> TransformTest(Image<Rgba32> original, Rectangle source, Rectangle destination, Size canvasSize, Rgba32? backgroundColor)
             {

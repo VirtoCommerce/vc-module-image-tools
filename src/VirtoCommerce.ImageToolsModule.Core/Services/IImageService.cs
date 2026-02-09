@@ -26,19 +26,5 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <param name="format">Image object format.</param>
         /// <param name="jpegQuality">Target image quality.</param>
         Task SaveImageAsync(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality);
-
-        /// <summary>
-        /// Defines if given file extension is allowed for image processing
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        Task<bool> IsFileExtensionAllowedAsync(string path);
-
-        /// <summary>
-        /// Defines if given image format is allowed for image processing
-        /// </summary>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        Task<bool> IsImageFormatAllowedAsync(IImageFormat format);
     }
 }

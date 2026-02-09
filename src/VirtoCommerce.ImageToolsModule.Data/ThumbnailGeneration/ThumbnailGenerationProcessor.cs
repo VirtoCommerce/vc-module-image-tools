@@ -14,18 +14,18 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     public class ThumbnailGenerationProcessor : IThumbnailGenerationProcessor
     {
-        private readonly IThumbnailGenerator _generator;
+        private readonly IThumbnailHandlerFactory _handlerFactory;
         private readonly ISettingsManager _settingsManager;
         private readonly IImagesChangesProvider _imageChangesProvider;
         private readonly ILogger<ThumbnailGenerationProcessor> _logger;
 
         public ThumbnailGenerationProcessor(
-            IThumbnailGenerator generator,
+            IThumbnailHandlerFactory handlerFactory,
             ISettingsManager settingsManager,
             IImagesChangesProvider imageChangesProvider,
             ILogger<ThumbnailGenerationProcessor> logger)
         {
-            _generator = generator;
+            _handlerFactory = handlerFactory;
             _settingsManager = settingsManager;
             _imageChangesProvider = imageChangesProvider;
             _logger = logger;
@@ -58,13 +58,24 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                     // Reasons it wasn't done:
                     // 1. High memory consumption and potential memory buggy leaks in ArrayPools (used inside of BlobClient and SixLabours) with multi-threading.
                     // 2. Network overload with reading heavy graphic files could cause non-reliable accessibility of other critical services (like Redis).
-                    foreach (var fileChange in changes)
+                    foreach (var fileChangeUrl in changes.Select(f => f.Url))
                     {
-                        var result = await _generator.GenerateThumbnailsAsync(fileChange.Url, task.WorkPath, task.ThumbnailOptions, token);
+                        // Use format-specific handler if available
+                        var handler = await _handlerFactory.GetHandlerAsync(fileChangeUrl);
+                        if (handler != null)
+                        {
+                            var result = await handler.GenerateThumbnailsAsync(fileChangeUrl, task.WorkPath, task.ThumbnailOptions, token);
+                            if (result?.Errors?.Count > 0)
+                            {
+                                progressInfo.Errors.AddRange(result.Errors);
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogWarning("No handler found for image: {Url}", fileChangeUrl);
+                        }
 
                         progressInfo.ProcessedCount++;
-
-                        _ = (result != null && !result.Errors.IsNullOrEmpty()) ? progressInfo.Errors.AddRange(result.Errors) : null;
 
                         AfterPageProgress(progressCallback, progressInfo, pageSize);
 
