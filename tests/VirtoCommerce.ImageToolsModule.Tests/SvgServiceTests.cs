@@ -58,12 +58,9 @@ namespace VirtoCommerce.ImageToolsModule.Tests
             // Arrange
             var url = "image.svg?v=123";
 
-            // Act - Note: Path.GetExtension handles query strings differently
             var result = _svgService.IsSvgFile(url);
 
-            // Assert - May return false due to query string handling
-            // This tests the current behavior
-            Assert.False(result);
+            Assert.True(result);
         }
 
         #endregion

@@ -48,5 +48,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             // Re-sort by priority
             _handlers.Sort((a, b) => b.Priority.CompareTo(a.Priority));
         }
+
+        public void UnregisterHandler(IFormatThumbnailHandler handler)
+        {
+            _handlers.Remove(handler);
+            // Re-sort by priority
+            _handlers.Sort((a, b) => b.Priority.CompareTo(a.Priority));
+        }
     }
 }

@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
+using VirtoCommerce.ImageToolsModule.Data.Extensions;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
@@ -13,6 +17,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
     public class RasterThumbnailHandler : IFormatThumbnailHandler
     {
         private readonly IThumbnailGenerator _thumbnailGenerator;
+
+        private static readonly Lazy<HashSet<string>> _supportedExtensions = new(() =>
+            new HashSet<string>(
+                Configuration.Default.ImageFormats.SelectMany(f => f.FileExtensions),
+                StringComparer.OrdinalIgnoreCase));
 
         public RasterThumbnailHandler(
             IThumbnailGenerator thumbnailGenerator)
@@ -26,7 +35,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <inheritdoc />
         public Task<bool> CanHandleAsync(string imageUrl)
         {
-            return Task.FromResult(true);
+            var extension = UrlExtensions.GetFileExtensionWithoutDot(imageUrl);
+            return Task.FromResult(
+                extension.Length > 0 && _supportedExtensions.Value.Contains(extension));
         }
 
         /// <inheritdoc />

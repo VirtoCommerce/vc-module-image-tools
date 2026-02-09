@@ -1,11 +1,13 @@
-using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Data.Extensions;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
@@ -16,11 +18,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     public class AllowedImageFormatsService : IAllowedImageFormatsService
     {
         private readonly ISettingsManager _settingsManager;
-        private string[] _allowedImageFormats;
+        private readonly IPlatformMemoryCache _platformMemoryCache;
 
-        public AllowedImageFormatsService(ISettingsManager settingsManager)
+        public AllowedImageFormatsService(ISettingsManager settingsManager, IPlatformMemoryCache platformMemoryCache)
         {
             _settingsManager = settingsManager;
+            _platformMemoryCache = platformMemoryCache;
         }
 
         /// <inheritdoc />
@@ -32,23 +35,25 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
             }
 
             var allowedImageFormats = await GetAllowedFormatsAsync();
-            var extension = Path.GetExtension(url).TrimStart('.');
+            var extension = UrlExtensions.GetFileExtensionWithoutDot(url);
+
             return allowedImageFormats.Any(x => x.EqualsIgnoreCase(extension));
         }
 
-        private async Task<string[]> GetAllowedFormatsAsync()
+        private Task<string[]> GetAllowedFormatsAsync()
         {
-            var formats = Volatile.Read(ref _allowedImageFormats);
-            if (formats != null)
+            var cacheKey = CacheKey.With(GetType(), "GetAllowedFormatsAsync");
+
+            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                return formats;
-            }
+                var allowedImageFormatsSetting = await _settingsManager.GetObjectSettingAsync(ModuleConstants.Settings.General.AllowedImageFormats.Name);
 
-            var allowedImageFormatsSetting = await _settingsManager.GetObjectSettingAsync(ModuleConstants.Settings.General.AllowedImageFormats.Name);
-            var allowedFormatNames = allowedImageFormatsSetting.AllowedValues.OfType<string>().ToArray();
-            Interlocked.CompareExchange(ref _allowedImageFormats, allowedFormatNames, null);
+                cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(allowedImageFormatsSetting));
 
-            return _allowedImageFormats;
+                var allowedFormatNames = allowedImageFormatsSetting.AllowedValues.OfType<string>().ToArray();
+
+                return allowedFormatNames;
+            });
         }
     }
 }

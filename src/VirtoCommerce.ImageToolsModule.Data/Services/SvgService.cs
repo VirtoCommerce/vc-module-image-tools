@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using VirtoCommerce.AssetsModule.Core.Assets;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
+using VirtoCommerce.ImageToolsModule.Data.Extensions;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Services
 {
@@ -13,7 +14,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
     /// </summary>
     public class SvgService : ISvgService
     {
-        private static readonly string[] SvgExtensions = [".svg"];
+        private static readonly string[] SvgExtensions = ["svg"];
 
         private readonly IBlobStorageProvider _storageProvider;
         private readonly ISvgResizer _svgResizer;
@@ -85,7 +86,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.Services
                 return false;
             }
 
-            var extension = Path.GetExtension(url);
+            var extension = UrlExtensions.GetFileExtensionWithoutDot(url);
             return Array.Exists(SvgExtensions, ext => ext.Equals(extension, StringComparison.OrdinalIgnoreCase));
         }
     }

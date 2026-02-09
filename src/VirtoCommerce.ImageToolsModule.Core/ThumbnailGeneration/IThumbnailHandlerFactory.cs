@@ -20,5 +20,11 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
         /// </summary>
         /// <param name="handler">The handler to register</param>
         void RegisterHandler(IFormatThumbnailHandler handler);
+
+        /// <summary>
+        /// Unregister handler from factory
+        /// </summary>
+        /// <param name="handler"></param>
+        void UnregisterHandler(IFormatThumbnailHandler handler);
     }
 }

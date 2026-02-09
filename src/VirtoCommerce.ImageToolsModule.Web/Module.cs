@@ -87,7 +87,7 @@ namespace VirtoCommerce.ImageToolsModule.Web
             serviceCollection.AddTransient<IFormatThumbnailHandler, SvgThumbnailHandler>();
 
             // Handler factory for format-based routing
-            serviceCollection.AddTransient<IThumbnailHandlerFactory, ThumbnailHandlerFactory>();
+            serviceCollection.AddSingleton<IThumbnailHandlerFactory, ThumbnailHandlerFactory>();
 
             serviceCollection.AddTransient<ThumbnailsExportImport>();
             serviceCollection.AddTransient<BlobCreatedEventHandler>();
