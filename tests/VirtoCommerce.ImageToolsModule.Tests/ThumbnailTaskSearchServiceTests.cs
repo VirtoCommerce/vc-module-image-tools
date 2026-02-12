@@ -68,7 +68,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             repositoryMock
                 .Setup(x => x.ThumbnailTasks)
-                .Returns(entities.AsQueryable().BuildMock());
+                .Returns(entities.BuildMock().AsQueryable());
 
             repositoryMock
                 .Setup(x => x.GetThumbnailTasksByIdsAsync(It.IsAny<IList<string>>()))
