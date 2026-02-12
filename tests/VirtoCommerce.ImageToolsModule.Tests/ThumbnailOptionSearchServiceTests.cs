@@ -50,7 +50,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
 
             repositoryMock
                 .Setup(x => x.ThumbnailOptions)
-                .Returns(entities.AsQueryable().BuildMock());
+                .Returns(entities.BuildMock().AsQueryable());
 
             repositoryMock
                 .Setup(r => r.GetThumbnailOptionsByIdsAsync(It.IsAny<IList<string>>()))
