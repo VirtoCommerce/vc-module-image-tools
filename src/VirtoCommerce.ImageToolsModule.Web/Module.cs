@@ -28,6 +28,9 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.MySql.Extensions;
+using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
+using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.ImageToolsModule.Web
@@ -49,13 +52,13 @@ namespace VirtoCommerce.ImageToolsModule.Web
                 switch (databaseProvider)
                 {
                     case "MySql":
-                        options.UseMySqlDatabase(connectionString);
+                        options.UseMySqlDatabase(connectionString, typeof(MySqlDataAssemblyMarker), Configuration);
                         break;
                     case "PostgreSql":
-                        options.UsePostgreSqlDatabase(connectionString);
+                        options.UsePostgreSqlDatabase(connectionString, typeof(PostgreSqlDataAssemblyMarker), Configuration);
                         break;
                     default:
-                        options.UseSqlServerDatabase(connectionString);
+                        options.UseSqlServerDatabase(connectionString, typeof(SqlServerDataAssemblyMarker), Configuration);
                         break;
                 }
             });
