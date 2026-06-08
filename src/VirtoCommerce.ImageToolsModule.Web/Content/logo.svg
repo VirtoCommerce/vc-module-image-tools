@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Image Tools">
+  <title>Image Tools</title>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="92%" y2="100%">
+      <stop offset="0%" stop-color="#B79DFB"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="lift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#3A1D7A" flood-opacity="0.30"/>
+    </filter>
+    <clipPath id="img"><rect x="-42" y="-40" width="76" height="72" rx="9"/></clipPath>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+
+  <g transform="translate(64,64)" filter="url(#lift)">
+    <!-- Photo -->
+    <rect x="-42" y="-40" width="76" height="72" rx="9" fill="#ffffff"/>
+    <g clip-path="url(#img)">
+      <circle cx="14" cy="-20" r="8" fill="#FFC24D"/>
+      <polygon points="-42,32 -12,-2 8,20 34,-6 34,32" fill="#3FD8B4"/>
+      <polygon points="-42,32 -22,14 -2,32 18,10 34,28 34,32" fill="#2FA85A"/>
+    </g>
+
+    <!-- Adjustments / tools badge -->
+    <circle cx="29" cy="26" r="16" fill="#6A45D9"/>
+    <g stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">
+      <line x1="20" y1="20" x2="38" y2="20"/>
+      <line x1="20" y1="26" x2="38" y2="26"/>
+      <line x1="20" y1="32" x2="38" y2="32"/>
+    </g>
+    <circle cx="25" cy="20" r="3" fill="#FFC24D"/>
+    <circle cx="34" cy="26" r="3" fill="#3FD8B4"/>
+    <circle cx="24" cy="32" r="3" fill="#5FC8F5"/>
+  </g>
+</svg>
