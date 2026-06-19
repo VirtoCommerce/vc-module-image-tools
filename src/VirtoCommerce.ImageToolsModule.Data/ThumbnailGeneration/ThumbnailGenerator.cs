@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -36,9 +37,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="options">Represents generation options</param>
         /// <param name="token">Allows cancel operation</param>
         /// <returns></returns>
-        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token)
+        public virtual async Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, CancellationToken token)
         {
-            token?.ThrowIfCancellationRequested();
+            token.ThrowIfCancellationRequested();
 
             var originalImage = await _imageService.LoadImageAsync(source);
             if (originalImage == null)
