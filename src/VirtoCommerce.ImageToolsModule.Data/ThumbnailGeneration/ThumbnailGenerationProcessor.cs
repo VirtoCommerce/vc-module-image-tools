@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _logger = logger;
         }
 
-        public async Task ProcessTasksAsync(ICollection<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, ICancellationToken token)
+        public async Task ProcessTasksAsync(ICollection<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, CancellationToken token)
         {
             try
             {
@@ -79,7 +80,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                         AfterPageProgress(progressCallback, progressInfo, pageSize);
 
-                        token?.ThrowIfCancellationRequested();
+                        token.ThrowIfCancellationRequested();
                     }
 
                     ClearCache(task, regenerate);

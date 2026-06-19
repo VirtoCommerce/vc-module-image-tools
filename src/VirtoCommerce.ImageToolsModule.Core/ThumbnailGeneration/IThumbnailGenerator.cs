@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -7,6 +8,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
 {
     public interface IThumbnailGenerator
     {
-        Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, ICancellationToken token);
+        Task<ThumbnailGenerationResult> GenerateThumbnailsAsync(string source, string destination, IList<ThumbnailOption> options, CancellationToken token);
     }
 }

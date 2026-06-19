@@ -111,7 +111,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
             {
                 using (JobStorage.Current.GetConnection().AcquireDistributedLock("ThumbnailProcessJob", TimeSpan.Zero))
                 {
-                    var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
+                    var token = cancellationToken.ShutdownToken;
 
                     foreach (var task in tasks)
                     {
@@ -120,7 +120,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
                         //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
                         var runTime = DateTime.UtcNow;
 
-                        await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationTokenWrapper);
+                        await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, token);
 
                         task.LastRun = runTime;
 

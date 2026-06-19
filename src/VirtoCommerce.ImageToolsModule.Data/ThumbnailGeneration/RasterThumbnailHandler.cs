@@ -1,4 +1,5 @@
-using System;
+using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             string source,
             string destination,
             IList<ThumbnailOption> options,
-            ICancellationToken token)
+            CancellationToken token)
         {
             // Delegate to existing implementation - zero changes to raster processing
             return _thumbnailGenerator.GenerateThumbnailsAsync(source, destination, options, token);
