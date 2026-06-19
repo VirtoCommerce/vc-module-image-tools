@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -44,9 +45,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             string source,
             string destination,
             IList<ThumbnailOption> options,
-            ICancellationToken token)
+            CancellationToken token)
         {
-            token?.ThrowIfCancellationRequested();
+            token.ThrowIfCancellationRequested();
 
             var result = new ThumbnailGenerationResult();
 
@@ -64,7 +65,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 
                 foreach (var option in options)
                 {
-                    token?.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
 
                     var thumbnailUrl = source.GenerateThumbnailName(option.FileSuffix);
 

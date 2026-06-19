@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -36,6 +37,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration
             string source,
             string destination,
             IList<ThumbnailOption> options,
-            ICancellationToken token);
+            CancellationToken token);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,14 +36,14 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             _platformMemoryCache = platformMemoryCache;
         }
 
-        public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
+        public async Task<long> GetTotalChangesCount(ThumbnailTask task, DateTime? changedSince, CancellationToken cancellationToken)
         {
             var changedFiles = await GetChangeFiles(task, changedSince, cancellationToken);
 
             return changedFiles.Count;
         }
 
-        public async Task<IList<ImageChange>> GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip, long? take, ICancellationToken cancellationToken)
+        public async Task<IList<ImageChange>> GetNextChangesBatch(ThumbnailTask task, DateTime? changedSince, long? skip, long? take, CancellationToken cancellationToken)
         {
             var changedFiles = await GetChangeFiles(task, changedSince, cancellationToken);
 
@@ -55,7 +56,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         }
 
 
-        protected virtual async Task<IList<ImageChange>> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, ICancellationToken cancellationToken)
+        protected virtual async Task<IList<ImageChange>> GetChangeFiles(ThumbnailTask task, DateTime? changedSince, CancellationToken cancellationToken)
         {
             var options = await GetOptionsCollection();
             var cacheKey = CacheKey.With(GetType(), "GetChangeFiles", task.WorkPath, changedSince?.ToString(), string.Join(":", options.Select(x => x.FileSuffix)));
@@ -85,9 +86,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             });
         }
 
-        protected virtual async Task<ConcurrentDictionary<string, BlobEntry>> ReadBlobFolderAsync(string folderPath, ICancellationToken cancellationToken)
+        protected virtual async Task<ConcurrentDictionary<string, BlobEntry>> ReadBlobFolderAsync(string folderPath, CancellationToken cancellationToken)
         {
-            cancellationToken?.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             var result = new ConcurrentDictionary<string, BlobEntry>();
 
@@ -105,7 +106,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             // Add images from child folders recursively
             await Parallel.ForEachAsync(searchResults.Results.Where(IsFolder), async (folderBlob, token) =>
             {
-                var childFolderImages = await ReadBlobFolderAsync(folderBlob.RelativeUrl, new CancellationTokenWrapper(token));
+                var childFolderImages = await ReadBlobFolderAsync(folderBlob.RelativeUrl, token);
 
                 foreach (var imageBlob in childFolderImages.Values)
                 {

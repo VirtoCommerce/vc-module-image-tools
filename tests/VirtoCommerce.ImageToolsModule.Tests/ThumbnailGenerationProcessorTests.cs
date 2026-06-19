@@ -57,7 +57,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 WorkPath = workPath,
                 ThumbnailOptions = new List<ThumbnailOption>() { thumbnailOption },
             };
-            var cancellationToken = new CancellationTokenWrapper(new CancellationToken());
+            var cancellationToken = CancellationToken.None;
 
             // Act
 
@@ -92,7 +92,7 @@ namespace VirtoCommerce.ImageToolsModule.Tests
                 WorkPath = workPath,
                 ThumbnailOptions = new List<ThumbnailOption>() { thumbnailOption },
             };
-            var cancellationToken = new CancellationTokenWrapper(new CancellationToken());
+            var cancellationToken = CancellationToken.None;
 
             // Act
 
