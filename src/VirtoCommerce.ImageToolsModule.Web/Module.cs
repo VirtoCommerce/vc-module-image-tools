@@ -1,8 +1,7 @@
-using System;
+using System;
 using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +14,7 @@ using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
 using VirtoCommerce.ImageToolsModule.Data.ExportImport;
 using VirtoCommerce.ImageToolsModule.Data.Handlers;
+using VirtoCommerce.ImageToolsModule.Data.Jobs;
 using VirtoCommerce.ImageToolsModule.Data.Models;
 using VirtoCommerce.ImageToolsModule.Data.MySql;
 using VirtoCommerce.ImageToolsModule.Data.PostgreSql;
@@ -25,6 +25,7 @@ using VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -32,7 +33,6 @@ using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql.Extensions;
 using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
-using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.ImageToolsModule.Web
 {
@@ -95,6 +95,17 @@ namespace VirtoCommerce.ImageToolsModule.Web
 
             serviceCollection.AddTransient<ThumbnailsExportImport>();
             serviceCollection.AddTransient<BlobCreatedEventHandler>();
+
+            serviceCollection.AddTransient<ThumbnailProcessJob>();
+            serviceCollection.AddBackgroundJob<ThumbnailProcessJobHandler, ThumbnailProcessJobPayload>();
+
+            // Schedule periodic image processing. Registered here rather than in PostInitialize: the schedule is now a
+            // DI registration the engine module picks up, not an imperative call on a resolved service.
+            serviceCollection.AddRecurringJob<ThumbnailProcessAllJobHandler, ThumbnailProcessAllJobPayload>(schedule => schedule
+                .WithId(nameof(ThumbnailProcessAllJobHandler))
+                .FromSettings(
+                    ModuleConstants.Settings.General.EnableImageProcessJob,
+                    ModuleConstants.Settings.General.ImageProcessJobCronExpression));
         }
 
         public void PostInitialize(IApplicationBuilder appBuilder)
@@ -114,16 +125,6 @@ namespace VirtoCommerce.ImageToolsModule.Web
             //Register module permissions
             var permissionsRegistrar = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
             permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "Thumbnail", ModuleConstants.Security.Permissions.AllPermissions);
-
-            //Schedule periodic image processing job
-            var recurringJobService = appBuilder.ApplicationServices.GetService<IRecurringJobService>();
-
-            recurringJobService.WatchJobSetting(
-                new SettingCronJobBuilder()
-                    .SetEnablerSetting(ModuleConstants.Settings.General.EnableImageProcessJob)
-                    .SetCronSetting(ModuleConstants.Settings.General.ImageProcessJobCronExpression)
-                    .ToJob<ThumbnailProcessJob>(x => x.ProcessAll(JobCancellationToken.Null))
-                    .Build());
 
             //Force migrations
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
