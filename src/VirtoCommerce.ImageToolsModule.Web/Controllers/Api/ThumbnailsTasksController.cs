@@ -124,7 +124,7 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
                     detail: "The active background job engine cannot cancel a running job. Wait for the process to finish.");
             }
 
-            await BackgroundJob.Delete(jobId, cancellationToken);
+            await BackgroundJob.Cancel(jobId, cancellationToken);
 
             return Ok();
         }
@@ -132,14 +132,14 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("run")]
         [Authorize(Permission.Read)]
-        public async Task<ActionResult<ThumbnailProcessNotification>> Run([FromBody] ThumbnailsTaskRunRequest runRequest)
+        public async Task<ActionResult<ThumbnailProcessNotification>> Run([FromBody] ThumbnailsTaskRunRequest runRequest, CancellationToken cancellationToken)
         {
-            var notification = await Enqueue(runRequest);
+            var notification = await Enqueue(runRequest, cancellationToken);
             _pushNotifier.Send(notification);
             return Ok(notification);
         }
 
-        private async Task<ThumbnailProcessNotification> Enqueue(ThumbnailsTaskRunRequest runRequest)
+        private async Task<ThumbnailProcessNotification> Enqueue(ThumbnailsTaskRunRequest runRequest, CancellationToken cancellationToken)
         {
             var notification = new ThumbnailProcessNotification(_userNameResolver.GetCurrentUserName())
             {
@@ -154,7 +154,9 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
 
             // MaxRetryAttempts = 0 carries over [AutomaticRetry(Attempts = 0)] from the Hangfire job: a failed
             // generation run is reported through the notification, not retried behind the user's back.
-            var jobId = await BackgroundJob.Enqueue<ThumbnailProcessJobHandler>(payload, new EnqueueOptions { MaxRetryAttempts = 0 });
+            var jobId = await BackgroundJob.Enqueue<ThumbnailProcessJobHandler>(payload,
+                new EnqueueOptions { MaxRetryAttempts = 0 },
+                cancellationToken);
 
             // Set after the enqueue, as before: the payload copy the engine serialized carries no id, and the running
             // job fills it in from IJobExecutionContext.JobId. This assignment is for the HTTP response only.

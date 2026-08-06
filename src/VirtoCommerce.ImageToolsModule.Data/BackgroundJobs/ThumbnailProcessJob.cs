@@ -68,6 +68,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
         {
             notifyEvent ??= new ThumbnailProcessNotification(Guid.NewGuid().ToString());
 
+            var canceled = false;
             try
             {
                 Action<ThumbnailTaskProgress> progressCallback = x =>
@@ -89,8 +90,9 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
             }
             catch (OperationCanceledException)
             {
-                // Stopped by shutdown or by an explicit cancellation - the JobAbortedException equivalent.
-                // Nothing to report: the run ended on purpose.
+                // Stopped by shutdown or by an explicit cancellation - the JobAbortedException equivalent. Flag it so
+                // the finally reports "canceled" rather than mislabeling a partial run as success or failure.
+                canceled = true;
             }
             catch (Exception ex)
             {
@@ -102,9 +104,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
             {
                 notifyEvent.Finished = DateTime.UtcNow;
 
-                notifyEvent.Description = notifyEvent.Errors.Count != 0
-                    ? $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention."
-                    : "Thumbnails generated successfully!";
+                notifyEvent.Description = canceled
+                    ? $"Thumbnail generation was canceled. Processed {notifyEvent.ProcessedCount} of {notifyEvent.TotalCount} images."
+                    : notifyEvent.Errors.Count != 0
+                        ? $"Thumbnail generation process completed with errors. {notifyEvent.Errors.Count} issues need your attention."
+                        : "Thumbnails generated successfully!";
 
                 await _pushNotifier.SendAsync(notifyEvent);
             }
