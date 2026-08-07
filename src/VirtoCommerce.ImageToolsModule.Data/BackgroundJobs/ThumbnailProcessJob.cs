@@ -134,6 +134,11 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 
         private async Task PerformGeneration(IEnumerable<ThumbnailTask> tasks, bool regenerate, Action<ThumbnailTaskProgress> progressCallback, CancellationToken cancellationToken)
         {
+            // Set as the first statement inside the lock body, so it tells "we never got the lock" apart from "the
+            // generation itself failed". IDistributedLockService reports both as PlatformException, and only the
+            // former means another run is in progress.
+            var lockAcquired = false;
+
             try
             {
                 // tryLockTimeout stays null on purpose: fail immediately when another run holds the lock, matching the
@@ -142,6 +147,8 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
                     GenerationLockKey,
                     async () =>
                     {
+                        lockAcquired = true;
+
                         foreach (var task in tasks)
                         {
                             // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
@@ -164,10 +171,12 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
                     lockTimeout: _generationLockTimeout,
                     cancellationToken: cancellationToken);
             }
-            catch (PlatformException)
+            catch (PlatformException) when (!lockAcquired)
             {
                 // Another run holds the lock. IDistributedLockService signals that as PlatformException, where Hangfire
-                // raised DistributedLockTimeoutException; the message shown to the user is unchanged.
+                // raised DistributedLockTimeoutException; the message shown to the user is unchanged. A PlatformException
+                // raised once the lock IS held comes from the generation itself and must not be reported as contention -
+                // it propagates to Process, which records it as an error, exactly as before the migration.
                 var errorMsg = "A thumbnail generation process is currently running. Please wait until the process is complete before attempting to start another one.";
                 var progressInfo = new ThumbnailTaskProgress
                 {
