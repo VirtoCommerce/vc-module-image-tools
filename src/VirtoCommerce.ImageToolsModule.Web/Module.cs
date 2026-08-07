@@ -103,6 +103,9 @@ namespace VirtoCommerce.ImageToolsModule.Web
             // DI registration the engine module picks up, not an imperative call on a resolved service.
             serviceCollection.AddRecurringJob<ThumbnailProcessAllJobHandler, ThumbnailProcessAllJobPayload>(schedule => schedule
                 .WithId(nameof(ThumbnailProcessAllJobHandler))
+                // Carries over [AutomaticRetry(Attempts = 0)] from the Hangfire job: a failed scheduled run is
+                // superseded by the next occurrence, so retrying it only duplicates a long generation pass.
+                .WithMaxRetryAttempts(0)
                 .FromSettings(
                     ModuleConstants.Settings.General.EnableImageProcessJob,
                     ModuleConstants.Settings.General.ImageProcessJobCronExpression));
