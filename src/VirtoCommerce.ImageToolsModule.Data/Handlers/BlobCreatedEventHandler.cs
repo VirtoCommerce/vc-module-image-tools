@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using VirtoCommerce.AssetsModule.Core.Events;
 using VirtoCommerce.ImageToolsModule.Core;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
-using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
+using VirtoCommerce.ImageToolsModule.Data.Jobs;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Data.Handlers
@@ -65,12 +65,19 @@ namespace VirtoCommerce.ImageToolsModule.Data.Handlers
                 return;
             }
 
-            var runRequest = new ThumbnailsTaskRunRequest
+            var payload = AbstractTypeFactory<ThumbnailProcessJobPayload>.TryCreateInstance();
+            payload.RunRequest = new ThumbnailsTaskRunRequest
             {
                 TaskIds = tasksToRun.Select(x => x.Id).ToArray(),
             };
+            // No notification: this run was triggered by an uploaded blob, not by a user watching a progress bar.
+            // ThumbnailProcessJob.Process creates a throwaway one, exactly as it did when Hangfire passed null here.
+            payload.Notification = null;
 
-            BackgroundJob.Enqueue<ThumbnailProcessJob>(x => x.Process(runRequest, null, JobCancellationToken.Null, null));
+            // The static facade, not an injected IBackgroundJob: RegisterEventHandler resolves this handler once from
+            // the root provider and holds it for the process lifetime, so it must not capture a Scoped dependency.
+            // MaxRetryAttempts = 0 carries over [AutomaticRetry(Attempts = 0)] from the Hangfire job.
+            await BackgroundJob.Enqueue<ThumbnailProcessJobHandler>(payload, new EnqueueOptions { MaxRetryAttempts = 0 });
         }
 
         protected virtual List<string> GetOriginalItems(List<string> assetUrls, List<string> suffixCollection)

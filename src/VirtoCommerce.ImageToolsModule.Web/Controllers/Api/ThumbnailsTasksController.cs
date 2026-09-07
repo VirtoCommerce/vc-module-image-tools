@@ -1,12 +1,14 @@
+using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.PushNotifications;
 using VirtoCommerce.ImageToolsModule.Core.Services;
-using VirtoCommerce.ImageToolsModule.Data.BackgroundJobs;
+using VirtoCommerce.ImageToolsModule.Data.Jobs;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 
@@ -107,23 +109,37 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
         [HttpPost]
         [Route("{jobId}/cancel")]
         [Authorize(Permission.Read)]
-        public ActionResult Cancel([FromRoute] string jobId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+        public async Task<ActionResult> Cancel([FromRoute] string jobId, CancellationToken cancellationToken)
         {
-            BackgroundJob.Delete(jobId);
+            // Cancellation is engine-dependent: Hangfire can recall a job by id, RabbitMQ cannot - a published message
+            // is gone. Report that explicitly instead of answering 200 to a request that did nothing, so the admin UI
+            // can disable the button rather than pretend the run was stopped.
+            if (!BackgroundJob.SupportsCancellation)
+            {
+                return Problem(
+                    statusCode: StatusCodes.Status501NotImplemented,
+                    title: "Cancellation is not supported",
+                    detail: "The active background job engine cannot cancel a running job. Wait for the process to finish.");
+            }
+
+            await BackgroundJob.Cancel(jobId, cancellationToken);
+
             return Ok();
         }
 
         [HttpPost]
         [Route("run")]
         [Authorize(Permission.Read)]
-        public ActionResult<ThumbnailProcessNotification> Run([FromBody] ThumbnailsTaskRunRequest runRequest)
+        public async Task<ActionResult<ThumbnailProcessNotification>> Run([FromBody] ThumbnailsTaskRunRequest runRequest, CancellationToken cancellationToken)
         {
-            var notification = Enqueue(runRequest);
+            var notification = await Enqueue(runRequest, cancellationToken);
             _pushNotifier.Send(notification);
             return Ok(notification);
         }
 
-        private ThumbnailProcessNotification Enqueue(ThumbnailsTaskRunRequest runRequest)
+        private async Task<ThumbnailProcessNotification> Enqueue(ThumbnailsTaskRunRequest runRequest, CancellationToken cancellationToken)
         {
             var notification = new ThumbnailProcessNotification(_userNameResolver.GetCurrentUserName())
             {
@@ -132,7 +148,18 @@ namespace VirtoCommerce.ImageToolsModule.Web.Controllers.Api
             };
             _pushNotifier.Send(notification);
 
-            var jobId = BackgroundJob.Enqueue<ThumbnailProcessJob>(x => x.Process(runRequest, notification, JobCancellationToken.Null, null));
+            var payload = AbstractTypeFactory<ThumbnailProcessJobPayload>.TryCreateInstance();
+            payload.RunRequest = runRequest;
+            payload.Notification = notification;
+
+            // MaxRetryAttempts = 0 carries over [AutomaticRetry(Attempts = 0)] from the Hangfire job: a failed
+            // generation run is reported through the notification, not retried behind the user's back.
+            var jobId = await BackgroundJob.Enqueue<ThumbnailProcessJobHandler>(payload,
+                new EnqueueOptions { MaxRetryAttempts = 0 },
+                cancellationToken);
+
+            // Set after the enqueue, as before: the payload copy the engine serialized carries no id, and the running
+            // job fills it in from IJobExecutionContext.JobId. This assignment is for the HTTP response only.
             notification.JobId = jobId;
 
             return notification;
