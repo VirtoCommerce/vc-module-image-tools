@@ -3,7 +3,7 @@
   <id>VirtoCommerce.ImageTools</id>
   <version>3.1004.0</version>
   <version-tag />
-  <platformVersion>3.1059.0-alpha.13367-vcst-5686</platformVersion>
+  <platformVersion>3.1065.0</platformVersion>
   <dependencies>
     <dependency id="VirtoCommerce.Assets" version="3.1005.0" />
   </dependencies>
