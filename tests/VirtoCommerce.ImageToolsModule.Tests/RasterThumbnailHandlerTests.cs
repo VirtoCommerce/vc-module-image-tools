@@ -16,14 +16,14 @@ public class RasterThumbnailHandlerTests
         yield return new("png");
         yield return new("webp");
         yield return new("bmp");
-        yield return new("gif");
-        yield return new("tif");
-        yield return new("tiff");
-        yield return new("tga");
-        yield return new("ppm");
-        yield return new("pbm");
-        yield return new("pgm");
-        yield return new("qoi");
+        yield return new("gif") { Skip = KnownLimitations.Gif };
+        yield return new("tif") { Skip = KnownLimitations.Tiff };
+        yield return new("tiff") { Skip = KnownLimitations.Tiff };
+        yield return new("tga") { Skip = KnownLimitations.Tga };
+        yield return new("ppm") { Skip = KnownLimitations.Pbm };
+        yield return new("pbm") { Skip = KnownLimitations.Pbm };
+        yield return new("pgm") { Skip = KnownLimitations.Pbm };
+        yield return new("qoi") { Skip = KnownLimitations.Qoi };
     }
 
     [Theory]

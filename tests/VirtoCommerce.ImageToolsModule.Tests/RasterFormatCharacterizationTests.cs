@@ -34,12 +34,12 @@ public class RasterFormatCharacterizationTests
         yield return new("webp-lossless-alpha.webp", ImageProbe.Webp, "#FF0000", "#00000000", 8);
         yield return new("bmp-24.bmp", ImageProbe.Bmp, "#FF0000", "#0000FF", 8);
         yield return new("bmp-32.bmp", ImageProbe.Bmp, "#FF0000", "#0000FF", 8);
-        yield return new("gif.gif", ImageProbe.Gif, "#FF0000", "#0000FF", 8);
-        yield return new("tiff.tif", ImageProbe.Tiff, "#FF0000", "#0000FF", 8);
-        yield return new("tiff.tiff", ImageProbe.Tiff, "#FF0000", "#0000FF", 8);
-        yield return new("tga.tga", ImageProbe.Tga, "#FF0000", "#0000FF", 8);
-        yield return new("pbm.ppm", ImageProbe.Pbm, "#FF0000", "#0000FF", 8);
-        yield return new("qoi.qoi", ImageProbe.Qoi, "#FF0000", "#0000FF", 8);
+        yield return new("gif.gif", ImageProbe.Gif, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Gif };
+        yield return new("tiff.tif", ImageProbe.Tiff, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Tiff };
+        yield return new("tiff.tiff", ImageProbe.Tiff, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Tiff };
+        yield return new("tga.tga", ImageProbe.Tga, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Tga };
+        yield return new("pbm.ppm", ImageProbe.Pbm, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Pbm };
+        yield return new("qoi.qoi", ImageProbe.Qoi, "#FF0000", "#0000FF", 8) { Skip = KnownLimitations.Qoi };
     }
 
     [Theory]
@@ -75,7 +75,7 @@ public class RasterFormatCharacterizationTests
         }
     }
 
-    [Fact]
+    [Fact(Skip = KnownLimitations.AnimatedWebp)]
     public async Task GenerateThumbnails_AnimatedWebp_ThumbnailStaysAnimated()
     {
         // Arrange

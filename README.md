@@ -6,13 +6,13 @@
 
 The Image Tools Module provides comprehensive image processing capabilities for the Virto Commerce platform. It enables automatic thumbnail generation for product images, category banners, and other visual assets stored in blob storage.
 
-The module features a **format-agnostic architecture** that supports both raster formats (JPEG, PNG, WebP) via [SixLabors.ImageSharp](https://docs.sixlabors.com/articles/imagesharp/index.html) and vector formats (SVG) with native XML manipulation, ensuring scalability without quality loss.
+The module features a **format-agnostic architecture** that supports both raster formats (JPEG, PNG, WebP, BMP) and vector formats (SVG) with native XML manipulation, ensuring scalability without quality loss. Resize geometry and the public interfaces are owned by the module; decoding, scaling and encoding of raster images use [SkiaSharp](https://github.com/mono/SkiaSharp) (MIT).
 
 ![ImageTools Main Screen](docs/media/main-page.png)
 
 ## Key Features
 
-- **Multi-Format Support**: Process raster images (JPEG, PNG, WebP, GIF, BMP, TIFF) and vector graphics (SVG)
+- **Multi-Format Support**: Process raster images (JPEG, PNG, WebP, BMP) and vector graphics (SVG)
 - **Flexible Resize Methods**:
   - `FixedSize` - Proportional fit within specified dimensions with optional padding
   - `FixedWidth` - Maintain aspect ratio, resize to target width
@@ -52,8 +52,18 @@ Configure the module in `appsettings.json`:
 ### Allowed Image Formats
 
 Formats can be enabled/disabled via Platform Settings UI:
-- **Raster**: JPEG, PNG, WebP (default), GIF, BMP, TIFF, TGA, PBM
+- **Raster**: JPEG, PNG, WebP (default), BMP
 - **Vector**: SVG
+
+### Known Limitations
+
+| Image type | Behavior |
+|------------|----------|
+| GIF, TIFF, TGA, PBM/PGM/PPM, QOI | Not supported: no thumbnails are generated for these files |
+| Animated WebP, APNG | The thumbnail is a static image of the first frame |
+| BMP | Thumbnails are written as 24-bit BMP; transparency is not kept |
+| Images without transparency (JPEG, RGB PNG, lossy WebP) | Padding without a background color is black, and a background color's transparency is ignored |
+| Embedded color profiles, EXIF orientation | Not applied: pixels are used as stored |
 
 ## Architecture
 
@@ -75,12 +85,13 @@ The module implements a **Handler-Based Architecture** for format-agnostic image
 ┌─────────▼─────────┐ ┌───────▼───────┐ ┌────────▼────────┐
 │ RasterThumbnail   │ │ SvgThumbnail  │ │ Custom Format   │
 │ Handler           │ │ Handler       │ │ Handler         │
-│ (JPEG, PNG, WebP) │ │ (SVG, SVGZ)   │ │ (Extensible)    │
+│ (JPEG, PNG, WebP, │ │ (SVG, SVGZ)   │ │ (Extensible)    │
+│  BMP)             │ │               │ │                 │
 └─────────┬─────────┘ └───────┬───────┘ └─────────────────┘
           │                   │
 ┌─────────▼─────────┐ ┌───────▼───────┐
 │ IThumbnailGen     │ │ ISvgService   │
-│ (ImageSharp)      │ │ ISvgResizer   │
+│ (SkiaSharp)       │ │ ISvgResizer   │
 └───────────────────┘ └───────────────┘
 ```
 
@@ -131,8 +142,8 @@ serviceCollection.AddTransient<IFormatThumbnailHandler, PdfThumbnailHandler>();
 
 | Service | Description |
 |---------|-------------|
-| `ImageService` | ImageSharp-based raster image I/O |
-| `ImageResizer` | ImageSharp resize with multiple methods |
+| `ImageService` | Raster image I/O (SkiaSharp decode/encode, own BMP encoder) |
+| `ImageResizer` | Resize methods: module-owned `ResizePlanner` geometry, SkiaSharp rendering |
 | `SvgService` | SVG blob storage operations |
 | `SvgResizer` | SVG XML manipulation for resizing |
 | `AllowedImageFormatsService` | Settings-based format validation |

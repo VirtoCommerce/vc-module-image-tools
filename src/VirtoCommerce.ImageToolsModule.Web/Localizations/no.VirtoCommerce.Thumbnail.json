@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Tillatte bildeformater",
-      "description": "Miniatyrbilder genereres kun for de angitte bildeformatene. For listen over bildeformater støttet av ImageSharp, besøk følgende lenke: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Miniatyrbilder genereres kun for de angitte bildeformatene. Støttede formater: JPEG, PNG, WebP, BMP og SVG."
     }
   },
   "module": {
