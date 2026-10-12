@@ -22,13 +22,4 @@
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data.PostgreSql\VirtoCommerce.ImageToolsModule.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data.SqlServer\VirtoCommerce.ImageToolsModule.Data.SqlServer.csproj" />
   </ItemGroup>
-  <!-- Keep SkiaSharp native libraries only for $(SkiaSharpNativeRuntimes), without native debug symbols -->
-  <Target Name="TrimSkiaSharpNativeAssets" AfterTargets="ResolvePackageAssets">
-    <ItemGroup>
-      <_SkiaSharpNativeAsset Include="@(RuntimeTargetsCopyLocalItems)" Condition="$([System.String]::Copy('%(RuntimeTargetsCopyLocalItems.NuGetPackageId)').StartsWith('SkiaSharp.NativeAssets'))" />
-      <_SkiaSharpNativeAssetToKeep Include="@(_SkiaSharpNativeAsset)" Condition="'%(_SkiaSharpNativeAsset.Extension)' != '.pdb' and $([System.String]::Copy(';$(SkiaSharpNativeRuntimes);').Contains(';%(_SkiaSharpNativeAsset.RuntimeIdentifier);'))" />
-      <RuntimeTargetsCopyLocalItems Remove="@(_SkiaSharpNativeAsset)" />
-      <RuntimeTargetsCopyLocalItems Include="@(_SkiaSharpNativeAssetToKeep)" />
-    </ItemGroup>
-  </Target>
 </Project>
