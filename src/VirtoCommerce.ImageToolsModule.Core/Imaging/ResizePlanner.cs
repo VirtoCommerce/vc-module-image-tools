@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Imaging;
@@ -114,9 +115,11 @@ public static class ResizePlanner
 
     private static int AtLeastOne(int value) => Math.Max(1, value);
 
-    private static void EnsurePositive(ImageSize size)
+    private static void EnsurePositive(ImageSize size, [CallerArgumentExpression(nameof(size))] string paramName = null)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size.Width, "width");
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size.Height, "height");
+        if (size.Width <= 0 || size.Height <= 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, size, "Width and height must be positive.");
+        }
     }
 }

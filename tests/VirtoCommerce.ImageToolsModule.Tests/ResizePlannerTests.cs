@@ -112,8 +112,8 @@ public class ResizePlannerTests
     [InlineData(-1, 10)]
     public void Plans_NonPositiveTarget_Throw(int width, int height)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.FitWithin(Source, new ImageSize(width, height)));
-        Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.Pad(Source, new ImageSize(width, height)));
-        Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.Crop(Source, new ImageSize(width, height), AnchorPosition.Center));
+        Assert.Equal("box", Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.FitWithin(Source, new ImageSize(width, height))).ParamName);
+        Assert.Equal("target", Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.Pad(Source, new ImageSize(width, height))).ParamName);
+        Assert.Equal("target", Assert.Throws<ArgumentOutOfRangeException>(() => ResizePlanner.Crop(Source, new ImageSize(width, height), AnchorPosition.Center)).ParamName);
     }
 }

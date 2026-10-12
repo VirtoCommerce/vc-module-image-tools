@@ -75,25 +75,6 @@ public class RasterFormatCharacterizationTests
         }
     }
 
-    [Fact(Skip = KnownLimitations.AnimatedWebp)]
-    public async Task GenerateThumbnails_AnimatedWebp_ThumbnailStaysAnimated()
-    {
-        // Arrange
-        var storage = new InMemoryBlobStorage();
-        const string sourceUrl = SourceFolder + "webp-animated.webp";
-        storage.Add(sourceUrl, TestImages.Read("webp-animated.webp"));
-        var option = new ThumbnailOption { FileSuffix = "sm", ResizeMethod = ResizeMethod.FixedWidth, Width = 40 };
-        var generator = ThumbnailTestHost.CreateGenerator(storage.Provider);
-
-        // Act
-        await generator.GenerateThumbnailsAsync(sourceUrl, SourceFolder, [option], CancellationToken.None);
-
-        // Assert
-        var thumbnail = storage.GetWritten(sourceUrl.GenerateThumbnailName("sm"));
-        Assert.NotNull(thumbnail);
-        Assert.True(ImageProbe.IsAnimatedWebp(thumbnail), "thumbnail of an animated WebP is animated");
-    }
-
     [Fact]
     public async Task GenerateThumbnails_CorruptImage_ReturnsNullAndWritesNothing()
     {

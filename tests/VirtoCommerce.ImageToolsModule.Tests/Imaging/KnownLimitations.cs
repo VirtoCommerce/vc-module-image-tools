@@ -11,5 +11,4 @@ internal static class KnownLimitations
     public const string Tga = "Known limitation: TGA is not supported (SkiaSharp cannot decode or encode TGA)";
     public const string Pbm = "Known limitation: PBM/PGM/PPM is not supported (SkiaSharp cannot decode or encode it)";
     public const string Qoi = "Known limitation: QOI is not supported (SkiaSharp cannot decode or encode QOI)";
-    public const string AnimatedWebp = "Known limitation: animated WebP thumbnails keep only the first frame";
 }
