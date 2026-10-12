@@ -12,12 +12,18 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="MockQueryable.Moq" Version="10.0.12" />
     <PackageReference Include="Moq" Version="4.21.0" />
+    <!-- Independent decoder used only to verify generated thumbnails -->
+    <PackageReference Include="SkiaSharp" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <PackageReference Include="xunit.v3.runner.console" Version="3.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="media\formats\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\VirtoCommerce.ImageToolsModule.Data\VirtoCommerce.ImageToolsModule.Data.csproj" />
