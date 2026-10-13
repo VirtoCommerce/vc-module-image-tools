@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "許可される画像フォーマット",
-      "description": "指定された画像フォーマットに対してのみサムネイルが生成されます。ImageSharpでサポートされている画像フォーマットのリストについては、次のリンクをご覧ください：https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "指定された画像フォーマットに対してのみサムネイルが生成されます。対応フォーマット: JPEG、PNG、WebP、BMP、SVG。"
     }
   },
   "module": {

@@ -1,9 +1,8 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
+using VirtoCommerce.ImageToolsModule.Core.Imaging;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
 using VirtoCommerce.ImageToolsModule.Data.Extensions;
@@ -12,17 +11,12 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
 {
     /// <summary>
-    /// Handler for raster image formats (JPEG, PNG, WebP, etc.).
+    /// Handler for raster image formats (JPEG, PNG, WebP, BMP).
     /// Delegates processing to the existing IThumbnailGenerator implementation.
     /// </summary>
     public class RasterThumbnailHandler : IFormatThumbnailHandler
     {
         private readonly IThumbnailGenerator _thumbnailGenerator;
-
-        private static readonly Lazy<HashSet<string>> _supportedExtensions = new(() =>
-            new HashSet<string>(
-                Configuration.Default.ImageFormats.SelectMany(f => f.FileExtensions),
-                StringComparer.OrdinalIgnoreCase));
 
         public RasterThumbnailHandler(
             IThumbnailGenerator thumbnailGenerator)
@@ -37,8 +31,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         public Task<bool> CanHandleAsync(string imageUrl)
         {
             var extension = UrlExtensions.GetFileExtensionWithoutDot(imageUrl);
-            return Task.FromResult(
-                extension.Length > 0 && _supportedExtensions.Value.Contains(extension));
+            return Task.FromResult(RasterImageFormat.FindByExtension(extension) != null);
         }
 
         /// <inheritdoc />

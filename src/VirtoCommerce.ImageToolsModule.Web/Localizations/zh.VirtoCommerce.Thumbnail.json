@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "允许的图像格式",
-      "description": "只会为指定的图像格式生成缩略图。有关ImageSharp支持的图像格式列表，请访问以下链接：https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "只会为指定的图像格式生成缩略图。支持的格式：JPEG、PNG、WebP、BMP 和 SVG。"
     }
   },
   "module": {

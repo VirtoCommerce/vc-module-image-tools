@@ -3,8 +3,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using VirtoCommerce.ImageToolsModule.Core.Imaging;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 using VirtoCommerce.ImageToolsModule.Core.Services;
 using VirtoCommerce.ImageToolsModule.Core.ThumbnailGeneration;
@@ -62,7 +61,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
                         {
                             _ = thumbnail ?? throw new PlatformException($"Cannot save thumbnail image {thumbnailUrl}");
 
-                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, originalImage.Metadata.DecodedImageFormat, option.JpegQuality);
+                            await _imageService.SaveImageAsync(thumbnailUrl, thumbnail, originalImage.Format, option.JpegQuality);
 
                             result.GeneratedThumbnails.Add(thumbnailUrl);
                         }
@@ -84,15 +83,15 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
         /// <param name="image"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        protected virtual Image<Rgba32> GenerateThumbnail(Image<Rgba32> image, ThumbnailOption option)
+        protected virtual RasterImage GenerateThumbnail(RasterImage image, ThumbnailOption option)
         {
             var height = option.Height ?? image.Height;
             var width = option.Width ?? image.Width;
 
-            var color = Color.Transparent;
+            var color = ImageColor.Transparent;
             if (!string.IsNullOrWhiteSpace(option.BackgroundColor))
             {
-                color = Rgba32.ParseHex(option.BackgroundColor);
+                color = ImageColor.Parse(option.BackgroundColor);
             }
 
             var result = option.ResizeMethod switch

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Formats.Webp;
+using VirtoCommerce.ImageToolsModule.Core.Imaging;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.ImageToolsModule.Core
@@ -11,7 +9,7 @@ namespace VirtoCommerce.ImageToolsModule.Core
     public static class ModuleConstants
     {
         /// <summary>
-        /// SVG format name constant (not part of ImageSharp, so defined here)
+        /// SVG format name constant (SVG is handled separately from raster formats)
         /// </summary>
         public const string SvgFormatName = "SVG";
 
@@ -74,9 +72,9 @@ namespace VirtoCommerce.ImageToolsModule.Core
                     IsDictionary = true,
                     AllowedValues =
                     [
-                        JpegFormat.Instance.Name,
-                        PngFormat.Instance.Name,
-                        WebpFormat.Instance.Name,
+                        RasterImageFormat.Jpeg.Name,
+                        RasterImageFormat.Png.Name,
+                        RasterImageFormat.Webp.Name,
                         SvgFormatName,
                     ],
                 };

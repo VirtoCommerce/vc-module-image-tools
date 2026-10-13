@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Sallitut kuvaformaatit",
-      "description": "Pikkukuvat luodaan vain määritetyille kuvaformaateille. ImageSharpin tukemien formaattien luettelo löytyy osoitteesta: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Pikkukuvat luodaan vain määritetyille kuvaformaateille. Tuetut formaatit: JPEG, PNG, WebP, BMP ja SVG."
     }
   },
   "module": {
