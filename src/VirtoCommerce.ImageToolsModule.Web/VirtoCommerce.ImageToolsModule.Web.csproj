@@ -30,5 +30,7 @@
       <RuntimeTargetsCopyLocalItems Remove="@(_SkiaSharpNativeAsset)" />
       <RuntimeTargetsCopyLocalItems Include="@(_SkiaSharpNativeAssetToKeep)" />
     </ItemGroup>
+    <!-- Never ship a package without the native library: thumbnails would fail at runtime -->
+    <Error Condition="'@(_SkiaSharpNativeAsset)' != '' and '@(_SkiaSharpNativeAssetToKeep)' == ''" Text="No SkiaSharp native library matched SkiaSharpNativeRuntimes '$(SkiaSharpNativeRuntimes)'. Check the runtime identifiers and the RuntimeIdentifier metadata of RuntimeTargetsCopyLocalItems." />
   </Target>
 </Project>
