@@ -49,13 +49,13 @@ public static class ResizePlanner
 
         if (heightRatio < widthRatio)
         {
-            var width = Round(source.Width * heightRatio);
+            var width = AtLeastOne(Round(source.Width * heightRatio));
             var x = Round((target.Width - (source.Width * heightRatio)) / 2f);
             destination = new ImageRectangle(x, 0, width, target.Height);
         }
         else
         {
-            var height = Round(source.Height * widthRatio);
+            var height = AtLeastOne(Round(source.Height * widthRatio));
             var y = Round((target.Height - (source.Height * widthRatio)) / 2f);
             destination = new ImageRectangle(0, y, target.Width, height);
         }

@@ -59,6 +59,19 @@ namespace VirtoCommerce.ImageToolsModule.Tests
         }
 
         [Fact]
+        public void FixedSize_VeryWideImage_KeepsAtLeastOneRowOfImage()
+        {
+            var resizer = new ImageResizerTestClass();
+            using var image = SkiaRasterImage.Create(new ImageSize(1920, 60), RasterImageFormat.Png, hasAlpha: false, new ImageColor(255, 0, 0, 255));
+
+            using var result = (SkiaRasterImage)resizer.FixedSize(image, 16, 16, Green);
+
+            Assert.True(result.Width == 16 && result.Height == 16);
+            Assert.Equal(new SkiaSharp.SKColor(0, 255, 0), result.Bitmap.GetPixel(8, 2));
+            Assert.Equal(new SkiaSharp.SKColor(255, 0, 0), result.Bitmap.GetPixel(8, 8));
+        }
+
+        [Fact]
         public void Render()
         {
             var resizer = new ImageResizerTestClass();

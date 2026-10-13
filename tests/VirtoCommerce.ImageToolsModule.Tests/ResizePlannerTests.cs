@@ -32,6 +32,10 @@ public class ResizePlannerTests
     [InlineData(80, 40, 160, 160, 0, 40, 160, 80)] // upscales to fit
     [InlineData(80, 40, 80, 40, 0, 0, 80, 40)] // same aspect ratio: no bars
     [InlineData(80, 40, 41, 41, 0, 10, 41, 20)] // (41 - 20.5) / 2 = 10.25
+    [InlineData(1920, 60, 16, 16, 0, 8, 16, 1)] // fitted height 0.5 is kept at one pixel
+    [InlineData(60, 1920, 16, 16, 8, 0, 1, 16)] // fitted width 0.5 is kept at one pixel
+    [InlineData(4000, 100, 20, 20, 0, 10, 20, 1)]
+    [InlineData(80, 3, 40, 40, 0, 19, 40, 2)]
     public void Pad_FitsInsideTargetCentered(int sourceWidth, int sourceHeight, int width, int height, int x, int y, int destinationWidth, int destinationHeight)
     {
         var plan = ResizePlanner.Pad(new ImageSize(sourceWidth, sourceHeight), new ImageSize(width, height));
