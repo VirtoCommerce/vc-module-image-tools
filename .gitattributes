@@ -3,6 +3,9 @@
 ###############################################################################
 * text=auto
 
+# Image fixtures are binary, never normalize line endings
+tests/**/media/** binary
+
 *.bat    text eol=crlf
 *.cmd    text eol=crlf
 *.config text eol=crlf

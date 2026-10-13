@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Formatos de imagen permitidos",
-      "description": "Las miniaturas solo se generarán para los formatos de imagen especificados. Para obtener la lista de formatos de imagen compatibles con ImageSharp, visite el siguiente enlace: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Las miniaturas solo se generarán para los formatos de imagen especificados. Formatos compatibles: JPEG, PNG, WebP, BMP y SVG."
     }
   },
   "module": {

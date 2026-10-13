@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Formati immagine consentiti",
-      "description": "Le miniature verranno generate solo per i formati immagine specificati. Per l'elenco dei formati immagine supportati da ImageSharp, visita il seguente link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Le miniature verranno generate solo per i formati immagine specificati. Formati supportati: JPEG, PNG, WebP, BMP e SVG."
     }
   },
   "module": {

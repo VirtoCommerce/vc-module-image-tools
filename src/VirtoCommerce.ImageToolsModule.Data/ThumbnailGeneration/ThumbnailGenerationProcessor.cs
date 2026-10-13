@@ -97,8 +97,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.ThumbnailGeneration
             if (progressInfo.ProcessedCount % pageSize == 0 || progressInfo.ProcessedCount == progressInfo.TotalCount)
             {
                 progressCallback(progressInfo);
-                // Trace unmanaged resources, captured by SixLabours
-                _logger.LogTrace(@"SixLabors...TotalUndisposedAllocationCount {count}", SixLabors.ImageSharp.Diagnostics.MemoryDiagnostics.TotalUndisposedAllocationCount);
             }
         }
 
