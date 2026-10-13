@@ -1,5 +1,4 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using VirtoCommerce.ImageToolsModule.Core.Imaging;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Services
@@ -9,31 +8,31 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <summary>
         /// Scale image by given percent
         /// </summary>
-        Image<Rgba32> ScaleByPercent(Image<Rgba32> image, int percent);
+        RasterImage ScaleByPercent(RasterImage image, int percent);
 
         /// <summary>
         /// Resize image vertically with keeping it aspect rate.
         /// </summary>
-        Image<Rgba32> FixedHeight(Image<Rgba32> image, int height, Rgba32 background);
+        RasterImage FixedHeight(RasterImage image, int height, ImageColor background);
 
         /// <summary>
         /// Resize image horizontally with keeping it aspect rate
         /// </summary>
-        Image<Rgba32> FixedWidth(Image<Rgba32> image, int width, Rgba32 background);
+        RasterImage FixedWidth(RasterImage image, int width, ImageColor background);
 
         /// <summary>
         /// Resize image.
         /// Original image will be resized proportionally to fit given Width, Height.
         /// Original image will not be cropped.
-        /// If the original image has an aspect ratio different from thumbnail then thumbnail will contain empty spaces (top and bottom or left and right). 
+        /// If the original image has an aspect ratio different from thumbnail then thumbnail will contain empty spaces (top and bottom or left and right).
         /// The empty spaces will be filled with given color.
         /// </summary>
-        Image<Rgba32> FixedSize(Image<Rgba32> image, int width, int height, Rgba32 background);
+        RasterImage FixedSize(RasterImage image, int width, int height, ImageColor background);
 
         /// <summary>
         /// Resize and trim excess.
         /// The image will have given size
         /// </summary>
-        Image<Rgba32> Crop(Image<Rgba32> image, int width, int height, AnchorPosition anchor);
+        RasterImage Crop(RasterImage image, int width, int height, AnchorPosition anchor);
     }
 }

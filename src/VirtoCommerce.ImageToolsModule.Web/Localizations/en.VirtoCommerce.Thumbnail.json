@@ -160,7 +160,7 @@
     },
     "ImageTools.Thumbnails.AllowedImageFormats": {
       "title": "Allowed image formats",
-      "description": "Thumbnails will only be generated for the specified image formats. For the list of image formats supported by ImageSharp, please visit the following link: https://docs.sixlabors.com/articles/imagesharp/imageformats.html"
+      "description": "Thumbnails will only be generated for the specified image formats. Supported formats: JPEG, PNG, WebP, BMP and SVG."
     }
   },
   "module": {
