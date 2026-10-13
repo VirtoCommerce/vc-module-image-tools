@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.PixelFormats;
+using VirtoCommerce.ImageToolsModule.Core.Imaging;
 using VirtoCommerce.ImageToolsModule.Core.Models;
 
 namespace VirtoCommerce.ImageToolsModule.Core.Services
@@ -15,8 +13,8 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// Loads Image from blob storage
         /// </summary>
         /// <param name="imageUrl">image url.</param>
-        /// <returns>Image object.</returns>
-        Task<Image<Rgba32>> LoadImageAsync(string imageUrl);
+        /// <returns>Image object, or null when the blob is missing, corrupt or not in a supported format.</returns>
+        Task<RasterImage> LoadImageAsync(string imageUrl);
 
         /// <summary>
         /// Save given image to blob storage.
@@ -25,6 +23,6 @@ namespace VirtoCommerce.ImageToolsModule.Core.Services
         /// <param name="image">Image object.</param>
         /// <param name="format">Image object format.</param>
         /// <param name="jpegQuality">Target image quality.</param>
-        Task SaveImageAsync(string imageUrl, Image<Rgba32> image, IImageFormat format, JpegQuality jpegQuality);
+        Task SaveImageAsync(string imageUrl, RasterImage image, RasterImageFormat format, JpegQuality jpegQuality);
     }
 }

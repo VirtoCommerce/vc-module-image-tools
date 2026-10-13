@@ -4,6 +4,8 @@
     <noWarn>1591;NU1608</noWarn>
     <IsPackable>False</IsPackable>
     <OutputType>Library</OutputType>
+    <!-- SkiaSharp native libraries shipped in the module package -->
+    <SkiaSharpNativeRuntimes>linux-x64;linux-arm64;linux-musl-x64;osx;win-x64</SkiaSharpNativeRuntimes>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="dist\**" />
@@ -20,4 +22,15 @@
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data.PostgreSql\VirtoCommerce.ImageToolsModule.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.ImageToolsModule.Data.SqlServer\VirtoCommerce.ImageToolsModule.Data.SqlServer.csproj" />
   </ItemGroup>
+  <!-- Keep SkiaSharp native libraries only for $(SkiaSharpNativeRuntimes), without native debug symbols -->
+  <Target Name="TrimSkiaSharpNativeAssets" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <_SkiaSharpNativeAsset Include="@(RuntimeTargetsCopyLocalItems)" Condition="$([System.String]::Copy('%(RuntimeTargetsCopyLocalItems.NuGetPackageId)').StartsWith('SkiaSharp.NativeAssets'))" />
+      <_SkiaSharpNativeAssetToKeep Include="@(_SkiaSharpNativeAsset)" Condition="'%(_SkiaSharpNativeAsset.Extension)' != '.pdb' and $([System.String]::Copy(';$(SkiaSharpNativeRuntimes);').Contains(';%(_SkiaSharpNativeAsset.RuntimeIdentifier);'))" />
+      <RuntimeTargetsCopyLocalItems Remove="@(_SkiaSharpNativeAsset)" />
+      <RuntimeTargetsCopyLocalItems Include="@(_SkiaSharpNativeAssetToKeep)" />
+    </ItemGroup>
+    <!-- Never ship a package without the native library: thumbnails would fail at runtime -->
+    <Error Condition="'@(_SkiaSharpNativeAsset)' != '' and '@(_SkiaSharpNativeAssetToKeep)' == ''" Text="No SkiaSharp native library matched SkiaSharpNativeRuntimes '$(SkiaSharpNativeRuntimes)'. Check the runtime identifiers and the RuntimeIdentifier metadata of RuntimeTargetsCopyLocalItems." />
+  </Target>
 </Project>
