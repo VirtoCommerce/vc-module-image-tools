@@ -1,0 +1,18 @@
+{
+  // Thumbnails admin UI for the Admin Shell host (Module Federation remote)
+  "remote": { "name": "thumbnails_admin", "exposed": "./Module" },
+  "contributions": {
+    "menu": [
+      {
+        "id": "thumbnails",
+        "sectionId": "catalog",
+        "title": "Thumbnails",
+        "icon": "lucide-images",
+        "route": "/thumbnails",
+        "permission": "thumbnail:access",
+        "priority": 60,
+        "replaces": "legacy.thumbnail"
+      }
+    ]
+  }
+}

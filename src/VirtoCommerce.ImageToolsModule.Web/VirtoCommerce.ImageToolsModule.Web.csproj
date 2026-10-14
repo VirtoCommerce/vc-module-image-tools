@@ -33,4 +33,17 @@
     <!-- Never ship a package without the native library: thumbnails would fail at runtime -->
     <Error Condition="'@(_SkiaSharpNativeAsset)' != '' and '@(_SkiaSharpNativeAssetToKeep)' == ''" Text="No SkiaSharp native library matched SkiaSharpNativeRuntimes '$(SkiaSharpNativeRuntimes)'. Check the runtime identifiers and the RuntimeIdentifier metadata of RuntimeTargetsCopyLocalItems." />
   </Target>
+  <ItemGroup>
+    <!-- Admin Shell plugin: Vue sources in vue/, built into plugins/admin-shell/ -->
+    <Compile Remove="vue\**" />
+    <Content Remove="vue\**" />
+    <EmbeddedResource Remove="vue\**" />
+    <None Remove="vue\**" />
+    <Content Remove="plugins\**" />
+    <None Remove="plugins\**" />
+    <AdminShellPlugin Include="plugins\**" />
+  </ItemGroup>
+  <Target Name="CopyAdminShellPluginOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(AdminShellPlugin)" DestinationFiles="$(PublishDir)\..\%(Identity)" />
+  </Target>
 </Project>
