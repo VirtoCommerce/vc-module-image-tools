@@ -3,7 +3,6 @@
     "MENU": { "TITLE": "Thumbnails" },
     "PAGES": {
       "TASKS": {
-        "TITLE": "Thumbnails",
         "EMPTY": "No thumbnail tasks",
         "COLUMNS": { "NAME": "Task name", "PATH": "Images folder", "OPTIONS": "Thumbnails", "LAST_RUN": "Last run" },
         "TOOLBAR": { "REFRESH": "Refresh", "ADD": "Add", "RUN": "Run", "DELETE": "Delete" }

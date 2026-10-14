@@ -1,6 +1,6 @@
 <template>
   <VcBlade
-    :title="$t('THUMBNAILS.PAGES.TASKS.TITLE')"
+    :title="$t('THUMBNAILS.MENU.TITLE')"
     :toolbar-items="bladeToolbar"
     :loading="loading"
     width="50%"
