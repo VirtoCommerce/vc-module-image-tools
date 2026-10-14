@@ -4,7 +4,7 @@
     "menu": [
       {
         "id": "thumbnails",
-        "sectionId": "catalog",
+        "sectionId": "configuration",
         "title": "Thumbnails",
         "icon": "lucide-images",
         "route": "/thumbnails",
