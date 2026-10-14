@@ -66,7 +66,10 @@ watch(
 onBeforeUnmount(() => clearInterval(tick));
 
 const hasErrors = computed(() => (props.job?.errorCount ?? props.job?.errors?.length ?? 0) > 0);
-const state = computed(() => (!props.finished ? "running" : hasErrors.value ? "error" : "done"));
+const state = computed(() => {
+  if (!props.finished) return "running";
+  return hasErrors.value ? "error" : "done";
+});
 const stateIcon = computed(
   () => ({ running: "lucide-loader-circle", error: "lucide-circle-alert", done: "lucide-circle-check" })[state.value],
 );

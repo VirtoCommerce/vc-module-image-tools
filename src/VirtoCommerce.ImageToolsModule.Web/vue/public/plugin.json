@@ -1,5 +1,4 @@
 {
-  // Thumbnails admin UI for the Admin Shell host (Module Federation remote)
   "remote": { "name": "thumbnails_admin", "exposed": "./Module" },
   "contributions": {
     "menu": [
