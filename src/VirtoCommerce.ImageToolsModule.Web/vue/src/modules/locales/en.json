@@ -1,0 +1,74 @@
+{
+  "THUMBNAILS": {
+    "MENU": { "TITLE": "Thumbnails" },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "No thumbnail tasks",
+        "COLUMNS": { "NAME": "Task name", "PATH": "Images folder", "OPTIONS": "Thumbnails", "LAST_RUN": "Last run" },
+        "TOOLBAR": { "REFRESH": "Refresh", "ADD": "Add", "RUN": "Run", "DELETE": "Delete" }
+      },
+      "TASK": {
+        "TITLE": "Thumbnail task",
+        "NEW": "New thumbnail task",
+        "FIELDS": {
+          "NAME": "Name",
+          "NAME_HINT": "Task name",
+          "PATH": "Images folder",
+          "PATH_HINT": "Folder of the images to process, relative to the assets root (e.g. catalog)",
+          "OPTIONS": "Thumbnail settings",
+          "OPTIONS_HINT": "The thumbnails generated for each image",
+          "LAST_RUN": "Last run"
+        },
+        "TOOLBAR": { "SAVE": "Save", "RESET": "Reset", "RUN": "Run", "DELETE": "Delete" },
+        "WIDGETS": { "OPTIONS": "Thumbnail settings" }
+      },
+      "OPTIONS": {
+        "TITLE": "Thumbnail settings",
+        "EMPTY": "No thumbnail settings",
+        "COLUMNS": { "NAME": "Name", "METHOD": "Resize method", "SIZE": "Width × height", "SUFFIX": "File suffix", "BACKGROUND": "Background" },
+        "TOOLBAR": { "REFRESH": "Refresh", "ADD": "Add" }
+      },
+      "OPTION": {
+        "TITLE": "Thumbnail setting",
+        "NEW": "New thumbnail setting",
+        "FIELDS": {
+          "NAME": "Name",
+          "SUFFIX": "File suffix",
+          "SUFFIX_HINT": "Added to the image file name, e.g. image_md.png",
+          "METHOD": "Resize method",
+          "WIDTH": "Width",
+          "HEIGHT": "Height",
+          "BACKGROUND": "Background color",
+          "BACKGROUND_HINT": "Hex color used to fill the free area, e.g. #FFFFFF",
+          "ANCHOR": "Anchor position",
+          "QUALITY": "JPEG quality"
+        },
+        "TOOLBAR": { "SAVE": "Save", "RESET": "Reset", "DELETE": "Delete" }
+      },
+      "PROGRESS": { "TITLE": "Process images", "TOOLBAR": { "CANCEL": "Cancel" } }
+    },
+    "RESIZE": { "FixedSize": "Fixed size", "FixedWidth": "Fixed width", "FixedHeight": "Fixed height", "Crop": "Crop" },
+    "ANCHOR": {
+      "TopLeft": "Top left", "TopCenter": "Top center", "TopRight": "Top right",
+      "CenterLeft": "Center left", "Center": "Center", "CenterRight": "Center right",
+      "BottomLeft": "Bottom left", "BottomCenter": "Bottom center", "BottomRight": "Bottom right"
+    },
+    "QUALITY": { "Low": "Low", "Medium": "Medium", "High": "High", "VeryHigh": "Very high" },
+    "RUN": {
+      "TITLE": "Generate thumbnails",
+      "MESSAGE": "How should the thumbnails be generated?",
+      "NOTE_CHANGES": "Process changes: only images added or changed since the last run (not available before the first run).",
+      "NOTE_REGENERATE": "Regenerate: rebuild the thumbnails of every image in the folder.",
+      "CHANGES": "Process changes",
+      "REGENERATE": "Regenerate",
+      "CANCEL": "Cancel"
+    },
+    "JOB": { "STARTED": "Started", "FINISHED": "Finished", "ELAPSED": "Elapsed", "PROCESSED": "Processed", "ERRORS": "Errors" },
+    "ALERTS": {
+      "DELETE_TASKS": "Delete {count} thumbnail task(s)?",
+      "DELETE_OPTION": "Delete this thumbnail setting?",
+      "CLOSE_CONFIRMATION": "You have unsaved changes. Are you sure you want to close?",
+      "CANCEL_UNSUPPORTED": "The background job engine can't cancel a running job. Wait for it to finish."
+    }
+  }
+}
