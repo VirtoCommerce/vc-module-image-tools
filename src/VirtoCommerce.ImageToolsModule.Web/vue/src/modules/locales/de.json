@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniaturansichten"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Keine Miniaturansichten-Aufgaben",
+        "COLUMNS": {
+          "NAME": "Aufgabenname",
+          "PATH": "Bilderordner",
+          "OPTIONS": "Miniaturansichten",
+          "LAST_RUN": "Letzte Ausführung"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Aktualisieren",
+          "ADD": "Hinzufügen",
+          "RUN": "Ausführen",
+          "DELETE": "Löschen"
+        }
+      },
+      "TASK": {
+        "TITLE": "Miniaturansichten-Aufgabe",
+        "NEW": "Neue Miniaturansichten-Aufgabe",
+        "FIELDS": {
+          "NAME": "Name",
+          "NAME_HINT": "Aufgabenname",
+          "PATH": "Bilderordner",
+          "PATH_HINT": "Ordner der zu verarbeitenden Bilder, relativ zum Stammverzeichnis der Assets (z. B. catalog)",
+          "OPTIONS": "Miniaturansichten-Einstellungen",
+          "OPTIONS_HINT": "Die für jedes Bild generierten Miniaturansichten",
+          "LAST_RUN": "Letzte Ausführung"
+        },
+        "TOOLBAR": {
+          "SAVE": "Speichern",
+          "RESET": "Zurücksetzen",
+          "RUN": "Ausführen",
+          "DELETE": "Löschen"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Miniaturansichten-Einstellungen"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Miniaturansichten-Einstellungen",
+        "EMPTY": "Keine Miniaturansichten-Einstellungen",
+        "COLUMNS": {
+          "NAME": "Name",
+          "METHOD": "Größenänderungsmethode",
+          "SIZE": "Breite × Höhe",
+          "SUFFIX": "Dateisuffix",
+          "BACKGROUND": "Hintergrund"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Aktualisieren",
+          "ADD": "Hinzufügen"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Miniaturansichten-Einstellung",
+        "NEW": "Neue Miniaturansichten-Einstellung",
+        "FIELDS": {
+          "NAME": "Name",
+          "SUFFIX": "Dateisuffix",
+          "SUFFIX_HINT": "Wird an den Bilddateinamen angehängt, z. B. image_md.png",
+          "METHOD": "Größenänderungsmethode",
+          "WIDTH": "Breite",
+          "HEIGHT": "Höhe",
+          "BACKGROUND": "Hintergrundfarbe",
+          "BACKGROUND_HINT": "Hex-Farbe zum Füllen der freien Fläche, z. B. #FFFFFF",
+          "ANCHOR": "Ankerposition",
+          "QUALITY": "JPEG-Qualität"
+        },
+        "TOOLBAR": {
+          "SAVE": "Speichern",
+          "RESET": "Zurücksetzen",
+          "DELETE": "Löschen"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Bilder verarbeiten",
+        "TOOLBAR": {
+          "CANCEL": "Abbrechen"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Feste Größe",
+      "FixedWidth": "Feste Breite",
+      "FixedHeight": "Feste Höhe",
+      "Crop": "Zuschneiden"
+    },
+    "ANCHOR": {
+      "TopLeft": "Oben links",
+      "TopCenter": "Oben Mitte",
+      "TopRight": "Oben rechts",
+      "CenterLeft": "Mitte links",
+      "Center": "Mitte",
+      "CenterRight": "Mitte rechts",
+      "BottomLeft": "Unten links",
+      "BottomCenter": "Unten Mitte",
+      "BottomRight": "Unten rechts"
+    },
+    "QUALITY": {
+      "Low": "Niedrig",
+      "Medium": "Mittel",
+      "High": "Hoch",
+      "VeryHigh": "Sehr hoch"
+    },
+    "RUN": {
+      "TITLE": "Miniaturansichten generieren",
+      "MESSAGE": "Wie sollen die Miniaturansichten generiert werden?",
+      "NOTE_CHANGES": "Änderungen verarbeiten: nur Bilder, die seit der letzten Ausführung hinzugefügt oder geändert wurden (vor der ersten Ausführung nicht verfügbar).",
+      "NOTE_REGENERATE": "Neu generieren: die Miniaturansichten aller Bilder im Ordner neu erstellen.",
+      "CHANGES": "Änderungen verarbeiten",
+      "REGENERATE": "Neu generieren",
+      "CANCEL": "Abbrechen"
+    },
+    "JOB": {
+      "STARTED": "Gestartet",
+      "FINISHED": "Beendet",
+      "ELAPSED": "Verstrichen",
+      "PROCESSED": "Verarbeitet",
+      "ERRORS": "Fehler"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Ausgewählte Miniaturansichten-Aufgaben ({count}) löschen?",
+      "DELETE_OPTION": "Diese Miniaturansichten-Einstellung löschen?",
+      "CLOSE_CONFIRMATION": "Es gibt nicht gespeicherte Änderungen. Möchten Sie wirklich schließen?",
+      "CANCEL_UNSUPPORTED": "Die Hintergrundjob-Engine kann einen laufenden Job nicht abbrechen. Warten Sie, bis er abgeschlossen ist."
+    }
+  }
+}
