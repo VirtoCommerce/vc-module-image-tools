@@ -59,7 +59,7 @@ defineEmits<{ (e: "close"): void; (e: "choose", value: string): void }>();
   }
   ul {
     margin: 0;
-    padding-left: 20px;
+    padding-inline-start: 20px;
     list-style: disc;
   }
 }
