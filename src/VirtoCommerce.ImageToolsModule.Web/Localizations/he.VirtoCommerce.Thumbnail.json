@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "thumbnail:access": "פתיחת תפריט התמונות הממוזערות",
+    "thumbnail:create": "יצירת נתוני תמונות ממוזערות",
+    "thumbnail:read": "צפייה בנתוני תמונות ממוזערות",
+    "thumbnail:update": "עדכון נתוני תמונות ממוזערות",
+    "thumbnail:delete": "מחיקת נתוני תמונות ממוזערות"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "ביטוי Cron לתזמון הרצת משימת עיבוד התמונות"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "גודל מנה",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "הפעלת משימת עיבוד התמונות",
+      "description": "הפעלת משימת עיבוד התמונות ברקע"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "הפעלת יצירת תמונות ממוזערות מבוססת אירועים",
+      "description": "התחלת יצירת התמונות הממוזערות מיד עם הוספת נכס"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "פורמטי תמונה מותרים",
+      "description": "תמונות ממוזערות ייווצרו רק עבור פורמטי התמונה שצוינו. פורמטים נתמכים: JPEG, PNG, WebP, BMP ו-SVG."
+    }
+  }
+}
