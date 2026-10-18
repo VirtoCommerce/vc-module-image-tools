@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Pikkukuvat"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Ei pikkukuvatehtäviä",
+        "COLUMNS": {
+          "NAME": "Tehtävän nimi",
+          "PATH": "Kuvakansio",
+          "OPTIONS": "Pikkukuvat",
+          "LAST_RUN": "Viimeksi suoritettu"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Päivitä",
+          "ADD": "Lisää",
+          "RUN": "Suorita",
+          "DELETE": "Poista"
+        }
+      },
+      "TASK": {
+        "TITLE": "Pikkukuvatehtävä",
+        "NEW": "Uusi pikkukuvatehtävä",
+        "FIELDS": {
+          "NAME": "Nimi",
+          "NAME_HINT": "Tehtävän nimi",
+          "PATH": "Kuvakansio",
+          "PATH_HINT": "Käsiteltävien kuvien kansio suhteessa resurssien juureen (esim. catalog)",
+          "OPTIONS": "Pikkukuvien asetukset",
+          "OPTIONS_HINT": "Kullekin kuvalle luotavat pikkukuvat",
+          "LAST_RUN": "Viimeksi suoritettu"
+        },
+        "TOOLBAR": {
+          "SAVE": "Tallenna",
+          "RESET": "Nollaa",
+          "RUN": "Suorita",
+          "DELETE": "Poista"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Pikkukuvien asetukset"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Pikkukuvien asetukset",
+        "EMPTY": "Ei pikkukuvien asetuksia",
+        "COLUMNS": {
+          "NAME": "Nimi",
+          "METHOD": "Koonmuutosmenetelmä",
+          "SIZE": "Leveys × korkeus",
+          "SUFFIX": "Tiedostotunniste",
+          "BACKGROUND": "Tausta"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Päivitä",
+          "ADD": "Lisää"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Pikkukuva-asetus",
+        "NEW": "Uusi pikkukuva-asetus",
+        "FIELDS": {
+          "NAME": "Nimi",
+          "SUFFIX": "Tiedostotunniste",
+          "SUFFIX_HINT": "Lisätään kuvatiedoston nimeen, esim. image_md.png",
+          "METHOD": "Koonmuutosmenetelmä",
+          "WIDTH": "Leveys",
+          "HEIGHT": "Korkeus",
+          "BACKGROUND": "Taustaväri",
+          "BACKGROUND_HINT": "Heksadesimaaliväri, jolla vapaa alue täytetään, esim. #FFFFFF",
+          "ANCHOR": "Ankkuripaikka",
+          "QUALITY": "JPEG-laatu"
+        },
+        "TOOLBAR": {
+          "SAVE": "Tallenna",
+          "RESET": "Nollaa",
+          "DELETE": "Poista"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Käsittele kuvat",
+        "TOOLBAR": {
+          "CANCEL": "Peruuta"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Kiinteä koko",
+      "FixedWidth": "Kiinteä leveys",
+      "FixedHeight": "Kiinteä korkeus",
+      "Crop": "Rajaa"
+    },
+    "ANCHOR": {
+      "TopLeft": "Ylhäällä vasemmalla",
+      "TopCenter": "Ylhäällä keskellä",
+      "TopRight": "Ylhäällä oikealla",
+      "CenterLeft": "Keskellä vasemmalla",
+      "Center": "Keskellä",
+      "CenterRight": "Keskellä oikealla",
+      "BottomLeft": "Alhaalla vasemmalla",
+      "BottomCenter": "Alhaalla keskellä",
+      "BottomRight": "Alhaalla oikealla"
+    },
+    "QUALITY": {
+      "Low": "Matala",
+      "Medium": "Keskitaso",
+      "High": "Korkea",
+      "VeryHigh": "Erittäin korkea"
+    },
+    "RUN": {
+      "TITLE": "Luo pikkukuvat",
+      "MESSAGE": "Miten pikkukuvat luodaan?",
+      "NOTE_CHANGES": "Käsittele muutokset: vain edellisen suorituksen jälkeen lisätyt tai muuttuneet kuvat (ei käytettävissä ennen ensimmäistä suoritusta).",
+      "NOTE_REGENERATE": "Luo uudelleen: luo kansion kaikkien kuvien pikkukuvat uudelleen.",
+      "CHANGES": "Käsittele muutokset",
+      "REGENERATE": "Luo uudelleen",
+      "CANCEL": "Peruuta"
+    },
+    "JOB": {
+      "STARTED": "Aloitettu",
+      "FINISHED": "Valmis",
+      "ELAPSED": "Kulunut aika",
+      "PROCESSED": "Käsitelty",
+      "ERRORS": "Virheet"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Poistetaanko valitut pikkukuvatehtävät ({count})?",
+      "DELETE_OPTION": "Poistetaanko tämä pikkukuva-asetus?",
+      "CLOSE_CONFIRMATION": "Tallentamattomia muutoksia on olemassa. Haluatko varmasti sulkea?",
+      "CANCEL_UNSUPPORTED": "Taustatöiden moottori ei voi peruuttaa käynnissä olevaa työtä. Odota, että se valmistuu."
+    }
+  }
+}

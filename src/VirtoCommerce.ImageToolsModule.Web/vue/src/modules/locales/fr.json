@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniatures"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Aucune tâche de miniatures",
+        "COLUMNS": {
+          "NAME": "Nom de la tâche",
+          "PATH": "Dossier d'images",
+          "OPTIONS": "Miniatures",
+          "LAST_RUN": "Dernière exécution"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Actualiser",
+          "ADD": "Ajouter",
+          "RUN": "Exécuter",
+          "DELETE": "Supprimer"
+        }
+      },
+      "TASK": {
+        "TITLE": "Tâche de miniatures",
+        "NEW": "Nouvelle tâche de miniatures",
+        "FIELDS": {
+          "NAME": "Nom",
+          "NAME_HINT": "Nom de la tâche",
+          "PATH": "Dossier d'images",
+          "PATH_HINT": "Dossier des images à traiter, relatif à la racine des ressources (par ex. catalog)",
+          "OPTIONS": "Paramètres des miniatures",
+          "OPTIONS_HINT": "Les miniatures générées pour chaque image",
+          "LAST_RUN": "Dernière exécution"
+        },
+        "TOOLBAR": {
+          "SAVE": "Enregistrer",
+          "RESET": "Réinitialiser",
+          "RUN": "Exécuter",
+          "DELETE": "Supprimer"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Paramètres des miniatures"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Paramètres des miniatures",
+        "EMPTY": "Aucun paramètre de miniature",
+        "COLUMNS": {
+          "NAME": "Nom",
+          "METHOD": "Méthode de redimensionnement",
+          "SIZE": "Largeur × hauteur",
+          "SUFFIX": "Suffixe de fichier",
+          "BACKGROUND": "Arrière-plan"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Actualiser",
+          "ADD": "Ajouter"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Paramètre de miniature",
+        "NEW": "Nouveau paramètre de miniature",
+        "FIELDS": {
+          "NAME": "Nom",
+          "SUFFIX": "Suffixe de fichier",
+          "SUFFIX_HINT": "Ajouté au nom du fichier image, par ex. image_md.png",
+          "METHOD": "Méthode de redimensionnement",
+          "WIDTH": "Largeur",
+          "HEIGHT": "Hauteur",
+          "BACKGROUND": "Couleur d'arrière-plan",
+          "BACKGROUND_HINT": "Couleur hexadécimale utilisée pour remplir la zone libre, par ex. #FFFFFF",
+          "ANCHOR": "Position d'ancrage",
+          "QUALITY": "Qualité JPEG"
+        },
+        "TOOLBAR": {
+          "SAVE": "Enregistrer",
+          "RESET": "Réinitialiser",
+          "DELETE": "Supprimer"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Traiter les images",
+        "TOOLBAR": {
+          "CANCEL": "Annuler"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Taille fixe",
+      "FixedWidth": "Largeur fixe",
+      "FixedHeight": "Hauteur fixe",
+      "Crop": "Recadrer"
+    },
+    "ANCHOR": {
+      "TopLeft": "En haut à gauche",
+      "TopCenter": "En haut au centre",
+      "TopRight": "En haut à droite",
+      "CenterLeft": "Au centre à gauche",
+      "Center": "Au centre",
+      "CenterRight": "Au centre à droite",
+      "BottomLeft": "En bas à gauche",
+      "BottomCenter": "En bas au centre",
+      "BottomRight": "En bas à droite"
+    },
+    "QUALITY": {
+      "Low": "Faible",
+      "Medium": "Moyenne",
+      "High": "Élevée",
+      "VeryHigh": "Très élevée"
+    },
+    "RUN": {
+      "TITLE": "Générer les miniatures",
+      "MESSAGE": "Comment les miniatures doivent-elles être générées ?",
+      "NOTE_CHANGES": "Traiter les modifications : uniquement les images ajoutées ou modifiées depuis la dernière exécution (non disponible avant la première exécution).",
+      "NOTE_REGENERATE": "Régénérer : recréer les miniatures de toutes les images du dossier.",
+      "CHANGES": "Traiter les modifications",
+      "REGENERATE": "Régénérer",
+      "CANCEL": "Annuler"
+    },
+    "JOB": {
+      "STARTED": "Démarré",
+      "FINISHED": "Terminé",
+      "ELAPSED": "Durée écoulée",
+      "PROCESSED": "Traitées",
+      "ERRORS": "Erreurs"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Supprimer les tâches de miniatures sélectionnées ({count}) ?",
+      "DELETE_OPTION": "Supprimer ce paramètre de miniature ?",
+      "CLOSE_CONFIRMATION": "Des modifications ne sont pas enregistrées. Voulez-vous vraiment fermer ?",
+      "CANCEL_UNSUPPORTED": "Le moteur de tâches en arrière-plan ne peut pas annuler une tâche en cours. Attendez qu'elle se termine."
+    }
+  }
+}

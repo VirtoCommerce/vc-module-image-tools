@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniatyrbilder"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Inga miniatyruppgifter",
+        "COLUMNS": {
+          "NAME": "Uppgiftsnamn",
+          "PATH": "Bildmapp",
+          "OPTIONS": "Miniatyrbilder",
+          "LAST_RUN": "Senast körd"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Uppdatera",
+          "ADD": "Lägg till",
+          "RUN": "Kör",
+          "DELETE": "Radera"
+        }
+      },
+      "TASK": {
+        "TITLE": "Miniatyruppgift",
+        "NEW": "Ny miniatyruppgift",
+        "FIELDS": {
+          "NAME": "Namn",
+          "NAME_HINT": "Uppgiftsnamn",
+          "PATH": "Bildmapp",
+          "PATH_HINT": "Mappen med bilderna som ska bearbetas, relativt till tillgångsroten (t.ex. catalog)",
+          "OPTIONS": "Miniatyrinställningar",
+          "OPTIONS_HINT": "Miniatyrbilderna som genereras för varje bild",
+          "LAST_RUN": "Senast körd"
+        },
+        "TOOLBAR": {
+          "SAVE": "Spara",
+          "RESET": "Återställ",
+          "RUN": "Kör",
+          "DELETE": "Radera"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Miniatyrinställningar"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Miniatyrinställningar",
+        "EMPTY": "Inga miniatyrinställningar",
+        "COLUMNS": {
+          "NAME": "Namn",
+          "METHOD": "Storleksändringsmetod",
+          "SIZE": "Bredd × höjd",
+          "SUFFIX": "Filsuffix",
+          "BACKGROUND": "Bakgrund"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Uppdatera",
+          "ADD": "Lägg till"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Miniatyrinställning",
+        "NEW": "Ny miniatyrinställning",
+        "FIELDS": {
+          "NAME": "Namn",
+          "SUFFIX": "Filsuffix",
+          "SUFFIX_HINT": "Läggs till i bildfilens namn, t.ex. image_md.png",
+          "METHOD": "Storleksändringsmetod",
+          "WIDTH": "Bredd",
+          "HEIGHT": "Höjd",
+          "BACKGROUND": "Bakgrundsfärg",
+          "BACKGROUND_HINT": "Hexadecimal färg som fyller den lediga ytan, t.ex. #FFFFFF",
+          "ANCHOR": "Förankringsposition",
+          "QUALITY": "JPEG-kvalitet"
+        },
+        "TOOLBAR": {
+          "SAVE": "Spara",
+          "RESET": "Återställ",
+          "DELETE": "Radera"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Bearbeta bilder",
+        "TOOLBAR": {
+          "CANCEL": "Avbryt"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Fast storlek",
+      "FixedWidth": "Fast bredd",
+      "FixedHeight": "Fast höjd",
+      "Crop": "Beskär"
+    },
+    "ANCHOR": {
+      "TopLeft": "Överst till vänster",
+      "TopCenter": "Överst i mitten",
+      "TopRight": "Överst till höger",
+      "CenterLeft": "Mitten till vänster",
+      "Center": "Mitten",
+      "CenterRight": "Mitten till höger",
+      "BottomLeft": "Nederst till vänster",
+      "BottomCenter": "Nederst i mitten",
+      "BottomRight": "Nederst till höger"
+    },
+    "QUALITY": {
+      "Low": "Låg",
+      "Medium": "Medel",
+      "High": "Hög",
+      "VeryHigh": "Mycket hög"
+    },
+    "RUN": {
+      "TITLE": "Generera miniatyrbilder",
+      "MESSAGE": "Hur ska miniatyrbilderna genereras?",
+      "NOTE_CHANGES": "Bearbeta ändringar: endast bilder som lagts till eller ändrats sedan den senaste körningen (inte tillgängligt före den första körningen).",
+      "NOTE_REGENERATE": "Återgenerera: skapa om miniatyrbilderna för alla bilder i mappen.",
+      "CHANGES": "Bearbeta ändringar",
+      "REGENERATE": "Återgenerera",
+      "CANCEL": "Avbryt"
+    },
+    "JOB": {
+      "STARTED": "Startad",
+      "FINISHED": "Slutförd",
+      "ELAPSED": "Förfluten tid",
+      "PROCESSED": "Bearbetade",
+      "ERRORS": "Fel"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Radera de valda miniatyruppgifterna ({count})?",
+      "DELETE_OPTION": "Radera den här miniatyrinställningen?",
+      "CLOSE_CONFIRMATION": "Det finns osparade ändringar. Är du säker på att du vill stänga?",
+      "CANCEL_UNSUPPORTED": "Motorn för bakgrundsjobb kan inte avbryta ett jobb som körs. Vänta tills det är klart."
+    }
+  }
+}

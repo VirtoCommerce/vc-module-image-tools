@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniatury"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Brak zadań miniatur",
+        "COLUMNS": {
+          "NAME": "Nazwa zadania",
+          "PATH": "Folder obrazów",
+          "OPTIONS": "Miniatury",
+          "LAST_RUN": "Ostatnie uruchomienie"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Odśwież",
+          "ADD": "Dodaj",
+          "RUN": "Uruchom",
+          "DELETE": "Usuń"
+        }
+      },
+      "TASK": {
+        "TITLE": "Zadanie miniatur",
+        "NEW": "Nowe zadanie miniatur",
+        "FIELDS": {
+          "NAME": "Nazwa",
+          "NAME_HINT": "Nazwa zadania",
+          "PATH": "Folder obrazów",
+          "PATH_HINT": "Folder obrazów do przetworzenia, względem katalogu głównego zasobów (np. catalog)",
+          "OPTIONS": "Ustawienia miniatur",
+          "OPTIONS_HINT": "Miniatury generowane dla każdego obrazu",
+          "LAST_RUN": "Ostatnie uruchomienie"
+        },
+        "TOOLBAR": {
+          "SAVE": "Zapisz",
+          "RESET": "Resetuj",
+          "RUN": "Uruchom",
+          "DELETE": "Usuń"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Ustawienia miniatur"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Ustawienia miniatur",
+        "EMPTY": "Brak ustawień miniatur",
+        "COLUMNS": {
+          "NAME": "Nazwa",
+          "METHOD": "Metoda zmiany rozmiaru",
+          "SIZE": "Szerokość × wysokość",
+          "SUFFIX": "Sufiks pliku",
+          "BACKGROUND": "Tło"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Odśwież",
+          "ADD": "Dodaj"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Ustawienie miniatury",
+        "NEW": "Nowe ustawienie miniatury",
+        "FIELDS": {
+          "NAME": "Nazwa",
+          "SUFFIX": "Sufiks pliku",
+          "SUFFIX_HINT": "Dodawany do nazwy pliku obrazu, np. image_md.png",
+          "METHOD": "Metoda zmiany rozmiaru",
+          "WIDTH": "Szerokość",
+          "HEIGHT": "Wysokość",
+          "BACKGROUND": "Kolor tła",
+          "BACKGROUND_HINT": "Kolor szesnastkowy używany do wypełnienia wolnego obszaru, np. #FFFFFF",
+          "ANCHOR": "Pozycja kotwicy",
+          "QUALITY": "Jakość JPEG"
+        },
+        "TOOLBAR": {
+          "SAVE": "Zapisz",
+          "RESET": "Resetuj",
+          "DELETE": "Usuń"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Przetwarzanie obrazów",
+        "TOOLBAR": {
+          "CANCEL": "Anuluj"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Stały rozmiar",
+      "FixedWidth": "Stała szerokość",
+      "FixedHeight": "Stała wysokość",
+      "Crop": "Przytnij"
+    },
+    "ANCHOR": {
+      "TopLeft": "Góra, lewa",
+      "TopCenter": "Góra, środek",
+      "TopRight": "Góra, prawa",
+      "CenterLeft": "Środek, lewa",
+      "Center": "Środek",
+      "CenterRight": "Środek, prawa",
+      "BottomLeft": "Dół, lewa",
+      "BottomCenter": "Dół, środek",
+      "BottomRight": "Dół, prawa"
+    },
+    "QUALITY": {
+      "Low": "Niska",
+      "Medium": "Średnia",
+      "High": "Wysoka",
+      "VeryHigh": "Bardzo wysoka"
+    },
+    "RUN": {
+      "TITLE": "Generuj miniatury",
+      "MESSAGE": "Jak mają zostać wygenerowane miniatury?",
+      "NOTE_CHANGES": "Przetwórz zmiany: tylko obrazy dodane lub zmienione od ostatniego uruchomienia (niedostępne przed pierwszym uruchomieniem).",
+      "NOTE_REGENERATE": "Regeneruj: odtwórz miniatury wszystkich obrazów w folderze.",
+      "CHANGES": "Przetwórz zmiany",
+      "REGENERATE": "Regeneruj",
+      "CANCEL": "Anuluj"
+    },
+    "JOB": {
+      "STARTED": "Rozpoczęto",
+      "FINISHED": "Zakończono",
+      "ELAPSED": "Upłynęło",
+      "PROCESSED": "Przetworzono",
+      "ERRORS": "Błędy"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Usunąć wybrane zadania miniatur ({count})?",
+      "DELETE_OPTION": "Usunąć to ustawienie miniatury?",
+      "CLOSE_CONFIRMATION": "Istnieją niezapisane zmiany. Czy na pewno zamknąć?",
+      "CANCEL_UNSUPPORTED": "Mechanizm zadań w tle nie może anulować uruchomionego zadania. Poczekaj, aż się zakończy."
+    }
+  }
+}

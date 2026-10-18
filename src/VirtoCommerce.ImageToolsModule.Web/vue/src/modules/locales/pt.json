@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniaturas"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Nenhuma tarefa de miniaturas",
+        "COLUMNS": {
+          "NAME": "Nome da tarefa",
+          "PATH": "Pasta de imagens",
+          "OPTIONS": "Miniaturas",
+          "LAST_RUN": "Última execução"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Atualizar",
+          "ADD": "Adicionar",
+          "RUN": "Executar",
+          "DELETE": "Excluir"
+        }
+      },
+      "TASK": {
+        "TITLE": "Tarefa de miniaturas",
+        "NEW": "Nova tarefa de miniaturas",
+        "FIELDS": {
+          "NAME": "Nome",
+          "NAME_HINT": "Nome da tarefa",
+          "PATH": "Pasta de imagens",
+          "PATH_HINT": "Pasta das imagens a processar, relativa à raiz dos recursos (por ex. catalog)",
+          "OPTIONS": "Configurações de miniaturas",
+          "OPTIONS_HINT": "As miniaturas geradas para cada imagem",
+          "LAST_RUN": "Última execução"
+        },
+        "TOOLBAR": {
+          "SAVE": "Salvar",
+          "RESET": "Redefinir",
+          "RUN": "Executar",
+          "DELETE": "Excluir"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Configurações de miniaturas"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Configurações de miniaturas",
+        "EMPTY": "Nenhuma configuração de miniatura",
+        "COLUMNS": {
+          "NAME": "Nome",
+          "METHOD": "Método de redimensionamento",
+          "SIZE": "Largura × altura",
+          "SUFFIX": "Sufixo do arquivo",
+          "BACKGROUND": "Fundo"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Atualizar",
+          "ADD": "Adicionar"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Configuração de miniatura",
+        "NEW": "Nova configuração de miniatura",
+        "FIELDS": {
+          "NAME": "Nome",
+          "SUFFIX": "Sufixo do arquivo",
+          "SUFFIX_HINT": "Adicionado ao nome do arquivo de imagem, por ex. image_md.png",
+          "METHOD": "Método de redimensionamento",
+          "WIDTH": "Largura",
+          "HEIGHT": "Altura",
+          "BACKGROUND": "Cor de fundo",
+          "BACKGROUND_HINT": "Cor hexadecimal usada para preencher a área livre, por ex. #FFFFFF",
+          "ANCHOR": "Posição de ancoragem",
+          "QUALITY": "Qualidade JPEG"
+        },
+        "TOOLBAR": {
+          "SAVE": "Salvar",
+          "RESET": "Redefinir",
+          "DELETE": "Excluir"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Processar imagens",
+        "TOOLBAR": {
+          "CANCEL": "Cancelar"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Tamanho fixo",
+      "FixedWidth": "Largura fixa",
+      "FixedHeight": "Altura fixa",
+      "Crop": "Recortar"
+    },
+    "ANCHOR": {
+      "TopLeft": "Superior esquerdo",
+      "TopCenter": "Superior central",
+      "TopRight": "Superior direito",
+      "CenterLeft": "Centro esquerdo",
+      "Center": "Centro",
+      "CenterRight": "Centro direito",
+      "BottomLeft": "Inferior esquerdo",
+      "BottomCenter": "Inferior central",
+      "BottomRight": "Inferior direito"
+    },
+    "QUALITY": {
+      "Low": "Baixa",
+      "Medium": "Média",
+      "High": "Alta",
+      "VeryHigh": "Muito alta"
+    },
+    "RUN": {
+      "TITLE": "Gerar miniaturas",
+      "MESSAGE": "Como as miniaturas devem ser geradas?",
+      "NOTE_CHANGES": "Processar alterações: apenas imagens adicionadas ou alteradas desde a última execução (indisponível antes da primeira execução).",
+      "NOTE_REGENERATE": "Regenerar: recriar as miniaturas de todas as imagens da pasta.",
+      "CHANGES": "Processar alterações",
+      "REGENERATE": "Regenerar",
+      "CANCEL": "Cancelar"
+    },
+    "JOB": {
+      "STARTED": "Iniciado",
+      "FINISHED": "Concluído",
+      "ELAPSED": "Tempo decorrido",
+      "PROCESSED": "Processadas",
+      "ERRORS": "Erros"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Excluir as tarefas de miniaturas selecionadas ({count})?",
+      "DELETE_OPTION": "Excluir esta configuração de miniatura?",
+      "CLOSE_CONFIRMATION": "Há alterações não salvas. Tem certeza de que deseja fechar?",
+      "CANCEL_UNSUPPORTED": "O mecanismo de tarefas em segundo plano não pode cancelar uma tarefa em execução. Aguarde até que ela termine."
+    }
+  }
+}
