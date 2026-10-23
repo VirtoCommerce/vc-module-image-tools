@@ -152,6 +152,7 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 
                         // Each ProcessTasksAsync call reports its own task only, so the run totals are accumulated here:
                         // completedTasksProgress holds the tasks already finished, runProgress what is reported.
+                        // The total grows task by task: a task's image count is known only once its changes are fetched.
                         var completedTasksProgress = new ThumbnailTaskProgress();
                         var runProgress = new ThumbnailTaskProgress();
 
@@ -181,10 +182,6 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
 
                             await _taskService.SaveChangesAsync(oneTaskArray);
                         }
-
-                        // Keep the run totals and errors: a fresh progress object here reset the final notification to "0 of 0".
-                        runProgress.Message = "Thumbnails generated successfully!";
-                        progressCallback(runProgress);
 
                         return true;
                     },
