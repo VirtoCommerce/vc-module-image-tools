@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.ImageToolsModule.Core.Models;
@@ -149,6 +150,21 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
                     {
                         lockAcquired = true;
 
+                        // Each ProcessTasksAsync call reports its own task only, so the run totals are accumulated here:
+                        // completedTasksProgress holds the tasks already finished, runProgress what is reported.
+                        // The total grows task by task: a task's image count is known only once its changes are fetched.
+                        var completedTasksProgress = new ThumbnailTaskProgress();
+                        var runProgress = new ThumbnailTaskProgress();
+
+                        Action<ThumbnailTaskProgress> taskProgressCallback = taskProgress =>
+                        {
+                            runProgress.Message = taskProgress.Message;
+                            runProgress.TotalCount = completedTasksProgress.TotalCount + (taskProgress.TotalCount ?? 0);
+                            runProgress.ProcessedCount = completedTasksProgress.ProcessedCount + (taskProgress.ProcessedCount ?? 0);
+                            runProgress.Errors = completedTasksProgress.Errors.Concat(taskProgress.Errors).ToList();
+                            progressCallback(runProgress);
+                        };
+
                         foreach (var task in tasks)
                         {
                             // Better to run and save tasks one by one to save LastRun date once every task is completed, opposing to waiting all tasks completion, as it could be a long process.
@@ -156,15 +172,16 @@ namespace VirtoCommerce.ImageToolsModule.Data.BackgroundJobs
                             //Need to save runTime at start in order to not loose changes that may be done between the moment of getting changes and the task completion.
                             var runTime = DateTime.UtcNow;
 
-                            await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, progressCallback, cancellationToken);
+                            await _thumbnailProcessor.ProcessTasksAsync(oneTaskArray, regenerate, taskProgressCallback, cancellationToken);
+
+                            completedTasksProgress.TotalCount = runProgress.TotalCount;
+                            completedTasksProgress.ProcessedCount = runProgress.ProcessedCount;
+                            completedTasksProgress.Errors = runProgress.Errors.ToList();
 
                             task.LastRun = runTime;
 
                             await _taskService.SaveChangesAsync(oneTaskArray);
                         }
-
-                        var progressInfo = new ThumbnailTaskProgress { Message = "Thumbnails generated successfully!" };
-                        progressCallback(progressInfo);
 
                         return true;
                     },
