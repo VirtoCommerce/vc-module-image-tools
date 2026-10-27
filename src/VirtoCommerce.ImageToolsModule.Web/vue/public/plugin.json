@@ -1,0 +1,17 @@
+{
+  "remote": { "name": "thumbnails_admin", "exposed": "./Module" },
+  "contributions": {
+    "menu": [
+      {
+        "id": "thumbnails",
+        "sectionId": "configuration",
+        "title": "Thumbnails",
+        "icon": "lucide-images",
+        "route": "/thumbnails",
+        "permission": "thumbnail:access",
+        "priority": 60,
+        "replaces": "legacy.thumbnail"
+      }
+    ]
+  }
+}
