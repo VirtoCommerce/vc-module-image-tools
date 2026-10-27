@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <noWarn>1591</noWarn>
@@ -9,6 +9,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.1076.0" />
+    <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.1076.8" />
   </ItemGroup>
 </Project>
