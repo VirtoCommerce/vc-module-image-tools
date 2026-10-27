@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "サムネイル"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "サムネイルタスクがありません",
+        "COLUMNS": {
+          "NAME": "タスク名",
+          "PATH": "画像フォルダー",
+          "OPTIONS": "サムネイル",
+          "LAST_RUN": "最終実行"
+        },
+        "TOOLBAR": {
+          "REFRESH": "更新",
+          "ADD": "追加",
+          "RUN": "実行",
+          "DELETE": "削除"
+        }
+      },
+      "TASK": {
+        "TITLE": "サムネイルタスク",
+        "NEW": "新規サムネイルタスク",
+        "FIELDS": {
+          "NAME": "名前",
+          "NAME_HINT": "タスク名",
+          "PATH": "画像フォルダー",
+          "PATH_HINT": "処理する画像のフォルダー (アセットのルートからの相対パス、例: catalog)",
+          "OPTIONS": "サムネイル設定",
+          "OPTIONS_HINT": "各画像に対して生成されるサムネイル",
+          "LAST_RUN": "最終実行"
+        },
+        "TOOLBAR": {
+          "SAVE": "保存",
+          "RESET": "リセット",
+          "RUN": "実行",
+          "DELETE": "削除"
+        },
+        "WIDGETS": {
+          "OPTIONS": "サムネイル設定"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "サムネイル設定",
+        "EMPTY": "サムネイル設定がありません",
+        "COLUMNS": {
+          "NAME": "名前",
+          "METHOD": "リサイズ方法",
+          "SIZE": "幅 × 高さ",
+          "SUFFIX": "ファイルのサフィックス",
+          "BACKGROUND": "背景"
+        },
+        "TOOLBAR": {
+          "REFRESH": "更新",
+          "ADD": "追加"
+        }
+      },
+      "OPTION": {
+        "TITLE": "サムネイル設定",
+        "NEW": "新規サムネイル設定",
+        "FIELDS": {
+          "NAME": "名前",
+          "SUFFIX": "ファイルのサフィックス",
+          "SUFFIX_HINT": "画像ファイル名に追加されます (例: image_md.png)",
+          "METHOD": "リサイズ方法",
+          "WIDTH": "幅",
+          "HEIGHT": "高さ",
+          "BACKGROUND": "背景色",
+          "BACKGROUND_HINT": "空き領域を塗りつぶす 16 進数カラー (例: #FFFFFF)",
+          "ANCHOR": "アンカー位置",
+          "QUALITY": "JPEG 品質"
+        },
+        "TOOLBAR": {
+          "SAVE": "保存",
+          "RESET": "リセット",
+          "DELETE": "削除"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "画像を処理",
+        "TOOLBAR": {
+          "CANCEL": "キャンセル"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "固定サイズ",
+      "FixedWidth": "固定幅",
+      "FixedHeight": "固定高さ",
+      "Crop": "切り抜き"
+    },
+    "ANCHOR": {
+      "TopLeft": "左上",
+      "TopCenter": "中央上",
+      "TopRight": "右上",
+      "CenterLeft": "左中央",
+      "Center": "中央",
+      "CenterRight": "右中央",
+      "BottomLeft": "左下",
+      "BottomCenter": "中央下",
+      "BottomRight": "右下"
+    },
+    "QUALITY": {
+      "Low": "低",
+      "Medium": "中",
+      "High": "高",
+      "VeryHigh": "最高"
+    },
+    "RUN": {
+      "TITLE": "サムネイルを生成",
+      "MESSAGE": "サムネイルをどのように生成しますか？",
+      "NOTE_CHANGES": "変更を処理: 前回の実行以降に追加または変更された画像のみ (初回実行前は使用できません)。",
+      "NOTE_REGENERATE": "再生成: フォルダー内のすべての画像のサムネイルを再作成します。",
+      "CHANGES": "変更を処理",
+      "REGENERATE": "再生成",
+      "CANCEL": "キャンセル"
+    },
+    "JOB": {
+      "STARTED": "開始",
+      "FINISHED": "終了",
+      "ELAPSED": "経過時間",
+      "PROCESSED": "処理済み",
+      "ERRORS": "エラー"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "選択した {count} 件のサムネイルタスクを削除しますか？",
+      "DELETE_OPTION": "このサムネイル設定を削除しますか？",
+      "CLOSE_CONFIRMATION": "保存されていない変更があります。閉じてもよろしいですか？",
+      "CANCEL_UNSUPPORTED": "バックグラウンドジョブエンジンは実行中のジョブをキャンセルできません。完了するまでお待ちください。"
+    }
+  }
+}

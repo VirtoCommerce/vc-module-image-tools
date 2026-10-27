@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "Miniatyrbilder"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "Ingen miniatyroppgaver",
+        "COLUMNS": {
+          "NAME": "Oppgavenavn",
+          "PATH": "Bildemappe",
+          "OPTIONS": "Miniatyrbilder",
+          "LAST_RUN": "Sist kjørt"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Oppdater",
+          "ADD": "Legg til",
+          "RUN": "Kjør",
+          "DELETE": "Slett"
+        }
+      },
+      "TASK": {
+        "TITLE": "Miniatyroppgave",
+        "NEW": "Ny miniatyroppgave",
+        "FIELDS": {
+          "NAME": "Navn",
+          "NAME_HINT": "Oppgavenavn",
+          "PATH": "Bildemappe",
+          "PATH_HINT": "Mappen med bildene som skal behandles, relativt til ressursroten (f.eks. catalog)",
+          "OPTIONS": "Miniatyrinnstillinger",
+          "OPTIONS_HINT": "Miniatyrbildene som genereres for hvert bilde",
+          "LAST_RUN": "Sist kjørt"
+        },
+        "TOOLBAR": {
+          "SAVE": "Lagre",
+          "RESET": "Tilbakestill",
+          "RUN": "Kjør",
+          "DELETE": "Slett"
+        },
+        "WIDGETS": {
+          "OPTIONS": "Miniatyrinnstillinger"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "Miniatyrinnstillinger",
+        "EMPTY": "Ingen miniatyrinnstillinger",
+        "COLUMNS": {
+          "NAME": "Navn",
+          "METHOD": "Endringsmetode",
+          "SIZE": "Bredde × høyde",
+          "SUFFIX": "Filsuffiks",
+          "BACKGROUND": "Bakgrunn"
+        },
+        "TOOLBAR": {
+          "REFRESH": "Oppdater",
+          "ADD": "Legg til"
+        }
+      },
+      "OPTION": {
+        "TITLE": "Miniatyrinnstilling",
+        "NEW": "Ny miniatyrinnstilling",
+        "FIELDS": {
+          "NAME": "Navn",
+          "SUFFIX": "Filsuffiks",
+          "SUFFIX_HINT": "Legges til bildefilnavnet, f.eks. image_md.png",
+          "METHOD": "Endringsmetode",
+          "WIDTH": "Bredde",
+          "HEIGHT": "Høyde",
+          "BACKGROUND": "Bakgrunnsfarge",
+          "BACKGROUND_HINT": "Heksadesimal farge som fyller det ledige området, f.eks. #FFFFFF",
+          "ANCHOR": "Forankringsposisjon",
+          "QUALITY": "JPEG-kvalitet"
+        },
+        "TOOLBAR": {
+          "SAVE": "Lagre",
+          "RESET": "Tilbakestill",
+          "DELETE": "Slett"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "Behandle bilder",
+        "TOOLBAR": {
+          "CANCEL": "Avbryt"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "Fast størrelse",
+      "FixedWidth": "Fast bredde",
+      "FixedHeight": "Fast høyde",
+      "Crop": "Beskjær"
+    },
+    "ANCHOR": {
+      "TopLeft": "Øverst til venstre",
+      "TopCenter": "Øverst i midten",
+      "TopRight": "Øverst til høyre",
+      "CenterLeft": "Midten til venstre",
+      "Center": "Midten",
+      "CenterRight": "Midten til høyre",
+      "BottomLeft": "Nederst til venstre",
+      "BottomCenter": "Nederst i midten",
+      "BottomRight": "Nederst til høyre"
+    },
+    "QUALITY": {
+      "Low": "Lav",
+      "Medium": "Middels",
+      "High": "Høy",
+      "VeryHigh": "Svært høy"
+    },
+    "RUN": {
+      "TITLE": "Generer miniatyrbilder",
+      "MESSAGE": "Hvordan skal miniatyrbildene genereres?",
+      "NOTE_CHANGES": "Behandle endringer: bare bilder som er lagt til eller endret siden forrige kjøring (ikke tilgjengelig før første kjøring).",
+      "NOTE_REGENERATE": "Regenerer: lag miniatyrbildene for alle bildene i mappen på nytt.",
+      "CHANGES": "Behandle endringer",
+      "REGENERATE": "Regenerer",
+      "CANCEL": "Avbryt"
+    },
+    "JOB": {
+      "STARTED": "Startet",
+      "FINISHED": "Fullført",
+      "ELAPSED": "Medgått tid",
+      "PROCESSED": "Behandlet",
+      "ERRORS": "Feil"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "Vil du slette de valgte miniatyroppgavene ({count})?",
+      "DELETE_OPTION": "Vil du slette denne miniatyrinnstillingen?",
+      "CLOSE_CONFIRMATION": "Du har ulagrede endringer. Er du sikker på at du vil lukke?",
+      "CANCEL_UNSUPPORTED": "Motoren for bakgrunnsjobber kan ikke avbryte en jobb som kjører. Vent til den er ferdig."
+    }
+  }
+}

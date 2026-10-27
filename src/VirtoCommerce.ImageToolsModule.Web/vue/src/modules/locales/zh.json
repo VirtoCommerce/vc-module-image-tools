@@ -1,0 +1,133 @@
+{
+  "THUMBNAILS": {
+    "MENU": {
+      "TITLE": "缩略图"
+    },
+    "PAGES": {
+      "TASKS": {
+        "EMPTY": "无缩略图任务",
+        "COLUMNS": {
+          "NAME": "任务名称",
+          "PATH": "图像文件夹",
+          "OPTIONS": "缩略图",
+          "LAST_RUN": "上次运行"
+        },
+        "TOOLBAR": {
+          "REFRESH": "刷新",
+          "ADD": "添加",
+          "RUN": "运行",
+          "DELETE": "删除"
+        }
+      },
+      "TASK": {
+        "TITLE": "缩略图任务",
+        "NEW": "新建缩略图任务",
+        "FIELDS": {
+          "NAME": "名称",
+          "NAME_HINT": "任务名称",
+          "PATH": "图像文件夹",
+          "PATH_HINT": "要处理的图像所在的文件夹，相对于资源根目录（例如 catalog）",
+          "OPTIONS": "缩略图设置",
+          "OPTIONS_HINT": "为每张图像生成的缩略图",
+          "LAST_RUN": "上次运行"
+        },
+        "TOOLBAR": {
+          "SAVE": "保存",
+          "RESET": "重置",
+          "RUN": "运行",
+          "DELETE": "删除"
+        },
+        "WIDGETS": {
+          "OPTIONS": "缩略图设置"
+        }
+      },
+      "OPTIONS": {
+        "TITLE": "缩略图设置",
+        "EMPTY": "无缩略图设置",
+        "COLUMNS": {
+          "NAME": "名称",
+          "METHOD": "调整大小方法",
+          "SIZE": "宽 × 高",
+          "SUFFIX": "文件后缀",
+          "BACKGROUND": "背景"
+        },
+        "TOOLBAR": {
+          "REFRESH": "刷新",
+          "ADD": "添加"
+        }
+      },
+      "OPTION": {
+        "TITLE": "缩略图设置",
+        "NEW": "新建缩略图设置",
+        "FIELDS": {
+          "NAME": "名称",
+          "SUFFIX": "文件后缀",
+          "SUFFIX_HINT": "添加到图像文件名中，例如 image_md.png",
+          "METHOD": "调整大小方法",
+          "WIDTH": "宽度",
+          "HEIGHT": "高度",
+          "BACKGROUND": "背景颜色",
+          "BACKGROUND_HINT": "用于填充空白区域的十六进制颜色，例如 #FFFFFF",
+          "ANCHOR": "锚点位置",
+          "QUALITY": "JPEG 质量"
+        },
+        "TOOLBAR": {
+          "SAVE": "保存",
+          "RESET": "重置",
+          "DELETE": "删除"
+        }
+      },
+      "PROGRESS": {
+        "TITLE": "处理图像",
+        "TOOLBAR": {
+          "CANCEL": "取消"
+        }
+      }
+    },
+    "RESIZE": {
+      "FixedSize": "固定大小",
+      "FixedWidth": "固定宽度",
+      "FixedHeight": "固定高度",
+      "Crop": "裁剪"
+    },
+    "ANCHOR": {
+      "TopLeft": "左上",
+      "TopCenter": "中上",
+      "TopRight": "右上",
+      "CenterLeft": "左中",
+      "Center": "居中",
+      "CenterRight": "右中",
+      "BottomLeft": "左下",
+      "BottomCenter": "中下",
+      "BottomRight": "右下"
+    },
+    "QUALITY": {
+      "Low": "低",
+      "Medium": "中",
+      "High": "高",
+      "VeryHigh": "非常高"
+    },
+    "RUN": {
+      "TITLE": "生成缩略图",
+      "MESSAGE": "应如何生成缩略图？",
+      "NOTE_CHANGES": "处理更改：仅处理自上次运行以来添加或更改的图像（首次运行前不可用）。",
+      "NOTE_REGENERATE": "重新生成：重新生成文件夹中所有图像的缩略图。",
+      "CHANGES": "处理更改",
+      "REGENERATE": "重新生成",
+      "CANCEL": "取消"
+    },
+    "JOB": {
+      "STARTED": "开始时间",
+      "FINISHED": "完成时间",
+      "ELAPSED": "已用时间",
+      "PROCESSED": "已处理",
+      "ERRORS": "错误"
+    },
+    "ALERTS": {
+      "DELETE_TASKS": "删除所选的 {count} 个缩略图任务？",
+      "DELETE_OPTION": "删除此缩略图设置？",
+      "CLOSE_CONFIRMATION": "有未保存的更改。确定要关闭吗？",
+      "CANCEL_UNSUPPORTED": "后台作业引擎无法取消正在运行的作业。请等待其完成。"
+    }
+  }
+}

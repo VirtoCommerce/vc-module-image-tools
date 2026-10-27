@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "thumbnail:access": "فتح قائمة الصور المصغرة",
+    "thumbnail:create": "إنشاء بيانات الصور المصغرة",
+    "thumbnail:read": "عرض بيانات الصور المصغرة",
+    "thumbnail:update": "تحديث بيانات الصور المصغرة",
+    "thumbnail:delete": "حذف بيانات الصور المصغرة"
+  },
+  "settings": {
+    "ImageTools.Thumbnails.ImageProcessJobCronExpression": {
+      "description": "",
+      "title": "تعبير Cron لجدولة تشغيل مهمة معالجة الصور"
+    },
+    "ImageTools.Thumbnails.ProcessBatchSize": {
+      "title": "حجم الجزء",
+      "description": ""
+    },
+    "ImageTools.Thumbnails.EnableImageProcessJob": {
+      "title": "تفعيل مهمة معالجة الصور",
+      "description": "علامة لتفعيل مهمة معالجة الصور في الخلفية"
+    },
+    "ImageTools.Thumbnails.EventBasedThumbnailGeneration": {
+      "title": "تفعيل إنشاء الصور المصغرة المستند إلى الأحداث",
+      "description": "بدء إنشاء الصور المصغرة فور إضافة أحد الأصول"
+    },
+    "ImageTools.Thumbnails.AllowedImageFormats": {
+      "title": "تنسيقات الصور المسموح بها",
+      "description": "تُنشأ الصور المصغرة لتنسيقات الصور المحددة فقط. التنسيقات المدعومة: JPEG وPNG وWebP وBMP وSVG."
+    }
+  }
+}
