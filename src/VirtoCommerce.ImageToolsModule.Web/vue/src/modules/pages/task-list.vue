@@ -6,6 +6,7 @@
     width="50%"
   >
     <VcDataTable
+      v-model:search-value="keyword"
       v-model:sort-field="sortField"
       v-model:sort-order="sortOrder"
       v-model:selection="selection"
@@ -13,6 +14,7 @@
       :items="items"
       :total-count="totalCount"
       :pagination="pagination"
+      :searchable="true"
       state-key="THUMBNAIL_TASKS"
       :active-item-id="activeItemId"
       :show-all-columns="!activeItemId"
@@ -57,6 +59,7 @@ import {
   useBlade,
   useDataTablePagination,
   useDataTableSort,
+  useFunctions,
   usePermissions,
   usePopup,
   type IBladeToolbar,
@@ -86,10 +89,12 @@ const { showConfirmation, showError } = usePopup();
 const { hasAccess } = usePermissions();
 const { ask } = useChoice();
 const { getApiClient } = useApiClient(ThumbnailsTasksClient);
+const { debounce } = useFunctions();
 
 const PAGE_SIZE = 50;
 const items = ref<ThumbnailTask[]>([]);
 const totalCount = ref(0);
+const keyword = ref("");
 const selection = ref<ThumbnailTask[]>([]);
 const activeItemId = ref<string>();
 
@@ -98,7 +103,12 @@ const pagination = useDataTablePagination({ stateKey: "THUMBNAIL_TASKS", pageSiz
 
 const { loading, action: load } = useAsync(async () => {
   const client = await getApiClient();
-  const result = await client.searchThumbnailTask({ sort: sortExpression.value, skip: pagination.skip, take: PAGE_SIZE });
+  const result = await client.searchThumbnailTask({
+    keyword: keyword.value || undefined,
+    sort: sortExpression.value,
+    skip: pagination.skip,
+    take: PAGE_SIZE,
+  });
   items.value = result.results ?? [];
   totalCount.value = result.totalCount ?? 0;
 });
@@ -170,6 +180,8 @@ const rowActions = (task: ThumbnailTask): TableAction[] => [
 
 load();
 watch([sortExpression, () => pagination.skip], () => load());
+// from page 2 setPage(1) triggers the skip watcher, which loads
+watch(keyword, debounce(() => (pagination.skip ? pagination.setPage(1) : load()), 400));
 
 const bladeToolbar = ref<IBladeToolbar[]>([
   { id: "refresh", title: t("THUMBNAILS.PAGES.TASKS.TOOLBAR.REFRESH"), icon: "lucide-refresh-cw", clickHandler: () => load() },
